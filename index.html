@@ -24,6 +24,7 @@
 <link rel="canonical" href="https://medtype-app.github.io/">
 <link rel="stylesheet" href="assets/site.css">
 <link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/flow-replay.css">
 </head>
 <body class="home">
 <a class="skip" href="#titel">Zum Inhalt springen</a>
@@ -94,11 +95,11 @@
 
       <figure class="flow" data-play>
         <div class="flow-visual" role="img"
-          aria-label="Auf dem iPhone steht in MedType der Text „Termin um 10 Uhr“. Er geht verschlüsselt per Bluetooth an den MedType-Dongle, der am PC steckt, und erscheint dort im Textfeld, wo der Cursor steht.">
+          aria-label="Auf dem iPhone steht in MedType der Text „Hallo vom iPhone“. Er geht verschlüsselt per Bluetooth an den MedType-Dongle, der am PC steckt, und erscheint dort im Textfeld, wo der Cursor steht.">
           <div class="flow-node flow-phone">
             <div class="flow-screen">
               <span class="flow-status">Verbunden</span>
-              <span class="flow-draft">Termin um 10 Uhr</span>
+              <span class="flow-draft">Hallo vom iPhone</span>
               <span class="flow-send">Senden</span>
             </div>
           </div>
@@ -125,7 +126,7 @@
             <div class="flow-monitor">
               <div class="flow-window">
                 <span class="flow-bar"><i></i><i></i><i></i></span>
-                <span class="flow-line"><span class="flow-typed">Termin um 10 Uhr</span><span class="flow-caret"></span></span>
+                <span class="flow-line"><span class="flow-typed">Hallo vom iPhone</span><span class="flow-caret"></span></span>
               </div>
             </div>
             <span class="flow-stand"></span>
@@ -258,8 +259,8 @@
         <p>Gekoppelt wird einmal per Tastendruck am Dongle, danach verbindet sich MedType beim Start von selbst.
           „Verbindung prüfen“ zeigt dir auf einen Blick, wie schnell der Dongle antwortet.</p>
         <p>Neue Software für den Dongle bringt die App gleich mit. Du spielst sie per Bluetooth auf, der Dongle
-          bleibt dabei am PC. Und jeder Dongle bekommt auf Wunsch einen eigenen Namen, zum Beispiel „Büro“ oder
-          „Schreibtisch 2“.</p>
+          bleibt dabei am PC. Und jeder Dongle bekommt auf Wunsch einen eigenen Namen, zum Beispiel „PC 1“ oder
+          „Laptop“.</p>
       </div>
     </section>
 
@@ -268,9 +269,9 @@
       <ul>
         <li><strong>Tippgeschwindigkeit einstellbar.</strong> So kommen auch langsamere Programme mit.</li>
         <li><strong>Pause nach Zeilenumbruch.</strong> Für Programme, die nach Enter einen Moment brauchen.</li>
-        <li><strong>Vier App-Icons.</strong> Leuchtrot, Warnweste, Nachtschicht und Blaulicht.</li>
+        <li><strong>Vier App-Icons.</strong> Zur Wahl in den Einstellungen.</li>
         <li><strong>Hell und dunkel.</strong> Im Hoch- und Querformat, mit VoiceOver bedienbar.</li>
-        <li><strong>Mehrere Dongles.</strong> Zum Beispiel einer im Büro und einer am PC zu Hause.</li>
+        <li><strong>Mehrere Dongles.</strong> Für mehrere PCs – gewechselt wird mit wenigen Tipps in der App.</li>
         <li><strong>Demo-Modus.</strong> Zum Ausprobieren ohne Dongle.</li>
       </ul>
     </section>
@@ -332,8 +333,8 @@
       <div class="ask-inner">
         <h2 class="display ask-title" id="fragen">Fragen?</h2>
         <div>
-          <p class="ask-lead">Du möchtest MedType im Büro oder im Team nutzen, brauchst einen Dongle oder kommst nicht
-            weiter? Schreib uns.</p>
+          <p class="ask-lead">Du möchtest MedType nutzen, brauchst einen Dongle oder hast eine Frage? Schreib
+            uns.</p>
           <a class="mail" href="mailto:bironleonard5@gmail.com">bironleonard5@gmail.com</a>
           <p class="muted">Viele Antworten stehen schon in der <a href="hilfe.html">Hilfe</a>. Bitte schick uns keine
             vertraulichen oder personenbezogenen Daten – auch nicht in Bildschirmfotos.</p>
@@ -375,5 +376,6 @@
     });
   })();
 </script>
+<script src="assets/flow-replay.js" defer></script>
 </body>
 </html>
