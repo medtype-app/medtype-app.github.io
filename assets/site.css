@@ -1,0 +1,166 @@
+/* MedType – gemeinsame Gestaltung (Farben, Schrift, Kopf- und Fußzeile) für alle Seiten */
+
+:root {
+  color-scheme: light dark;
+  --bg: #faf7f5;
+  --surface: #ffffff;
+  --surface-2: #f3eeeb;
+  --text: #1c1918;
+  --muted: #5b5450;
+  --line: #e6deda;
+  --accent: #b00d28;
+  --accent-soft: #fbe9e9;
+  --brand-1: #ff3b30;
+  --brand-2: #c8102e;
+  --band-1: #e0261f;
+  --band-2: #a30b24;
+  --on-band: #ffffff;
+  --on-pill: #9b0b22;
+  --ok: #1d7a3a;
+  --ok-soft: #e8f5ec;
+  --ink: #1d1214;
+  --ink-text: #f6efed;
+  --ink-muted: #d3c6c3;
+  --ink-accent: #ffb4ad;
+  --phone-bezel: #0f0f11;
+  --shadow: 0 1px 2px rgba(60, 20, 20, .06), 0 8px 24px rgba(60, 20, 20, .06);
+  --shadow-phone: 0 40px 70px -30px rgba(70, 8, 18, .55), 0 14px 28px -14px rgba(0, 0, 0, .35);
+  --radius: 14px;
+  --radius-lg: 28px;
+  --measure: 44rem;
+  --wide: 72rem;
+  --page-w: var(--measure);
+  --gutter: 16px;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+}
+
+@media (min-width: 48rem) {
+  :root { --gutter: 32px; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121011;
+    --surface: #1c191a;
+    --surface-2: #242021;
+    --text: #f3efed;
+    --muted: #b5aca8;
+    --line: #322c2d;
+    --accent: #ff7a70;
+    --accent-soft: #2c1718;
+    --band-1: #9e1a1f;
+    --band-2: #5c0a17;
+    --ok: #5fd38a;
+    --ok-soft: #12251a;
+    --ink: #1f1517;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+    --shadow-phone: 0 40px 70px -30px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .12);
+  }
+}
+
+/* Grundlagen */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.6 var(--font);
+  overflow-wrap: break-word;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: var(--accent); text-underline-offset: .15em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.band :focus-visible, .ink :focus-visible { outline-color: #ffffff; }
+
+.wrap {
+  max-width: calc(var(--page-w) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: -999px; top: 0; z-index: 10;
+  background: var(--surface); color: var(--text);
+  padding: .5rem .75rem; border-radius: 8px;
+}
+.skip:focus { left: 1rem; top: 1rem; }
+
+/* Kopfbereich: rotes Band mit Marke und Navigation */
+.band {
+  position: relative;
+  background: linear-gradient(135deg, var(--band-1), var(--band-2));
+  color: var(--on-band);
+}
+.band-inner {
+  position: relative;
+  z-index: 1;
+  max-width: calc(var(--page-w) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 1.1rem var(--gutter) 2.75rem;
+}
+.topnav {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  font-size: .95rem;
+}
+.brand {
+  display: inline-flex; align-items: center; gap: .6rem;
+  color: var(--on-band); text-decoration: none;
+  font-weight: 700; font-size: 1.05rem; letter-spacing: -.01em;
+}
+.brand img {
+  width: 36px; height: 36px; flex: none;
+  border-radius: 22.5%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25), 0 0 0 1px rgba(255, 255, 255, .35);
+}
+.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: .25rem; }
+.site-nav a {
+  display: block;
+  padding: .4rem .75rem;
+  border-radius: 999px;
+  color: var(--on-band);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color .2s ease;
+}
+.site-nav a:hover { background: rgba(40, 0, 8, .24); }
+.site-nav a[aria-current="page"] { background: #ffffff; color: var(--on-pill); font-weight: 650; }
+.site-nav a:focus-visible { border-radius: 999px; }
+
+@media (max-width: 26rem) {
+  .brand-name {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  .site-nav a { padding: .4rem .6rem; font-size: .92rem; }
+}
+
+/* Fußzeile */
+.site-footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+.site-footer .wrap { display: grid; gap: .5rem; padding-top: 1.75rem; padding-bottom: 2.5rem; }
+.site-footer p { margin: 0; }
+.site-footer a { color: var(--muted); }
+.site-footer a:hover { color: var(--text); }
+.site-footer ul { list-style: none; margin: 0 0 .25rem; padding: 0; display: flex; flex-wrap: wrap; font-weight: 600; }
+.site-footer li + li::before { content: "·"; content: "·" / ""; margin: 0 .6rem; }
+.site-footer .fine { font-size: .8rem; max-width: 46rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .band { background: none; color: var(--text); }
+  .band .brand { color: var(--text); }
+  .site-nav, .skip { display: none; }
+}
