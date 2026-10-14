@@ -1,4 +1,4 @@
-/* Wiederholen des Ablaufs „So funktioniert’s“ (siehe flow-replay.js). */
+/* „Senden“ im Ablauf „So funktioniert’s“ spielt die Animation erneut ab (siehe flow-replay.js). */
 .flow-send.is-replayable {
   cursor: pointer;
   transition: transform .15s ease, filter .15s ease;
@@ -6,22 +6,6 @@
 .flow-send.is-replayable:hover { filter: brightness(1.08); }
 .flow-send.is-replayable:active { transform: scale(.96); }
 
-.flow-replay {
-  display: inline-flex; align-items: center; gap: .4rem;
-  margin-top: .75rem;
-  padding: .45rem .9rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--accent);
-  font: inherit; font-size: .9rem; font-weight: 600;
-  cursor: pointer;
-}
-.flow-replay::before { content: "↻"; font-size: 1.05em; line-height: 1; }
-.flow-replay:hover { background: var(--accent-soft); }
-.flow-replay:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-
 @media (prefers-reduced-motion: reduce) {
-  .flow-replay { display: none; }
   .flow-send.is-replayable { cursor: default; }
 }
