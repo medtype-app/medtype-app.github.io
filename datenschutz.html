@@ -35,7 +35,8 @@
 
   main {
     max-width: calc(var(--measure) + 2 * var(--gutter));
-    margin: -1.5rem auto 0;
+    /* Der Inhalt beginnt mit Abstand unter dem roten Band (nicht hineinragend). */
+    margin: 1.75rem auto 0;
     padding: 0 var(--gutter) 3rem;
   }
   .card {
@@ -152,7 +153,7 @@
       <li><a href="#kontakt">Wenn du uns schreibst</a></li>
       <li><a href="#webseite">Diese Webseite</a></li>
       <li><a href="#rechte">Deine Rechte</a></li>
-      <li><a href="#praxis">Hinweis für Praxen</a></li>
+      <li><a href="#beruflich">Hinweis für die berufliche Nutzung</a></li>
       <li><a href="#aenderungen">Änderungen</a></li>
     </ol>
   </nav>
@@ -201,9 +202,9 @@
       verschlüsselt, und der Dongle nimmt nach dem Koppeln nur noch dein iPhone an.</p>
     <p>Der Dongle tippt den Text am PC wie eine Tastatur. Er hält ihn dafür nur kurz im Arbeitsspeicher und speichert
       keine Texte dauerhaft. Dauerhaft speichert er nur seinen Namen und die Kopplung mit deinem iPhone.</p>
-    <p>Am PC landet der Text in dem Programm, in das du gerade tippst, zum Beispiel in deiner Praxissoftware. Was
-      dort mit dem Text geschieht, richtet sich nach diesem Programm und deiner Praxis; MedType hat darauf keinen
-      Zugriff.</p>
+    <p>Am PC landet der Text in dem Programm, in das du gerade tippst, zum Beispiel in einer Textverarbeitung, einem
+      E-Mail-Programm oder einer Fachanwendung. Was dort mit dem Text geschieht, richtet sich nach diesem Programm und
+      den Regeln deiner Organisation; MedType hat darauf keinen Zugriff.</p>
     <p>Im Demo-Modus sendet MedType nichts per Bluetooth.</p>
   </section>
 
@@ -257,7 +258,8 @@
     <p>Schreibst du uns eine E-Mail, verarbeiten wir deine E-Mail-Adresse und deine Nachricht, um dir zu antworten
       (Art. 6 Abs. 1 lit. b und f DSGVO). Wir löschen die Nachricht, wenn deine Frage erledigt ist und keine
       gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
-    <div class="note">Bitte schick uns keine Patientendaten – auch nicht in Bildschirmfotos.</div>
+    <div class="note">Bitte schick uns keine vertraulichen oder personenbezogenen Daten – auch nicht in
+      Bildschirmfotos.</div>
   </section>
 
   <section class="card" aria-labelledby="webseite">
@@ -281,15 +283,16 @@
       dem du wohnst oder arbeitest (Art. 77 DSGVO).</p>
   </section>
 
-  <section class="card" aria-labelledby="praxis">
-    <h2 id="praxis"><span class="no">11</span>Hinweis für Praxen</h2>
-    <p>MedType sieht nicht, was du schreibst. Schreibst du Patientendaten in Bausteine oder Entwürfe, liegen sie auf
-      deinem iPhone. Deshalb:</p>
+  <section class="card" aria-labelledby="beruflich">
+    <h2 id="beruflich"><span class="no">11</span>Hinweis für die berufliche Nutzung</h2>
+    <p>Nutzt du MedType im Beruf, bist du selbst dafür verantwortlich, die Regeln deiner Organisation zu Datenschutz
+      und Vertraulichkeit einzuhalten. MedType sieht nicht, was du schreibst. Schreibst du vertrauliche oder
+      personenbezogene Daten in Bausteine oder Entwürfe, liegen sie auf deinem iPhone. Deshalb:</p>
     <ul>
       <li>Schütz das iPhone mit einem Code. iOS verschlüsselt dann die Daten auf dem Gerät.</li>
-      <li>Leg Bausteine möglichst ohne Patientendaten an, zum Beispiel als Vorlage mit Lücken.</li>
+      <li>Leg Bausteine möglichst ohne personenbezogene Daten an, zum Beispiel als Vorlage mit Lücken.</li>
       <li>Lass „Nach dem Senden leeren“ eingeschaltet, damit Entwürfe nicht liegen bleiben.</li>
-      <li>Kläre in deiner Praxis, ob Backups des iPhones Praxisdaten enthalten dürfen.</li>
+      <li>Kläre in deiner Organisation, ob Backups des iPhones dienstliche Daten enthalten dürfen.</li>
     </ul>
   </section>
 
@@ -312,7 +315,7 @@
       </ul>
     </nav>
     <p>© 2026 Leonard Biron · <a href="mailto:bironleonard5@gmail.com">bironleonard5@gmail.com</a></p>
-    <p class="fine">MedType ist ein Eingabewerkzeug und kein Medizinprodukt. iPhone, iPad und App Store sind Marken der
+    <p class="fine">iPhone, iPad und App Store sind Marken der
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>

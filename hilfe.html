@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>MedType – Hilfe</title>
-<meta name="description" content="Hilfe zu MedType: das iPhone als Tastatur für den Praxis-PC. Voraussetzungen, erste Schritte, Koppeln, Dongle-Update und häufige Fragen.">
+<meta name="description" content="Hilfe zu MedType: das iPhone oder iPad als Tastatur für deinen PC. Voraussetzungen, erste Schritte, Koppeln, Dongle-Update und häufige Fragen.">
 <meta name="theme-color" content="#e0261f" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#9e1a1f" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
@@ -35,7 +35,8 @@
 
   main {
     max-width: calc(var(--measure) + 2 * var(--gutter));
-    margin: -1.5rem auto 0;
+    /* Der Inhalt beginnt mit Abstand unter dem roten Band (nicht hineinragend). */
+    margin: 1.75rem auto 0;
     padding: 0 var(--gutter) 3rem;
   }
   .card {
@@ -142,7 +143,7 @@
     </div>
     <div class="hero">
       <h1>Hilfe zu MedType</h1>
-      <p>Dein iPhone als Tastatur für den Praxis-PC. Hier findest du, was du brauchst, wie du loslegst und was bei
+      <p>Dein iPhone oder iPad als Tastatur für deinen PC. Hier findest du, was du brauchst, wie du loslegst und was bei
         Problemen hilft.</p>
     </div>
   </div>
@@ -163,8 +164,8 @@
       <li><strong>Live tippen:</strong> Jeder Buchstabe erscheint sofort am PC.</li>
       <li><strong>Bausteine:</strong> häufige Texte speichern und mit einem Tipp einfügen.</li>
     </ul>
-    <p class="muted">MedType ist ein Eingabewerkzeug. Die App wertet keine Texte aus, gibt keine medizinischen
-      Empfehlungen und ist kein Medizinprodukt.</p>
+    <p class="muted">Praktisch für alle, die viel am PC schreiben – im Büro, in der Verwaltung oder bei der
+      Dokumentation.</p>
   </section>
 
   <section class="card" aria-labelledby="brauchst">
@@ -172,7 +173,7 @@
     <ul>
       <li>den <strong>MedType-USB-Dongle</strong>, eingesteckt direkt am PC</li>
       <li>einen <strong>Windows-PC mit deutscher Tastaturbelegung (QWERTZ)</strong>, Sprache „Deutsch
-        (Deutschland)“. Für PCs mit US-Tastaturbelegung gibt es eine eigene Dongle-Variante.</li>
+        (Deutschland)“</li>
       <li>ein <strong>iPhone oder iPad mit iOS 17</strong> oder neuer, Bluetooth eingeschaltet</li>
     </ul>
     <p class="muted">Ein Konto oder eine Internetverbindung brauchst du nicht.</p>
@@ -287,7 +288,7 @@
     <details>
       <summary>Kann ich mehrere Dongles nutzen?</summary>
       <div>
-        <p>Ja. Gib jedem Dongle einen eigenen Namen, z. B. „Empfang“ oder „Behandlung 2“: <span class="path">Einstellungen
+        <p>Ja. Gib jedem Dongle einen eigenen Namen, z. B. „Büro“ oder „Schreibtisch 2“: <span class="path">Einstellungen
           › Dongle-Zeile antippen › Name</span>. Zu einem anderen Dongle wechselst du unter
           <span class="path">Einstellungen › Dongle-Zeile antippen › Anderen Dongle wählen …</span>. Jeder Dongle ist
           mit genau einem iPhone gekoppelt.</p>
@@ -308,19 +309,11 @@
     <details>
       <summary>Am PC kommen falsche Zeichen an (y und z vertauscht, Sonderzeichen falsch).</summary>
       <div>
-        <p>Die Tastaturbelegung des PCs passt nicht zum Dongle. Der normale Dongle tippt für
+        <p>Die Tastaturbelegung des PCs passt nicht zum Dongle. Der Dongle tippt für
           <strong>Deutsch (Deutschland), QWERTZ</strong>. Stell die Belegung in Windows unter
           <span class="path">Einstellungen › Zeit und Sprache › Sprache und Region</span> ein.</p>
         <p>Bei Remote Desktop oder Citrix zählt die Belegung der Remote-Sitzung. Schweizer oder andere deutsche
           Varianten werden nicht unterstützt.</p>
-      </div>
-    </details>
-
-    <details>
-      <summary>Mein PC hat eine US-Tastatur.</summary>
-      <div>
-        <p>Dafür gibt es eine eigene Dongle-Variante. Umlaute und ß kann sie nicht tippen. Updates für diese Variante
-          kommen nicht per App, sondern einmal am PC – schreib uns dafür an die E-Mail-Adresse unten.</p>
       </div>
     </details>
 
@@ -419,7 +412,8 @@
         <p>Bausteine und Entwürfe bleiben auf deinem iPhone. MedType hat keinen Server und kein Konto; Texte gehen nur
           per Bluetooth an deinen eigenen Dongle. Am PC landen sie in dem Programm, in das du tippst. Mehr dazu in der
           <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
-        <p>Schütz dein iPhone mit einem Code, wenn du Patientendaten in Bausteinen oder Entwürfen hast.</p>
+        <p>Schütz dein iPhone mit einem Code, wenn du vertrauliche oder personenbezogene Daten in Bausteinen oder
+          Entwürfen hast.</p>
       </div>
     </details>
 
@@ -444,7 +438,8 @@
     <h2 id="kontakt">Anbieter und Kontakt</h2>
     <p><strong>Leonard Biron</strong></p>
     <p>E-Mail: <a href="mailto:bironleonard5@gmail.com">bironleonard5@gmail.com</a></p>
-    <div class="note" style="margin-top:.9rem">Bitte schick uns keine Patientendaten – auch nicht in Bildschirmfotos.
+    <div class="note" style="margin-top:.9rem">Bitte schick uns keine vertraulichen oder personenbezogenen Daten – auch
+      nicht in Bildschirmfotos.
       Beschreib das Problem und nenne die Meldung, die MedType zeigt, und die Version unter
       <span class="path">Einstellungen › Info</span>.</div>
   </section>
@@ -463,7 +458,7 @@
       </ul>
     </nav>
     <p>© 2026 Leonard Biron · <a href="mailto:bironleonard5@gmail.com">bironleonard5@gmail.com</a></p>
-    <p class="fine">MedType ist ein Eingabewerkzeug und kein Medizinprodukt. iPhone, iPad und App Store sind Marken der
+    <p class="fine">iPhone, iPad und App Store sind Marken der
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>
