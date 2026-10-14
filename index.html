@@ -5,291 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>MedType – Vom iPhone direkt in den PC</title>
-<meta name="description" content="MedType macht dein iPhone zur Tastatur für den Praxis-PC: vorschreiben, live tippen, diktieren oder Bausteine einfügen – der MedType-Dongle tippt es am PC in jedes Programm.">
+<meta name="description" content="MedType macht dein iPhone zur Tastatur für den Praxis-PC: vorschreiben, live tippen, diktieren oder Bausteine einfügen – der MedType-Dongle tippt es am PC in jedem Programm, in das du tippen kannst.">
 <meta name="theme-color" content="#e0261f" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#9e1a1f" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:site_name" content="MedType">
 <meta property="og:title" content="MedType – Vom iPhone direkt in den PC">
-<meta property="og:description" content="Tippen, diktieren, Bausteine – der MedType-Dongle tippt es am PC in jedes Programm. Keine Cloud, kein Konto.">
-<meta property="og:image" content="assets/og-image.jpg">
+<meta property="og:description" content="Tippen, diktieren, Bausteine – der MedType-Dongle tippt es am PC in jedem Programm, in das du tippen kannst. Keine Cloud, kein Konto.">
+<meta property="og:url" content="https://medtype-app.github.io/">
+<meta property="og:image" content="https://medtype-app.github.io/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="MedType-App-Icon, der Satz „Vom iPhone direkt in den PC.“ und zwei iPhones mit der App">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-64.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="canonical" href="https://medtype-app.github.io/">
 <link rel="stylesheet" href="assets/site.css">
-<style>
-  .home { --page-w: var(--wide); }
-
-  /* Startbereich */
-  .hero-band { overflow-x: clip; }
-  .hero-band::before,
-  .hero-band::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
-  .hero-band::before {
-    background: radial-gradient(90% 40% at 50% 100%, rgba(255, 59, 48, .75), transparent 70%);
-  }
-  .hero-band::after {
-    background-image: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1.6px);
-    background-size: 22px 22px;
-    -webkit-mask-image: linear-gradient(180deg, transparent, #000 35%, transparent);
-    mask-image: linear-gradient(180deg, transparent, #000 35%, transparent);
-  }
-  .hero-band .band-inner { padding-bottom: 0; }
-  .hero { display: grid; gap: 2.75rem; padding-top: 2.75rem; }
-  .hero-app {
-    display: flex; align-items: center; gap: .9rem;
-    margin: 0 0 1.5rem;
-    font-size: 1.3rem; font-weight: 700; letter-spacing: -.01em;
-  }
-  .hero-icon {
-    width: 72px; height: 72px;
-    border-radius: 22.5%;
-    box-shadow: 0 12px 30px -8px rgba(60, 0, 10, .6), 0 0 0 1px rgba(255, 255, 255, .4);
-  }
-  .hero h1 {
-    font-size: clamp(2.5rem, 1.3rem + 5.6vw, 4.75rem);
-    font-weight: 800;
-    line-height: 1.02;
-    letter-spacing: -.035em;
-    margin: 0 0 1.2rem;
-    text-wrap: balance;
-  }
-  .hero-lead {
-    font-size: clamp(1.1rem, 1rem + .5vw, 1.3rem);
-    line-height: 1.5;
-    max-width: 33rem;
-    margin: 0 0 2rem;
-  }
-  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem 1.5rem; }
-  .status {
-    display: inline-flex; align-items: center; gap: .65rem;
-    margin: 0;
-    padding: .7rem 1.15rem .7rem 1rem;
-    border-radius: 999px;
-    background: #ffffff; color: var(--on-pill);
-    font-weight: 700;
-    box-shadow: 0 12px 26px -12px rgba(60, 0, 10, .7);
-  }
-  .status-dot { position: relative; width: .6rem; height: .6rem; border-radius: 50%; background: var(--brand-1); }
-  .hero-link {
-    color: var(--on-band); font-weight: 600;
-    text-underline-offset: .3em;
-    padding: .5rem 0;
-  }
-  .hero-link span { display: inline-block; transition: transform .25s var(--ease-out); }
-  .hero-link:hover span { transform: translateX(4px); }
-
-  .hero-visual {
-    --phone: min(44vw, 230px);
-    display: grid; place-items: center;
-    margin-bottom: -5.5rem;
-  }
-  .hero-visual .phone { grid-area: 1 / 1; width: var(--phone); }
-  .phone--back { translate: -40% -3%; rotate: -8deg; scale: .9; }
-  .phone--front { translate: 22% 4%; rotate: 4deg; }
-
-  /* Handy-Rahmen für Bildschirmfotos */
-  .phone {
-    position: relative;
-    overflow: hidden;
-    border: 7px solid var(--phone-bezel);
-    border-radius: 15% / 7%;
-    background: var(--phone-bezel);
-    box-shadow: var(--shadow-phone);
-  }
-  .phone img { width: 100%; }
-
-  /* Abschnitte */
-  .section { padding: 4.5rem 0; }
-  .section-head { max-width: 40rem; margin-bottom: 2.5rem; }
-  .kicker {
-    display: flex; align-items: center; gap: .7rem;
-    margin: 0 0 .9rem;
-    color: var(--accent);
-    font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  }
-  .kicker::before {
-    content: ""; flex: none; width: 1.75rem; height: 3px; border-radius: 2px;
-    background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
-  }
-  .display {
-    font-size: clamp(1.9rem, 1.2rem + 3vw, 3.1rem);
-    font-weight: 800;
-    line-height: 1.08;
-    letter-spacing: -.03em;
-    margin: 0 0 1rem;
-    text-wrap: balance;
-  }
-  .lede { font-size: 1.1rem; color: var(--muted); margin: 0; }
-  .path { font-weight: 600; }
-
-  /* So funktioniert's */
-  .how { padding-top: calc(5.5rem + 3.5rem); }
-  .how-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.25rem; }
-  .how-steps li { position: relative; padding-top: 4.4rem; }
-  .how-no {
-    position: absolute; top: 0; left: 0;
-    font-size: 3.6rem; font-weight: 800; line-height: 1; letter-spacing: -.05em;
-    background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
-  }
-  .how-steps h3 { font-size: 1.25rem; line-height: 1.25; letter-spacing: -.01em; margin: 0 0 .45rem; }
-  .how-steps p { margin: 0; color: var(--muted); }
-
-  /* Funktionen: abwechselnd Bild und Text */
-  .features { padding-bottom: 1rem; }
-  .feature { display: grid; gap: 2rem; align-items: center; padding: 2.5rem 0; }
-  .feature-media { margin: 0; }
-  .stage {
-    position: relative;
-    display: flex; justify-content: center; align-items: flex-start; gap: .9rem;
-    aspect-ratio: 4 / 5;
-    padding: 2.75rem 1.5rem 0;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-    background:
-      radial-gradient(110% 70% at 15% 0%, rgba(255, 59, 48, .22), transparent 62%),
-      linear-gradient(165deg, var(--surface-2), var(--accent-soft));
-  }
-  .stage .phone { width: min(62%, 270px); flex: none; }
-  .stage--duo { gap: .6rem; padding-inline: 1rem; }
-  .stage--duo .phone { width: min(50%, 240px); }
-  .stage--duo .phone + .phone { margin-top: 2.75rem; }
-  .feature-media figcaption { margin-top: .7rem; color: var(--muted); font-size: .9rem; }
-  .feature-copy p { margin: 0 0 1rem; }
-  .feature-copy p:last-child { margin-bottom: 0; }
-
-  /* Außerdem */
-  .extras { padding-top: 2.5rem; }
-  .extras h2 { font-size: 1.35rem; letter-spacing: -.01em; margin: 0 0 1rem; }
-  .extras ul {
-    list-style: none; margin: 0; padding: 0;
-    display: grid; gap: 0 2rem;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  }
-  .extras li { border-top: 1px solid var(--line); padding: .95rem 0 1.1rem; color: var(--muted); }
-  .extras strong { display: block; color: var(--text); }
-
-  /* Datenschutz */
-  .ink {
-    background:
-      radial-gradient(70% 90% at 100% 0%, rgba(200, 16, 46, .5), transparent 62%),
-      var(--ink);
-    color: var(--ink-text);
-  }
-  .ink .kicker { color: var(--ink-accent); }
-  .ink a { color: var(--ink-accent); font-weight: 600; }
-  .ink .display { max-width: 18ch; }
-  .ink-list {
-    list-style: none; margin: 2.5rem 0 2rem; padding: 0;
-    display: grid; gap: 1.5rem 2.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-  }
-  .ink-list li { border-top: 2px solid rgba(255, 255, 255, .2); padding-top: 1.1rem; color: var(--ink-muted); }
-  .ink-list strong { display: block; color: var(--ink-text); font-size: 1.15rem; margin-bottom: .35rem; }
-
-  /* Voraussetzungen */
-  .needs-list {
-    list-style: none; margin: 0 0 2rem; padding: 0;
-    display: grid; gap: 2rem;
-  }
-  .needs-list li { display: grid; grid-template-columns: auto 1fr; gap: 0 1rem; align-items: start; align-content: start; }
-  .needs-icon {
-    grid-row: span 2;
-    width: 3.25rem; height: 3.25rem;
-    display: grid; place-items: center;
-    border-radius: 16px;
-    background: var(--accent-soft); color: var(--accent);
-  }
-  .needs-icon svg { width: 1.6rem; height: 1.6rem; }
-  .needs-list h3 { font-size: 1.15rem; line-height: 1.3; margin: .1rem 0 .35rem; }
-  .needs-list p { margin: 0; color: var(--muted); }
-  .needs-note {
-    margin: 0 0 1rem;
-    padding: 1rem 1.2rem;
-    border-left: 4px solid var(--accent);
-    border-radius: 8px;
-    background: var(--accent-soft);
-  }
-  .disclaimer { margin: 0; color: var(--muted); font-size: .92rem; }
-
-  /* Fragen */
-  .ask { padding-top: 1rem; }
-  .ask-inner {
-    display: grid; gap: 1rem 3rem;
-    border-top: 4px solid transparent;
-    border-image: linear-gradient(90deg, var(--brand-1), var(--brand-2)) 1;
-    padding-top: 3rem;
-  }
-  .ask-title { font-size: clamp(2.6rem, 1.6rem + 5vw, 5rem); margin: 0; }
-  .ask-lead { font-size: 1.15rem; margin: 0 0 1rem; }
-  .mail {
-    display: inline-block;
-    margin: 0 0 1.25rem;
-    font-size: clamp(1.25rem, 1rem + 1.6vw, 1.9rem);
-    font-weight: 750;
-    letter-spacing: -.02em;
-    overflow-wrap: anywhere;
-  }
-  .ask p.muted { color: var(--muted); margin: 0; }
-
-  @media (min-width: 40rem) {
-    .how-steps { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-    .how-steps li:not(:last-child)::after {
-      content: ""; position: absolute; top: 1.8rem; left: 4.6rem; right: -1rem;
-      height: 2px; background: linear-gradient(90deg, var(--line), transparent);
-    }
-    .needs-list { grid-template-columns: repeat(3, 1fr); }
-    .needs-list li { grid-template-columns: 1fr; }
-    .needs-icon { grid-row: auto; margin-bottom: .9rem; }
-  }
-
-  @media (min-width: 56rem) {
-    .hero { grid-template-columns: 1.1fr .9fr; align-items: center; gap: 2rem; padding-top: 2rem; }
-    .hero-copy { padding-bottom: 4.5rem; }
-    .hero-band::before {
-      background: radial-gradient(45% 75% at 80% 55%, rgba(255, 59, 48, .8), transparent 70%);
-    }
-    .hero-visual { --phone: clamp(220px, 21vw, 275px); margin-bottom: -7rem; padding-top: 1.5rem; }
-    .hero-icon { width: 84px; height: 84px; }
-    .how { padding-top: calc(7rem + 4.5rem); }
-    .feature { grid-template-columns: 1fr 1fr; gap: 4.5rem; padding: 4rem 0; }
-    .feature--flip .feature-media { order: 2; }
-    .stage { aspect-ratio: 1 / 1; }
-    .ask-inner { grid-template-columns: auto 1fr; align-items: start; }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .hero-visual { animation: rise 1s var(--ease-out) both; }
-    .status-dot::after {
-      content: ""; position: absolute; inset: 0; border-radius: 50%;
-      background: var(--brand-1);
-      animation: ping 2.6s var(--ease-out) infinite;
-    }
-    @supports (animation-timeline: view()) {
-      .stage .phone {
-        animation: lift linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 90%;
-      }
-    }
-  }
-  @keyframes rise { from { transform: translateY(40px); } }
-  @keyframes ping { 0% { transform: scale(1); opacity: .7; } 80%, 100% { transform: scale(2.8); opacity: 0; } }
-  @keyframes lift { from { transform: translateY(3.5rem); } }
-
-  @media print {
-    .hero-visual, .stage { display: none; }
-    .ink { background: none; color: var(--text); }
-  }
-</style>
+<link rel="stylesheet" href="assets/home.css">
 </head>
 <body class="home">
-<a class="skip" href="#inhalt">Zum Inhalt springen</a>
+<a class="skip" href="#titel">Zum Inhalt springen</a>
 
 <header class="band hero-band">
   <div class="band-inner">
@@ -313,13 +50,17 @@
           <img class="hero-icon" src="assets/icon-256.png" width="84" height="84" alt="">
           MedType
         </p>
-        <h1>Vom iPhone direkt in den PC.</h1>
-        <p class="hero-lead">Du tippst, diktierst oder fügst Bausteine ein – der MedType-Dongle tippt es am PC in
-          jedes Programm, genau dort, wo der Cursor steht.</p>
+        <h1 id="titel">Vom iPhone direkt in den PC.</h1>
+        <p class="hero-lead">Du tippst, diktierst oder fügst Bausteine ein – der MedType-Dongle tippt es am PC genau
+          dort, wo der Cursor steht. In jedem Programm, in das du tippen kannst.</p>
         <div class="hero-actions">
-          <p class="status"><span class="status-dot" aria-hidden="true"></span>Bald im App Store</p>
+          <a class="hero-cta" href="mailto:bironleonard5@gmail.com?subject=Dongle%20f%C3%BCr%20MedType">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
+            Dongle anfragen
+          </a>
           <a class="hero-link" href="hilfe.html">Zur Hilfe <span aria-hidden="true">→</span></a>
         </div>
+        <p class="status"><span class="status-dot" aria-hidden="true"></span>Bald im App Store</p>
       </div>
 
       <div class="hero-visual">
@@ -350,24 +91,74 @@
         <p class="kicker">In drei Schritten</p>
         <h2 class="display" id="so">So funktioniert’s</h2>
       </div>
-      <ol class="how-steps">
+
+      <figure class="flow" data-play>
+        <div class="flow-visual" role="img"
+          aria-label="Auf dem iPhone steht in MedType der Text „Blutdruck 128/82“. Er geht verschlüsselt per Bluetooth an den MedType-Dongle, der am PC steckt, und erscheint dort im Textfeld, wo der Cursor steht.">
+          <div class="flow-node flow-phone">
+            <div class="flow-screen">
+              <span class="flow-status">Verbunden</span>
+              <span class="flow-draft">Blutdruck 128/82</span>
+              <span class="flow-send">Senden</span>
+            </div>
+          </div>
+          <div class="flow-link">
+            <span class="flow-packets"><i></i><i></i><i></i></span>
+            <span class="flow-label">Bluetooth, verschlüsselt</span>
+          </div>
+          <div class="flow-node flow-dongle">
+            <svg class="flow-dongle-art" viewBox="0 0 132 52">
+              <rect class="d-body" x="92" y="11" width="38" height="30" rx="3"/>
+              <path class="d-pin" d="M104 15.5h22M104 22h22M104 30h22M104 36.5h22"/>
+              <rect class="d-body" x="2" y="3" width="96" height="46" rx="11"/>
+              <circle class="d-button" cx="30" cy="26" r="8"/>
+              <circle class="d-led-glow" cx="66" cy="26" r="10"/>
+              <circle class="d-led" cx="66" cy="26" r="4.5"/>
+            </svg>
+            <span class="flow-name">MedType-Dongle</span>
+          </div>
+          <div class="flow-link">
+            <span class="flow-packets"><i></i><i></i><i></i></span>
+            <span class="flow-label">USB, wie eine Tastatur</span>
+          </div>
+          <div class="flow-node flow-pc">
+            <div class="flow-monitor">
+              <div class="flow-window">
+                <span class="flow-bar"><i></i><i></i><i></i></span>
+                <span class="flow-line"><span class="flow-typed">Blutdruck 128/82</span><span class="flow-caret"></span></span>
+              </div>
+            </div>
+            <span class="flow-stand"></span>
+          </div>
+        </div>
+        <figcaption>Du schreibst auf dem iPhone – der Dongle tippt es am PC, als säße dort jemand an der Tastatur.
+          Die LED am Dongle zeigt, was gerade passiert.</figcaption>
+      </figure>
+
+      <ol class="how-steps" data-play>
         <li>
-          <span class="how-no" aria-hidden="true">1</span>
+          <span class="how-led how-led--slow" aria-hidden="true">1</span>
           <h3>Dongle in den PC stecken</h3>
           <p>Der MedType-Dongle meldet sich am Windows-PC wie eine normale USB-Tastatur. Installieren musst du dort
             nichts.</p>
+          <p class="led-note"><span class="led-dot led-dot--blue" aria-hidden="true"></span>LED blinkt langsam blau:
+            bereit</p>
         </li>
         <li>
-          <span class="how-no" aria-hidden="true">2</span>
+          <span class="how-led how-led--fast" aria-hidden="true">2</span>
           <h3>iPhone koppeln</h3>
           <p>Taste am Dongle 3 Sekunden halten, in MedType den Dongle wählen und die Kopplung bestätigen. Das machst
             du nur einmal – danach verbindet sich MedType von selbst.</p>
+          <p class="led-note"><span class="led-dot led-dot--blue" aria-hidden="true"></span>LED blinkt schnell blau:
+            Koppelmodus</p>
         </li>
         <li>
-          <span class="how-no" aria-hidden="true">3</span>
+          <span class="how-led how-led--green" aria-hidden="true">3</span>
           <h3>Tippen</h3>
           <p>Klick am PC in das Feld, in das der Text soll, und schreib in MedType. Der Text erscheint genau dort, wo
             der Cursor steht.</p>
+          <p class="led-note"><span class="led-dot led-dot--green" aria-hidden="true"></span>LED grün: verbunden,
+            flackert beim Tippen</p>
         </li>
       </ol>
     </div>
@@ -377,7 +168,7 @@
 
     <section class="feature" aria-labelledby="live">
       <figure class="feature-media">
-        <div class="stage">
+        <div class="stage stage--dark">
           <div class="phone">
             <picture>
               <source type="image/webp" srcset="assets/08-live-dunkel.webp">
@@ -391,7 +182,7 @@
       <div class="feature-copy">
         <p class="kicker">Live tippen</p>
         <h2 class="display" id="live">Jeder Buchstabe erscheint sofort am PC.</h2>
-        <p>Im Modus „Live tippen“ landet jede Eingabe direkt am PC-Cursor. Löschen und Enter wirken direkt dort,
+        <p>Im Modus „Live tippen“ landet jede Eingabe sofort am PC-Cursor. Löschen und Enter wirken direkt dort,
           und die Pfeiltasten über der Tastatur bewegen den Cursor. Fertige Wörter wandern in einen Verlauf darüber –
           so behältst du den Überblick.</p>
         <p>Diktieren geht auch: Nutze das Mikrofon der iPhone-Tastatur wie gewohnt, MedType tippt den diktierten
@@ -414,7 +205,7 @@
       <div class="feature-copy">
         <p class="kicker">Vorschreiben</p>
         <h2 class="display" id="vorschreiben">Erst in Ruhe schreiben, dann senden.</h2>
-        <p>Schreib, korrigier oder diktier deinen Text in Ruhe. Mit „Baustein einfügen“ setzt du gespeicherte Texte
+        <p>Schreib, korrigiere oder diktiere deinen Text in Ruhe. Mit „Baustein einfügen“ setzt du gespeicherte Texte
           direkt an die Cursorposition in deinem Entwurf.</p>
         <p>Getippt wird erst, wenn du auf „Senden“ tippst. Du siehst den Fortschritt und kannst jederzeit abbrechen.
           Danach leert MedType den Entwurf – wenn du das nicht willst, schaltest du es ab.</p>
@@ -423,7 +214,7 @@
 
     <section class="feature" aria-labelledby="bausteine">
       <figure class="feature-media">
-        <div class="stage">
+        <div class="stage stage--wide">
           <div class="phone">
             <picture>
               <source type="image/webp" srcset="assets/05-bausteine.webp">
@@ -475,12 +266,12 @@
     <section class="extras" aria-labelledby="extras">
       <h2 id="extras">Außerdem an Bord</h2>
       <ul>
-        <li><strong>Tippgeschwindigkeit einstellbar</strong> damit auch langsamere Programme mitkommen.</li>
-        <li><strong>Pause nach Zeilenumbruch</strong> für Programme, die nach Enter einen Moment brauchen.</li>
-        <li><strong>Vier App-Icons</strong> Leuchtrot, Warnweste, Nachtschicht und Blaulicht.</li>
-        <li><strong>Hell und dunkel</strong> im Hoch- und Querformat, mit VoiceOver bedienbar.</li>
-        <li><strong>Mehrere Dongles</strong> zum Beispiel einer am Empfang und einer im Behandlungszimmer.</li>
-        <li><strong>Demo-Modus</strong> zum Ausprobieren ohne Dongle.</li>
+        <li><strong>Tippgeschwindigkeit einstellbar.</strong> So kommen auch langsamere Programme mit.</li>
+        <li><strong>Pause nach Zeilenumbruch.</strong> Für Programme, die nach Enter einen Moment brauchen.</li>
+        <li><strong>Vier App-Icons.</strong> Leuchtrot, Warnweste, Nachtschicht und Blaulicht.</li>
+        <li><strong>Hell und dunkel.</strong> Im Hoch- und Querformat, mit VoiceOver bedienbar.</li>
+        <li><strong>Mehrere Dongles.</strong> Zum Beispiel einer am Empfang und einer im Behandlungszimmer.</li>
+        <li><strong>Demo-Modus.</strong> Zum Ausprobieren ohne Dongle.</li>
       </ul>
     </section>
 
@@ -489,13 +280,13 @@
   <section class="section ink" aria-labelledby="daten">
     <div class="wrap">
       <p class="kicker">Datenschutz</p>
-      <h2 class="display" id="daten">Keine Cloud, kein Konto – alles bleibt auf dem iPhone.</h2>
+      <h2 class="display" id="daten">Keine Cloud, kein Konto, kein Server.</h2>
       <ul class="ink-list">
-        <li><strong>Auf deinem iPhone</strong> Bausteine und Entwürfe bleiben auf deinem Gerät. MedType hat keinen
+        <li><strong>Auf deinem iPhone.</strong> Bausteine und Entwürfe bleiben auf deinem Gerät. MedType hat keinen
           Server und braucht kein Internet.</li>
-        <li><strong>Nur an deinen Dongle</strong> Texte gehen per Bluetooth verschlüsselt an deinen eigenen Dongle.
+        <li><strong>Nur an deinen Dongle.</strong> Texte gehen per Bluetooth verschlüsselt an deinen eigenen Dongle.
           Nach dem Koppeln nimmt er nur noch dein iPhone an und speichert keine Texte dauerhaft.</li>
-        <li><strong>Nichts für uns</strong> Keine Werbung, kein Tracking, keine Analyse. Wir bekommen nichts von
+        <li><strong>Nichts landet bei uns.</strong> Keine Werbung, kein Tracking, keine Analyse. Wir bekommen nichts von
           dem, was du schreibst.</li>
       </ul>
       <p><a href="datenschutz.html">Zur Datenschutzerklärung <span aria-hidden="true">→</span></a></p>
@@ -529,7 +320,7 @@
           </span>
           <h3>Windows-PC mit deutscher Tastatur&shy;belegung</h3>
           <p>QWERTZ, Sprache „Deutsch (Deutschland)“. Für PCs mit US-Tastaturbelegung gibt es eine eigene
-            Dongle-Variante; sie wird nicht per App aktualisiert.</p>
+            Dongle-Variante (ohne Umlaute und ß); sie wird nicht per App aktualisiert.</p>
         </li>
       </ul>
       <p class="needs-note">Kein Konto, kein Internet nötig. Ohne Dongle probierst du MedType im Demo-Modus aus:
@@ -570,5 +361,22 @@
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>
+<script>
+  /* Spielt die kleinen Abläufe ab, sobald sie ins Bild kommen. Ohne Skript bleibt alles im Endzustand stehen. */
+  (function () {
+    if (!("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-playing");
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll("[data-play]").forEach(function (el) {
+      el.classList.add("is-armed");
+      io.observe(el);
+    });
+  })();
+</script>
 </body>
 </html>
