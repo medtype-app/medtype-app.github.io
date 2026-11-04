@@ -167,22 +167,32 @@
 }
 .tiles li { margin: 0; padding: 1rem 1.1rem; border-radius: var(--radius); background: var(--surface-2); }
 
-/* Schritte */
-ol.steps { list-style: none; counter-reset: step; margin: 0 0 1.25rem; padding: 0; }
-ol.steps li { counter-increment: step; position: relative; margin: 0; padding: .4rem 0 1.5rem 3.75rem; }
-ol.steps li::before {
-  content: counter(step);
-  position: absolute; left: 0; top: 0;
-  width: 2.6rem; height: 2.6rem; border-radius: 50%;
-  display: grid; place-items: center;
-  background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
-  color: #ffffff;
-  font-weight: 800;
-  box-shadow: 0 0 0 5px var(--accent-soft);
+/* Erste Schritte: Nummer, Bild und Text wie „So funktioniert’s“ auf der Startseite. Das Bild zeigt den Dongle
+   im USB-Anschluss und das Smartphone in einer kurzen, dauerhaft laufenden Szene (devices.css). */
+ol.guide { list-style: none; margin: 0 0 1.25rem; padding: 0; }
+ol.guide > li {
+  --dv-size: .48rem;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1rem .9rem; align-items: start;
+  margin: 0; padding: 1.75rem 0;
+  border-top: 1px solid var(--line);
 }
-ol.steps li:not(:last-child)::after {
-  content: ""; position: absolute; left: calc(1.3rem - 1px); top: 3.25rem; bottom: .35rem;
-  width: 2px; background: var(--line);
+ol.guide > li:first-child { border-top: 0; padding-top: .75rem; }
+.guide-no { color: var(--accent); font-size: 1.6rem; font-weight: 800; line-height: 1; min-width: .8em; }
+.guide-visual { display: flex; align-items: center; min-height: 3rem; }
+.guide-visual > .dv-stick { width: 10.5rem; }
+.guide-text { grid-column: 1 / -1; }
+@media (min-width: 46rem) {
+  ol.guide > li { --dv-size: .58rem; grid-template-columns: 1.4rem 18rem minmax(0, 1fr); gap: 1.75rem; align-items: center; }
+  .guide-no { align-self: start; }
+  .guide-text { grid-column: 3; }
+}
+
+/* Text mit Bild daneben (Demo-Modus) */
+.doc-split { display: grid; gap: 1.5rem; }
+.doc-split-visual { display: flex; justify-content: center; --dv-size: .52rem; }
+@media (min-width: 46rem) {
+  .doc-split { grid-template-columns: minmax(0, 1fr) auto; gap: 2.5rem; align-items: start; }
+  .doc-split-visual { --dv-size: .58rem; }
 }
 
 /* Tabellen */
@@ -201,18 +211,9 @@ th {
 }
 td:first-child { width: 40%; font-weight: 600; }
 
-/* LED-Punkte */
-.led {
-  --c: #1f6fe5;
-  display: inline-block; flex: none;
-  width: .8rem; height: .8rem; border-radius: 50%;
-  margin-right: .65rem; vertical-align: -.05em;
-  background: var(--c);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent), 0 0 12px color-mix(in srgb, var(--c) 55%, transparent);
-}
-.led--green { --c: #18a34a; }
-.led--red { --c: #e0261f; }
-.led--off { background: transparent; box-shadow: inset 0 0 0 2px var(--muted); }
+/* LED-Tabelle: Dongle, dessen LED so leuchtet wie beschrieben (devices.css) */
+.led-state { display: flex; align-items: center; gap: .8rem; }
+.led-state .dv-stick { flex: none; width: 4.4rem; }
 
 /* Häufige Fragen */
 .faq-group { margin: 1.5rem 0 0; scroll-margin-top: 1.25rem; }
@@ -303,7 +304,7 @@ mark { background: color-mix(in srgb, var(--brand-1) 22%, transparent); color: i
 }
 
 @media print {
-  .doc-band::before, .doc-band::after, .hero-search, .topics, .toc { display: none; }
+  .doc-band::before, .doc-band::after, .hero-search, .topics, .toc, .guide-visual, .doc-split-visual { display: none; }
   .doc-layout { display: block; padding-top: 1rem; }
   .ink-panel { background: none; color: var(--text); border: 1px solid var(--line); }
   details > div { display: block !important; }

@@ -46,10 +46,22 @@
     }
     return { text: out, map: map };
   }
+  /* Text ohne Illustrationen (aria-hidden): Beschriftungen in den Bildern sollen keine Treffer liefern */
+  function lesbarerText(el) {
+    var teile = [], w = document.createTreeWalker(el, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+      acceptNode: function (n) {
+        if (n.nodeType === 3) return NodeFilter.FILTER_ACCEPT;
+        return n.getAttribute("aria-hidden") === "true" ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_SKIP;
+      }
+    });
+    while (w.nextNode()) teile.push(w.currentNode.nodeValue);
+    return teile.join("");
+  }
   function eintrag(el, titelEl) {
+    var text = lesbarerText(el);
     return {
       el: el, titelEl: titelEl, titel: titelEl ? titelEl.textContent : "",
-      lang: norm(el.textContent).text, kurz: norm(el.textContent, true).text, warOffen: el.open
+      lang: norm(text).text, kurz: norm(text, true).text, warOffen: el.open
     };
   }
   var abschnitte = Array.prototype.slice.call(document.querySelectorAll("[data-suchbar]")).map(function (s) { return eintrag(s, null); });

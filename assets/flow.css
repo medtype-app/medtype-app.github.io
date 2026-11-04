@@ -17,6 +17,9 @@
   --app-blue: #0a84ff;
   --app-link: #007aff;
   --app-green: #34c759;
+  --app-faint: #c2c2c7;
+  --app-off-bg: rgba(120, 120, 128, .2);
+  --app-off-text: rgba(60, 60, 67, .32);
   /* Tablet-PC */
   --shell-hi: #e8443b;
   --shell-lo: #b81f22;
@@ -39,6 +42,9 @@
     --app-muted: #8e8e93;
     --app-link: #0a84ff;
     --app-green: #30d158;
+    --app-faint: #48484a;
+    --app-off-bg: rgba(120, 120, 128, .3);
+    --app-off-text: rgba(235, 235, 245, .3);
     --shell-hi: #c83a33;
     --shell-lo: #8e181c;
     --bumper: #5d5f64;
@@ -269,6 +275,30 @@
   font-size: .64em; line-height: 1.38;
 }
 .fl-app .fl-count { margin: .38em .35em 0; color: var(--app-muted); font-size: .46em; }
+.fl-toggle {
+  display: flex; align-items: center; justify-content: space-between; gap: .5em;
+  margin-top: .55em; padding: .45em .62em;
+  border-radius: .9em;
+  background: var(--app-card);
+  font-size: .56em;
+}
+.fl-switch { position: relative; flex: none; width: 2.6em; height: 1.55em; border-radius: 99px; background: var(--app-green); }
+.fl-switch::after {
+  content: ""; position: absolute; right: .15em; top: .15em;
+  width: 1.25em; height: 1.25em; border-radius: 50%;
+  background: #ffffff; box-shadow: 0 .1em .3em rgba(0, 0, 0, .25);
+}
+.fl-ph, .fl-count-empty { display: none; }
+.fl-ph { color: var(--app-faint); }
+/* „Nach dem Senden leeren“ ist in der App an: Nach dem Tippen ist das Feld leer und „Senden“ ausgegraut.
+   Während des Tippens ist „Senden“ ebenfalls gesperrt. */
+.flow:not([data-state]) .fl-draft, .flow[data-state="done"] .fl-draft,
+.flow:not([data-state]) .fl-count-full, .flow[data-state="done"] .fl-count-full { display: none; }
+.flow:not([data-state]) .fl-ph, .flow[data-state="done"] .fl-ph,
+.flow:not([data-state]) .fl-count-empty, .flow[data-state="done"] .fl-count-empty { display: inline; }
+.flow:not([data-state]) .fl-send, .flow[data-state="sending"] .fl-send, .flow[data-state="done"] .fl-send {
+  background: var(--app-off-bg); color: var(--app-off-text);
+}
 .fl-space { position: relative; flex: 1; }
 .fl-progress {
   position: absolute; left: 0; right: 0; bottom: .45em;

@@ -1,0 +1,724 @@
+/* MedType – Geräte-Illustrationen für Startseite und Hilfe: der Dongle in der weißen Hülle (LED und Taste
+   hintereinander, wahlweise im USB-Anschluss des PCs) und ein Smartphone mit der MedType-Oberfläche wie in der App.
+   Alles ist Illustration (aria-hidden), die Bedeutung steht immer im Text daneben. Die Schleifen laufen dauerhaft
+   und nur mit CSS. Alle Teile einer Szene dauern gleich lang (6 s) und bleiben so im Takt. Mit „Bewegung
+   reduzieren“ steht jede Szene still im wichtigsten Moment. Größe: Schriftgröße von .dv-pair / .dv-phone (em). */
+
+:root {
+  --dv-led-blue: #2f7bff;
+  --dv-led-green: #2fd158;
+  --dv-led-red: #ff3b30;
+}
+
+/* ---------- Dongle ---------- */
+.dv-stick {
+  display: block;
+  width: 7.5rem; height: auto;
+  overflow: visible;
+  color: var(--dv-led-blue);
+  filter: drop-shadow(0 .3rem .45rem rgba(60, 20, 20, .16));
+}
+.dv-stick--on, .dv-stick--typing, .dv-stick--saved, .dv-stick--send { color: var(--dv-led-green); }
+.dv-stick--reject, .dv-stick--reset, .dv-stick--error { color: var(--dv-led-red); }
+.dv-stick--off .hs-on { opacity: 0; }
+.hs-plug { fill: #1d1d1f; }
+.hs-pins { stroke: #d6b25e; stroke-width: 3.5; stroke-linecap: round; }
+.hs-case { fill: #f6f6f4; stroke: #cfcfcb; stroke-width: 1; }
+.hs-hole { fill: #d4d4cf; }
+.hs-on { fill: currentColor; }
+.hs-button { fill: #fbfbfa; stroke: #d5d5d0; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; }
+/* Seite des PCs mit USB-Anschluss (rot wie der Tablet-PC auf der Startseite) */
+.hs-edge { fill: #dc3a31; }
+.hs-edge-hi { fill: #ef6a5f; }
+.hs-slot { fill: #1d1d1f; }
+/* Finger auf der Taste, Ring zeigt die 3 Sekunden */
+.hs-press { opacity: 0; }
+.hs-finger { fill: rgba(40, 16, 16, .16); }
+.hs-ring { fill: none; stroke: var(--accent, #b00d28); stroke-width: 2.6; stroke-linecap: round; }
+.dv-stick--hold .hs-press { opacity: 1; }
+@media (prefers-color-scheme: dark) {
+  .dv-stick { filter: drop-shadow(0 .3rem .45rem rgba(0, 0, 0, .5)); }
+  .hs-plug { stroke: rgba(255, 255, 255, .22); stroke-width: 1; }
+  .hs-case { fill: #ecebe8; }
+  .hs-edge { fill: #b8302b; }
+  .hs-edge-hi { fill: #d24a42; }
+  .hs-finger { fill: rgba(255, 255, 255, .26); }
+}
+
+/* ---------- Smartphone ----------
+   Nachgebaut nach den Ansichten der App: „Type“ mit Verbindungsstatus oben links, Moduswahl, Hinweis ohne Verbindung,
+   Schreibfeld, „Nach dem Senden leeren“, „Senden“ und Tab-Leiste; „Dongle verbinden“ als halbes Blatt; Einstellungen. */
+.dv-phone {
+  --app-bg: #f2f2f7;
+  --app-card: #ffffff;
+  --app-bar: rgba(250, 250, 252, .96);
+  --app-seg: #e3e3e8;
+  --app-seg-on: #ffffff;
+  --app-text: #000000;
+  --app-muted: #8a8a8e;
+  --app-faint: #c2c2c7;
+  --app-sep: rgba(60, 60, 67, .16);
+  --app-fill: rgba(120, 120, 128, .16);
+  --app-blue: #0a84ff;
+  --app-link: #007aff;
+  --app-green: #34c759;
+  --app-orange: #ff9500;
+  --app-off-bg: rgba(120, 120, 128, .2);
+  --app-off-text: rgba(60, 60, 67, .32);
+  --app-sheet: #f2f2f7;
+  --app-sheet-card: #ffffff;
+  --app-alert: rgba(250, 250, 252, .97);
+  --app-tap: rgba(0, 0, 0, .2);
+  --app-wall: linear-gradient(160deg, #ffd9cf 0%, #f6c7d2 45%, #d9d4f4 100%);
+  position: relative;
+  flex: none;
+  width: 14.5em; height: 30em;
+  padding: .4em;
+  border-radius: 2.3em;
+  background: var(--phone-bezel, #0f0f11);
+  box-shadow: 0 1.4em 2.2em -1.1em rgba(70, 8, 18, .5), 0 .5em 1em -.5em rgba(0, 0, 0, .3),
+    inset 0 0 0 1px rgba(255, 255, 255, .14);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  font-size: var(--dv-size, .5rem);
+  line-height: 1.25;
+  text-align: left;
+  letter-spacing: 0;
+}
+@media (prefers-color-scheme: dark) {
+  .dv-phone {
+    --app-bg: #000000;
+    --app-card: #1c1c1e;
+    --app-bar: rgba(22, 22, 24, .96);
+    --app-seg: #1c1c1e;
+    --app-seg-on: #636366;
+    --app-text: #ffffff;
+    --app-muted: #8e8e93;
+    --app-faint: #48484a;
+    --app-sep: rgba(84, 84, 88, .6);
+    --app-fill: rgba(120, 120, 128, .28);
+    --app-link: #0a84ff;
+    --app-green: #30d158;
+    --app-orange: #ff9f0a;
+    --app-off-bg: rgba(120, 120, 128, .3);
+    --app-off-text: rgba(235, 235, 245, .3);
+    --app-sheet: #1c1c1e;
+    --app-sheet-card: #2c2c2e;
+    --app-alert: rgba(44, 44, 46, .98);
+    --app-tap: rgba(255, 255, 255, .32);
+    --app-wall: linear-gradient(160deg, #4a2230 0%, #2b1c3c 55%, #141a33 100%);
+    box-shadow: 0 1.4em 2.2em -1.1em rgba(0, 0, 0, .85), inset 0 0 0 1px rgba(255, 255, 255, .16);
+  }
+}
+:where(.dv-phone) :where(span, b, i, em) { display: block; font-style: normal; }
+.dv-phone svg { display: block; flex: none; }
+.dv-screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 1.95em;
+  background: var(--app-bg);
+  color: var(--app-text);
+}
+.dv-notch {
+  position: absolute; z-index: 9; left: 50%; top: 0;
+  width: 4.8em; height: 1.2em;
+  translate: -50% 0;
+  border-radius: 0 0 .85em .85em;
+  background: radial-gradient(circle at 70% 45%, #2a3a5c .1em, #0c0e16 .17em, transparent .2em), var(--phone-bezel, #0f0f11);
+}
+.dv-status {
+  position: absolute; z-index: 8; left: 0; right: 0; top: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 2.3em;
+  padding: .15em 1em 0 1.45em;
+}
+.dv-status b { font-size: .6em; font-weight: 700; }
+.dv-status svg { width: 4em; height: auto; fill: currentColor; }
+.dv-battery { fill: var(--app-green); }
+
+/* Symbole in Statusfarben; pulsierende Symbole wie in der App, solange sich der Status von selbst ändert */
+.dv-ico { display: grid; place-items: center; flex: none; width: 1.3em; height: 1.3em; }
+.dv-ico svg { width: 100%; height: 100%; }
+.dv-ico--muted { color: var(--app-muted); }
+.dv-ico--orange { color: var(--app-orange); }
+.dv-ico--blue { color: var(--app-link); }
+.dv-ok circle { fill: var(--app-green); }
+.dv-ok path { fill: none; stroke: #ffffff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.dv-spinner { color: var(--app-muted); }
+
+/* Zustände, die in einer Szene wechseln: erst .dv-va, dann .dv-vb (an derselben Stelle) */
+.dv-swap { display: grid; }
+.dv-swap > * { grid-area: 1 / 1; }
+.dv-vb { opacity: 0; }
+
+/* Tipp-Kreis an der Stelle, die gerade angetippt wird */
+.dv-tap {
+  position: absolute; z-index: 4; left: 50%; top: 50%;
+  width: 2.6em; height: 2.6em; margin: -1.3em 0 0 -1.3em;
+  border-radius: 50%;
+  background: var(--app-tap);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ----- Bildschirm „Type“ (Vorschreiben) ----- */
+.dv-app {
+  position: absolute; inset: 2.3em 0 0;
+  display: flex; flex-direction: column;
+  background: var(--app-bg);
+}
+.dv-nav {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .4em;
+  padding: .15em .7em .35em;
+}
+.dv-chip {
+  position: relative;
+  display: grid;
+  padding: .35em .6em .35em .35em;
+  border-radius: 99px;
+  background: var(--app-card);
+  box-shadow: 0 .1em .45em rgba(0, 0, 0, .08), inset 0 0 0 1px rgba(120, 120, 128, .12);
+  white-space: nowrap;
+}
+.dv-chip > * { grid-area: 1 / 1; display: flex; align-items: center; gap: .3em; }
+.dv-chip em { font-size: .5em; font-weight: 500; }
+.dv-chip .dv-ico { width: 1.05em; height: 1.05em; }
+.dv-title { font-size: .64em; font-weight: 700; text-align: center; white-space: nowrap; }
+.dv-round {
+  display: grid; place-items: center;
+  width: 1.75em; height: 1.75em; border-radius: 50%;
+  background: var(--app-card);
+  box-shadow: 0 .1em .45em rgba(0, 0, 0, .08), inset 0 0 0 1px rgba(120, 120, 128, .12);
+}
+.dv-round svg { width: .95em; height: .95em; }
+.dv-top { padding: 0 .7em .45em; background: var(--app-bar); box-shadow: 0 1px 0 var(--app-sep); }
+.dv-seg {
+  display: grid; grid-template-columns: 1fr 1fr;
+  padding: .13em;
+  border-radius: 99px;
+  background: var(--app-seg);
+  text-align: center;
+}
+.dv-seg > span { padding: .32em 0; border-radius: 99px; }
+.dv-seg em { font-size: .48em; font-weight: 600; }
+.dv-seg .is-on { background: var(--app-seg-on); box-shadow: 0 .15em .5em rgba(0, 0, 0, .1); }
+.dv-hint { margin-top: .55em; }
+.dv-hint > * > * { display: flex; align-items: center; gap: .45em; }
+.dv-hint-text { flex: 1; min-width: 0; }
+.dv-hint-text b { font-size: .5em; font-weight: 600; }
+.dv-hint-text em { margin-top: .15em; color: var(--app-muted); font-size: .42em; line-height: 1.3; }
+.dv-pill {
+  padding: .3em .55em;
+  border-radius: 99px;
+  background: var(--app-fill);
+  color: var(--app-link);
+  white-space: nowrap;
+}
+.dv-pill em { font-size: .44em; font-weight: 600; }
+.dv-form { flex: 1; min-height: 0; overflow: hidden; padding: .55em .7em 0; }
+.dv-head-row { display: flex; align-items: baseline; justify-content: space-between; margin: 0 .5em .3em; }
+.dv-head-row > em { color: var(--app-muted); font-size: .52em; font-weight: 600; }
+.dv-link { display: flex; align-items: center; gap: .25em; color: var(--app-link); }
+.dv-link svg { width: .9em; height: .9em; }
+.dv-link em { font-size: .48em; font-weight: 600; }
+.dv-field {
+  position: relative;
+  height: 6.4em;
+  padding: .5em .6em;
+  border-radius: .9em;
+  background: var(--app-card);
+}
+.dv-field > * { position: absolute; left: .6em; right: .6em; top: .5em; }
+.dv-field > .dv-typed { right: auto; }
+.dv-field em { font-size: .58em; line-height: 1.35; }
+.dv-ph em { color: var(--app-faint); }
+.dv-typed em { white-space: nowrap; }
+.dv-sum { margin: .3em .6em 0; color: var(--app-muted); }
+.dv-sum em, .dv-count { font-size: .44em; font-variant-numeric: tabular-nums; }
+.dv-card { border-radius: .9em; background: var(--app-card); }
+.dv-li {
+  position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: .4em;
+  min-height: 2.15em;
+  padding: .3em .65em;
+}
+.dv-li > em, .dv-li-l em { font-size: .54em; }
+.dv-li-l { display: flex; align-items: center; gap: .45em; }
+.dv-li-v { display: flex; align-items: center; gap: .3em; color: var(--app-muted); }
+.dv-li-v em { font-size: .52em; }
+.dv-sep { height: 1px; margin-left: .65em; background: var(--app-sep); }
+.dv-toggle { margin-top: .65em; }
+.dv-switch { position: relative; flex: none; width: 2.15em; height: 1.3em; border-radius: 99px; background: rgba(120, 120, 128, .3); }
+.dv-switch::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--app-green); }
+.dv-switch::after {
+  content: ""; position: absolute; left: .12em; top: .12em;
+  width: 1.06em; height: 1.06em; border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 .1em .3em rgba(0, 0, 0, .25);
+  transform: translateX(.85em);
+}
+.dv-note { margin: .3em .6em .6em; color: var(--app-muted); }
+.dv-note em { font-size: .4em; line-height: 1.35; }
+.dv-sec { margin: .2em .6em .3em; color: var(--app-muted); }
+.dv-sec em { font-size: .46em; font-weight: 600; }
+
+/* Fußleiste: Fortschritt, „Senden“ und Tab-Leiste */
+.dv-footer { position: relative; padding: .45em .7em .55em; background: var(--app-bar); }
+.dv-send { display: grid; height: 2.15em; }
+.dv-send > * {
+  grid-area: 1 / 1;
+  position: relative;
+  display: flex; align-items: center; justify-content: center; gap: .35em;
+  border-radius: 99px;
+}
+.dv-send em { font-size: .62em; font-weight: 600; }
+.dv-send svg { width: .85em; height: .85em; fill: currentColor; }
+.dv-send-on { background: var(--app-blue); color: #ffffff; }
+.dv-send-off { background: var(--app-off-bg); color: var(--app-off-text); }
+.dv-tabs {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  margin-top: .45em; padding: .15em;
+  border-radius: 99px;
+  background: var(--app-card);
+  box-shadow: 0 .1em .5em rgba(0, 0, 0, .08), inset 0 0 0 1px rgba(120, 120, 128, .14);
+}
+.dv-tabs > span { display: grid; justify-items: center; gap: .12em; padding: .3em 0 .25em; border-radius: 99px; }
+.dv-tabs svg { width: 1.15em; height: 1.15em; fill: currentColor; }
+.dv-tabs em { font-size: .29em; font-weight: 600; white-space: nowrap; }
+.dv-tabs .is-on { background: rgba(120, 120, 128, .14); color: var(--app-link); }
+.dv-progress {
+  position: absolute; left: 0; right: 0; bottom: 100%;
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .5em;
+  padding: .5em .7em .45em;
+  background: var(--app-bar);
+  opacity: 0;
+}
+.dv-busy { grid-area: 1 / 1; }
+.dv-cancel { grid-area: 1 / 2; }
+.dv-ptitle { display: flex; align-items: center; gap: .3em; }
+.dv-ptitle b { font-size: .52em; font-weight: 600; }
+.dv-ptitle .dv-ico { width: 1.05em; height: 1.05em; }
+.dv-pbar { height: .22em; margin: .35em 0 .25em; border-radius: 99px; background: rgba(120, 120, 128, .2); overflow: hidden; }
+.dv-pbar i { height: 100%; border-radius: inherit; background: var(--app-blue); transform-origin: 0 50%; }
+.dv-pcount { color: var(--app-muted); font-size: .42em; font-variant-numeric: tabular-nums; }
+.dv-done { grid-row: 1; grid-column: 1 / -1; display: flex; align-items: center; gap: .45em; opacity: 0; }
+.dv-done .dv-ico { width: 1.25em; height: 1.25em; }
+.dv-done b { font-size: .52em; font-weight: 600; }
+.dv-done em { margin-top: .1em; color: var(--app-muted); font-size: .42em; }
+
+/* Zähler für „N Zeichen“ und „N von 21 Zeichen“ (ohne Unterstützung bleibt die Endzahl stehen) */
+@property --dv-n { syntax: "<integer>"; inherits: false; initial-value: 21; }
+@property --dv-p { syntax: "<integer>"; inherits: false; initial-value: 21; }
+.dv-count { --dv-n: 21; counter-reset: dvn var(--dv-n); }
+.dv-count::before { content: counter(dvn) " Zeichen · ca. 1 Sek."; }
+.dv-pcount { --dv-p: 21; counter-reset: dvp var(--dv-p); }
+.dv-pcount::before { content: counter(dvp) " von 21 Zeichen"; }
+
+/* ----- Startbildschirm mit dem MedType-Symbol ----- */
+.dv-home {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: 3.1em 1.1em .9em;
+  background: var(--app-wall);
+  opacity: 0;
+}
+.dv-icons { display: grid; grid-template-columns: repeat(4, 2.35em); justify-content: space-between; row-gap: .75em; }
+.dv-icons > i, .dv-icon { position: relative; display: grid; justify-items: center; gap: .25em; }
+.dv-icons > i::before, .dv-dock > i {
+  content: ""; display: block;
+  width: 2.35em; height: 2.35em; border-radius: .62em;
+  background: rgba(255, 255, 255, .55);
+}
+.dv-icons > i::after { content: ""; display: block; width: 1.6em; height: .26em; border-radius: 99px; background: rgba(0, 0, 0, .14); }
+.dv-icons > i:nth-child(5n+1)::before { background: #ffcf5c; }
+.dv-icons > i:nth-child(5n+2)::before { background: #7fc8f8; }
+.dv-icons > i:nth-child(5n+3)::before { background: #9bd87a; }
+.dv-icons > i:nth-child(5n+4)::before { background: #c7b2f4; }
+.dv-icon img { width: 2.35em; height: 2.35em; border-radius: .62em; }
+.dv-icon em { font-size: .34em; font-weight: 500; }
+.dv-dock { display: flex; justify-content: space-between; padding: .5em; border-radius: 1.25em; background: rgba(255, 255, 255, .32); }
+@media (prefers-color-scheme: dark) {
+  .dv-icons > i::before, .dv-dock > i { opacity: .85; }
+  .dv-icons > i::after { background: rgba(255, 255, 255, .22); }
+  .dv-dock { background: rgba(255, 255, 255, .12); }
+}
+
+/* ----- Systemabfrage (Bluetooth erlauben, Kopplungsanfrage) ----- */
+.dv-alert {
+  position: absolute; z-index: 6; inset: 0;
+  display: grid; place-items: center;
+  padding: 0 1.25em;
+  background: rgba(0, 0, 0, .28);
+}
+.dv-alert-box {
+  width: 100%;
+  padding: .95em .8em .8em;
+  border-radius: 1.4em;
+  background: var(--app-alert);
+  box-shadow: 0 .8em 2em rgba(0, 0, 0, .25);
+  text-align: center;
+}
+.dv-alert-box > b { font-size: .56em; font-weight: 700; line-height: 1.3; }
+.dv-alert-box > em { margin: .4em 0 1em; font-size: .46em; line-height: 1.35; }
+.dv-btns { display: grid; grid-template-columns: 1fr 1fr; gap: .35em; }
+.dv-btns > span {
+  position: relative;
+  padding: .55em 0;
+  border-radius: 99px;
+  background: var(--app-fill);
+  color: var(--app-link);
+  white-space: nowrap;
+}
+.dv-btns em { font-size: .5em; font-weight: 600; }
+.dv-btns > .is-main { background: var(--app-blue); color: #ffffff; }
+.dv-btns .dv-tap { width: 3.6em; height: 3.6em; margin: -1.8em 0 0 -1.8em; }
+
+/* ----- „Dongle verbinden“ als halbes Blatt ----- */
+.dv-dim { position: absolute; z-index: 2; inset: 0; background: rgba(0, 0, 0, .22); }
+.dv-sheet {
+  position: absolute; z-index: 3; left: 0; right: 0; top: 11.2em; bottom: 0;
+  padding: .4em .7em;
+  border-radius: 1.4em 1.4em 0 0;
+  background: var(--app-sheet);
+  box-shadow: 0 -.3em 1.2em rgba(0, 0, 0, .14);
+}
+.dv-grab { width: 2.4em; height: .25em; margin: 0 auto .4em; border-radius: 99px; background: rgba(120, 120, 128, .4); }
+.dv-sheet-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: .2em; }
+.dv-sheet-nav b { grid-column: 2; font-size: .58em; font-weight: 700; }
+.dv-sheet-nav .dv-pill { justify-self: end; color: var(--app-text); }
+.dv-sheet .dv-sec { display: flex; align-items: center; gap: .35em; margin-top: .55em; }
+.dv-sheet .dv-sec .dv-spinner { width: .8em; height: .8em; }
+.dv-sheet .dv-card { background: var(--app-sheet-card); }
+.dv-dev {
+  position: relative;
+  display: flex; align-items: center; gap: .45em;
+  padding: .45em .65em;
+}
+.dv-dev-text { flex: 1; min-width: 0; }
+.dv-dev-text b { font-size: .54em; font-weight: 500; }
+.dv-dev-text > em, .dv-dev-text .dv-swap em { margin-top: .12em; color: var(--app-muted); font-size: .46em; }
+.dv-pairing { display: flex; align-items: center; gap: .25em; margin-top: .12em; color: var(--app-link); }
+.dv-pairing svg { width: 1.05em; height: auto; }
+.dv-pairing em { font-size: .46em; }
+.dv-bars { width: 1em; height: auto; fill: var(--app-muted); }
+.dv-ind { display: grid; place-items: center; width: 1em; height: 1em; }
+.dv-ind > * { grid-area: 1 / 1; width: 1em; height: 1em; }
+.dv-check { color: var(--app-link); }
+.dv-cardlink { padding: .45em .65em; color: var(--app-link); }
+.dv-cardlink em { font-size: .52em; }
+.dv-cur .dv-ico { width: 1.4em; height: 1.4em; }
+.dv-sheet .dv-note { margin-top: .35em; }
+.dv-hit { position: absolute; inset: 0; border-radius: inherit; background: var(--app-fill); opacity: 0; }
+
+/* ----- Einstellungen mit Demo-Modus ----- */
+.dv-settings .dv-form { padding-top: .35em; }
+.dv-settings .dv-sec { margin-top: .5em; }
+.dv-settings .dv-sec:first-child { margin-top: 0; }
+.dv-mini-icon { width: 1.2em; height: 1.2em; border-radius: .3em; }
+.dv-reveal { display: grid; grid-template-rows: 1fr; }
+.dv-reveal > span { overflow: hidden; min-height: 0; }
+.dv-chev { color: var(--app-faint); }
+.dv-chev em { font-size: .7em; font-weight: 600; line-height: 1; }
+
+/* ---------- Smartphone und Dongle zusammen ---------- */
+.dv-pair {
+  position: relative;
+  display: block;
+  width: 31em; height: 33.5em;
+  font-size: var(--dv-size, .5rem);
+}
+.dv-pair > .dv-phone { position: absolute; right: 0; bottom: 0; font-size: 1em; }
+.dv-pair > .dv-stick { position: absolute; left: 0; bottom: 4em; width: 15em; }
+.dv-air { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.dv-air path { fill: none; stroke-linecap: round; }
+.dv-air-dash { stroke: var(--line, #e6deda); stroke-width: 2.4; stroke-dasharray: 1 7; }
+.dv-air-pulse { stroke: var(--dv-led-blue); stroke-width: 3.2; stroke-dasharray: 9 91; opacity: 0; }
+.dv-pair--idle .dv-air { display: none; }
+
+/* Ruhezustand je Szene (gilt auch mit „Bewegung reduzieren“): der wichtigste Moment */
+.dv-send-on { opacity: 0; }
+.dv-phone--send .dv-send-on { opacity: 1; }
+.dv-phone--send .dv-send-off, .dv-phone--send .dv-ph, .dv-phone--send .dv-sum .dv-va { opacity: 0; }
+.dv-phone--send .dv-sum .dv-vb { opacity: 1; }
+.dv-send { position: relative; }
+
+/* ---------- Bewegung ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Dongle-LEDs */
+  .dv-stick--slow .hs-on { animation: dv-led-slow 1.5s linear infinite; }
+  .dv-stick--fast .hs-on { animation: dv-led-fast .33s linear infinite; }
+  .dv-stick--typing .hs-on { animation: dv-led-typing 3s linear infinite; }
+  .dv-stick--saved .hs-on { animation: dv-led-saved 3s linear infinite; }
+  .dv-stick--reject .hs-on { animation: dv-led-blip 3s linear infinite; }
+  .dv-stick--reset .hs-on { animation: dv-led-reset 3s linear infinite; }
+  .dv-stick--insert .hs-on { animation: dv-led-insert 6s linear infinite; }
+  .dv-stick--insert .hs-move { animation: dv-insert 6s var(--ease-out, ease-out) infinite; }
+  .dv-stick--hold .hs-on { animation: dv-led-hold 6s linear infinite; }
+  .dv-stick--hold .hs-press { animation: dv-press 6s linear infinite; }
+  .dv-stick--hold .hs-ring { animation: dv-ring 6s linear infinite; }
+  .dv-stick--hold .hs-button { animation: dv-push 6s linear infinite; }
+  .dv-stick--pair .hs-on { animation: dv-led-pair 6s linear infinite; }
+  .dv-stick--send .hs-on { animation: dv-led-send 6s linear infinite; }
+
+  /* App: pulsierende Statussymbole, drehende Aktivitätsanzeigen, Tipp-Kreise */
+  .dv-pulse { animation: dv-pulse 1.4s ease-in-out infinite; }
+  .dv-spinner { animation: dv-spin .9s steps(8) infinite; }
+  .dv-tap { animation: dv-tap 6s ease-out infinite; }
+  .dv-pair--send .dv-air-pulse { animation: dv-air-move 1.1s linear infinite, dv-air-send 6s linear infinite; }
+
+  /* MedType öffnen und Bluetooth erlauben */
+  .dv-phone--allow .dv-home { animation: dv-allow-home 6s var(--ease-out, ease-out) infinite; }
+  .dv-phone--allow .dv-app { transform-origin: 38% 20%; animation: dv-allow-app 6s var(--ease-out, ease-out) infinite; }
+  .dv-phone--allow .dv-alert { animation: dv-allow-alert 6s var(--ease-out, ease-out) infinite; }
+  .dv-phone--allow .dv-icon .dv-tap { animation-delay: .84s; }
+  .dv-phone--allow .dv-alert .dv-tap { animation-delay: 3.3s; }
+  .dv-phone--allow .dv-va { animation: dv-a-61 6s linear infinite; }
+  .dv-phone--allow .dv-vb { animation: dv-b-61 6s linear infinite; }
+
+  /* Dongle wählen */
+  .dv-phone--pick .dv-dim { animation: dv-pick-dim 6s ease infinite; }
+  .dv-phone--pick .dv-sheet { animation: dv-pick-sheet 6s var(--ease-out, ease-out) infinite; }
+  .dv-phone--pick .dv-chip .dv-tap { animation-delay: .6s; }
+  .dv-phone--pick .dv-dev .dv-tap { animation-delay: 3s; }
+  .dv-phone--pick .dv-hit { animation: dv-pick-hit 6s ease infinite; }
+  .dv-phone--pick .dv-va { animation: dv-a-52 6s linear infinite; }
+  .dv-phone--pick .dv-vb { animation: dv-b-52 6s linear infinite; }
+
+  /* Koppeln bestätigen */
+  .dv-phone--pair .dv-alert { animation: dv-pair-alert 6s var(--ease-out, ease-out) infinite; }
+  .dv-phone--pair .dv-alert .dv-tap { animation-delay: 2.4s; }
+  .dv-phone--pair .dv-va { animation: dv-a-47 6s linear infinite; }
+  .dv-phone--pair .dv-vb { animation: dv-b-47 6s linear infinite; }
+
+  /* Schreiben und senden */
+  .dv-phone--send .dv-ph { animation: dv-send-ph 6s linear infinite; }
+  .dv-phone--send .dv-typed { animation: dv-send-type 6s linear infinite; }
+  .dv-phone--send .dv-sum .dv-va { animation: dv-send-ph 6s linear infinite; }
+  .dv-phone--send .dv-sum .dv-vb { animation: dv-send-sum 6s linear infinite; }
+  .dv-phone--send .dv-count { animation: dv-send-count 6s linear infinite; }
+  .dv-phone--send .dv-send-on { animation: dv-send-on 6s linear infinite; }
+  .dv-phone--send .dv-send-off { animation: dv-send-off 6s linear infinite; }
+  .dv-phone--send .dv-send .dv-tap { animation-delay: 2.28s; }
+  .dv-phone--send .dv-progress { animation: dv-send-progress 6s var(--ease-out, ease-out) infinite; }
+  .dv-phone--send .dv-busy, .dv-phone--send .dv-cancel { animation: dv-send-busy 6s linear infinite; }
+  .dv-phone--send .dv-done { animation: dv-send-done 6s linear infinite; }
+  .dv-phone--send .dv-pbar i { animation: dv-send-bar 6s linear infinite; }
+  .dv-phone--send .dv-pcount { animation: dv-send-pcount 6s linear infinite; }
+
+  /* Demo-Modus einschalten */
+  .dv-phone--demo .dv-switch::before { animation: dv-demo-on 6s ease infinite; }
+  .dv-phone--demo .dv-switch::after { animation: dv-demo-knob 6s var(--ease-out, ease-out) infinite; }
+  .dv-phone--demo .dv-switch .dv-tap { animation-delay: 1.14s; }
+  .dv-phone--demo .dv-reveal { animation: dv-demo-reveal 6s var(--ease-out, ease-out) infinite; }
+}
+
+@keyframes dv-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+@keyframes dv-spin { to { transform: rotate(1turn); } }
+@keyframes dv-tap {
+  0% { opacity: 0; transform: scale(.4); }
+  2% { opacity: 1; transform: scale(.55); }
+  8%, 100% { opacity: 0; transform: scale(1.5); }
+}
+@keyframes dv-insert {
+  0% { opacity: 0; transform: translateX(34px); }
+  6%, 10% { opacity: 1; transform: translateX(34px); }
+  22%, 92% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(0); }
+}
+@keyframes dv-press { 0%, 8% { opacity: 0; } 10%, 60% { opacity: 1; } 64%, 100% { opacity: 0; } }
+@keyframes dv-ring { 0%, 10% { stroke-dashoffset: 100; } 60%, 100% { stroke-dashoffset: 0; } }
+@keyframes dv-push { 0%, 9% { transform: scale(1); } 11%, 60% { transform: scale(.86); } 63%, 100% { transform: scale(1); } }
+@keyframes dv-air-move { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+@keyframes dv-air-send { 0%, 44% { opacity: 0; } 46%, 77% { opacity: 1; } 80%, 100% { opacity: 0; } }
+
+/* Zustandswechsel an einer Stelle der Szene (Prozent der 6-Sekunden-Schleife) */
+@keyframes dv-a-61 { 0%, 60.9% { opacity: 1; } 61%, 100% { opacity: 0; } }
+@keyframes dv-b-61 { 0%, 60.9% { opacity: 0; } 61%, 100% { opacity: 1; } }
+@keyframes dv-a-52 { 0%, 51.9% { opacity: 1; } 52%, 93% { opacity: 0; } 96%, 100% { opacity: 1; } }
+@keyframes dv-b-52 { 0%, 51.9% { opacity: 0; } 52%, 93% { opacity: 1; } 96%, 100% { opacity: 0; } }
+@keyframes dv-a-47 { 0%, 46.9% { opacity: 1; } 47%, 94% { opacity: 0; } 97%, 100% { opacity: 1; } }
+@keyframes dv-b-47 { 0%, 46.9% { opacity: 0; } 47%, 94% { opacity: 1; } 97%, 100% { opacity: 0; } }
+
+@keyframes dv-allow-home { 0%, 20% { opacity: 1; } 27%, 90% { opacity: 0; } 97%, 100% { opacity: 1; } }
+@keyframes dv-allow-app {
+  0%, 18% { opacity: 0; transform: scale(.18); }
+  28%, 90% { opacity: 1; transform: scale(1); }
+  97%, 100% { opacity: 0; transform: scale(1); }
+}
+@keyframes dv-allow-alert {
+  0%, 33% { opacity: 0; transform: scale(1.12); }
+  38%, 56% { opacity: 1; transform: scale(1); }
+  61%, 100% { opacity: 0; transform: scale(1); }
+}
+
+@keyframes dv-pick-dim { 0%, 13% { opacity: 0; } 22%, 88% { opacity: 1; } 95%, 100% { opacity: 0; } }
+@keyframes dv-pick-sheet {
+  0%, 13% { transform: translateY(105%); }
+  24%, 88% { transform: translateY(0); }
+  96%, 100% { transform: translateY(105%); }
+}
+@keyframes dv-pick-hit { 0%, 49% { opacity: 0; } 51%, 56% { opacity: 1; } 64%, 100% { opacity: 0; } }
+
+@keyframes dv-pair-alert {
+  0%, 8% { opacity: 0; transform: scale(1.12); }
+  14%, 41% { opacity: 1; transform: scale(1); }
+  46%, 100% { opacity: 0; transform: scale(1); }
+}
+
+@keyframes dv-send-ph { 0%, 3.9% { opacity: 1; } 4%, 78.9% { opacity: 0; } 79%, 100% { opacity: 1; } }
+@keyframes dv-send-sum { 0%, 3.9% { opacity: 0; } 4%, 78.9% { opacity: 1; } 79%, 100% { opacity: 0; } }
+@keyframes dv-send-type {
+  0%, 4% { clip-path: inset(0 100% 0 0); animation-timing-function: steps(21, end); }
+  30%, 78.9% { clip-path: inset(0 0 0 0); }
+  79%, 100% { clip-path: inset(0 100% 0 0); }
+}
+@keyframes dv-send-count {
+  0%, 4% { --dv-n: 0; animation-timing-function: steps(21, end); }
+  30%, 100% { --dv-n: 21; }
+}
+@keyframes dv-send-on { 0%, 3.9% { opacity: 0; } 4%, 41.9% { opacity: 1; } 42%, 100% { opacity: 0; } }
+@keyframes dv-send-off { 0%, 3.9% { opacity: 1; } 4%, 41.9% { opacity: 0; } 42%, 100% { opacity: 1; } }
+@keyframes dv-send-progress {
+  0%, 41% { opacity: 0; transform: translateY(.6em); }
+  45%, 92% { opacity: 1; transform: translateY(0); }
+  96%, 100% { opacity: 0; transform: translateY(0); }
+}
+@keyframes dv-send-busy { 0%, 77.9% { opacity: 1; } 78%, 100% { opacity: 0; } }
+@keyframes dv-send-done { 0%, 77.9% { opacity: 0; } 78%, 100% { opacity: 1; } }
+@keyframes dv-send-bar { 0%, 45% { transform: scaleX(0); } 77%, 100% { transform: scaleX(1); } }
+@keyframes dv-send-pcount {
+  0%, 45% { --dv-p: 0; animation-timing-function: steps(21, end); }
+  77%, 100% { --dv-p: 21; }
+}
+
+@keyframes dv-demo-on { 0%, 20% { opacity: 0; } 24%, 92% { opacity: 1; } 96%, 100% { opacity: 0; } }
+@keyframes dv-demo-knob {
+  0%, 20% { transform: translateX(0); }
+  24%, 92% { transform: translateX(.85em); }
+  96%, 100% { transform: translateX(0); }
+}
+@keyframes dv-demo-reveal {
+  0%, 24% { grid-template-rows: 0fr; }
+  32%, 92% { grid-template-rows: 1fr; }
+  98%, 100% { grid-template-rows: 0fr; }
+}
+
+/* LED-Muster wie am echten Gerät (harte Wechsel) */
+@keyframes dv-led-slow { 0%, 12% { opacity: 1; } 13%, 100% { opacity: .15; } }
+@keyframes dv-led-fast { 0%, 50% { opacity: 1; } 51%, 100% { opacity: .15; } }
+@keyframes dv-led-typing {
+  0%, 52%, 100% { opacity: 1; }
+  55%, 61%, 67%, 73%, 79%, 85% { opacity: .2; }
+  58%, 64%, 70%, 76%, 82%, 88% { opacity: 1; }
+}
+@keyframes dv-led-insert {
+  0%, 24.99% { opacity: 0; }
+  25%, 27.99% { opacity: 1; }
+  28%, 49.99% { opacity: .15; }
+  50%, 52.99% { opacity: 1; }
+  53%, 74.99% { opacity: .15; }
+  75%, 77.99% { opacity: 1; }
+  78%, 100% { opacity: .15; }
+}
+@keyframes dv-led-hold {
+  0%, 2.99% { opacity: 1; }
+  3%, 24.99% { opacity: .15; }
+  25%, 27.99% { opacity: 1; }
+  28%, 49.99% { opacity: .15; }
+  50%, 52.99% { opacity: 1; }
+  53%, 59.99% { opacity: .15; }
+  60%, 62.74% { opacity: 1; }
+  62.75%, 65.49% { opacity: .15; }
+  65.5%, 68.24% { opacity: 1; }
+  68.25%, 70.99% { opacity: .15; }
+  71%, 73.74% { opacity: 1; }
+  73.75%, 76.49% { opacity: .15; }
+  76.5%, 79.24% { opacity: 1; }
+  79.25%, 81.99% { opacity: .15; }
+  82%, 84.74% { opacity: 1; }
+  84.75%, 87.49% { opacity: .15; }
+  87.5%, 90.24% { opacity: 1; }
+  90.25%, 92.99% { opacity: .15; }
+  93%, 95.74% { opacity: 1; }
+  95.75%, 98.49% { opacity: .15; }
+  98.5%, 100% { opacity: 1; }
+}
+@keyframes dv-led-saved {
+  0%, 5.99% { opacity: .15; }
+  6%, 13.19% { opacity: 1; }
+  13.2%, 17.99% { opacity: .15; }
+  18%, 25.19% { opacity: 1; }
+  25.2%, 29.99% { opacity: .15; }
+  30%, 37.19% { opacity: 1; }
+  37.2%, 41.99% { opacity: .15; }
+  42%, 100% { opacity: 1; }
+}
+@keyframes dv-led-reset {
+  0%, 5.99% { opacity: .15; }
+  6%, 13.19% { opacity: 1; }
+  13.2%, 17.99% { opacity: .15; }
+  18%, 25.19% { opacity: 1; }
+  25.2%, 29.99% { opacity: .15; }
+  30%, 37.19% { opacity: 1; }
+  37.2%, 41.99% { opacity: .15; }
+  42%, 100% { opacity: .15; }
+}
+@keyframes dv-led-blip {
+  0%, 7.99% { opacity: .15; }
+  8%, 21.99% { opacity: 1; }
+  22%, 100% { opacity: .15; }
+}
+@keyframes dv-led-pair {
+  0%, 2.74% { opacity: 1; color: var(--dv-led-blue); }
+  2.75%, 5.49% { opacity: .15; color: var(--dv-led-blue); }
+  5.5%, 8.24% { opacity: 1; color: var(--dv-led-blue); }
+  8.25%, 10.99% { opacity: .15; color: var(--dv-led-blue); }
+  11%, 13.74% { opacity: 1; color: var(--dv-led-blue); }
+  13.75%, 16.49% { opacity: .15; color: var(--dv-led-blue); }
+  16.5%, 19.24% { opacity: 1; color: var(--dv-led-blue); }
+  19.25%, 21.99% { opacity: .15; color: var(--dv-led-blue); }
+  22%, 24.74% { opacity: 1; color: var(--dv-led-blue); }
+  24.75%, 27.49% { opacity: .15; color: var(--dv-led-blue); }
+  27.5%, 30.24% { opacity: 1; color: var(--dv-led-blue); }
+  30.25%, 32.99% { opacity: .15; color: var(--dv-led-blue); }
+  33%, 35.74% { opacity: 1; color: var(--dv-led-blue); }
+  35.75%, 38.49% { opacity: .15; color: var(--dv-led-blue); }
+  38.5%, 41.24% { opacity: 1; color: var(--dv-led-blue); }
+  41.25%, 43.99% { opacity: .15; color: var(--dv-led-blue); }
+  44%, 47.99% { opacity: .15; color: var(--dv-led-green); }
+  48%, 50.99% { opacity: 1; color: var(--dv-led-green); }
+  51%, 53.99% { opacity: .15; color: var(--dv-led-green); }
+  54%, 56.99% { opacity: 1; color: var(--dv-led-green); }
+  57%, 59.99% { opacity: .15; color: var(--dv-led-green); }
+  60%, 62.99% { opacity: 1; color: var(--dv-led-green); }
+  63%, 65.99% { opacity: .15; color: var(--dv-led-green); }
+  66%, 94.99% { opacity: 1; color: var(--dv-led-green); }
+  95%, 97.74% { opacity: 1; color: var(--dv-led-blue); }
+  97.75%, 100% { opacity: .15; color: var(--dv-led-blue); }
+}
+@keyframes dv-led-send {
+  0%, 45.99% { opacity: 1; }
+  46%, 47.49% { opacity: 1; }
+  47.5%, 48.99% { opacity: .2; }
+  49%, 50.49% { opacity: 1; }
+  50.5%, 51.99% { opacity: .2; }
+  52%, 53.49% { opacity: 1; }
+  53.5%, 54.99% { opacity: .2; }
+  55%, 56.49% { opacity: 1; }
+  56.5%, 57.99% { opacity: .2; }
+  58%, 59.49% { opacity: 1; }
+  59.5%, 60.99% { opacity: .2; }
+  61%, 62.49% { opacity: 1; }
+  62.5%, 63.99% { opacity: .2; }
+  64%, 65.49% { opacity: 1; }
+  65.5%, 66.99% { opacity: .2; }
+  67%, 68.49% { opacity: 1; }
+  68.5%, 69.99% { opacity: .2; }
+  70%, 71.49% { opacity: 1; }
+  71.5%, 72.99% { opacity: .2; }
+  73%, 74.49% { opacity: 1; }
+  74.5%, 75.99% { opacity: .2; }
+  76%, 77.49% { opacity: 1; }
+  77.5%, 77.99% { opacity: .2; }
+  78%, 100% { opacity: 1; }
+}

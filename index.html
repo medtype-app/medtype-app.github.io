@@ -35,8 +35,9 @@
 }
 </script>
 <link rel="stylesheet" href="assets/site.css?v=4">
-<link rel="stylesheet" href="assets/home.css?v=4">
-<link rel="stylesheet" href="assets/flow.css?v=3">
+<link rel="stylesheet" href="assets/home.css?v=6">
+<link rel="stylesheet" href="assets/devices.css?v=2">
+<link rel="stylesheet" href="assets/flow.css?v=4">
 </head>
 <body class="home">
 <a class="skip" href="#titel">Zum Inhalt springen</a>
@@ -206,8 +207,9 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
                     <span>Text</span>
                     <span class="fl-link"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 5h4.5M4.75 2.75v4.5M10 5h7.5M2.5 10.5h15M2.5 15.5h15"/></svg>Baustein einfügen</span>
                   </div>
-                  <p class="fl-field">Hallo vom Smartphone!<br>Dieser Text erscheint dort, wo der Cursor steht.</p>
-                  <p class="fl-count">70 Zeichen · ca. 1 Sek.</p>
+                  <p class="fl-field"><span class="fl-draft">Hallo vom Smartphone!<br>Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-ph">Text schreiben, einfügen oder diktieren</span></p>
+                  <p class="fl-count"><span class="fl-count-full">70 Zeichen · ca. 1 Sek.</span><span class="fl-count-empty">0 Zeichen</span></p>
+                  <p class="fl-toggle"><span>Nach dem Senden leeren</span><i class="fl-switch"></i></p>
                   <div class="fl-space">
                     <div class="fl-progress">
                       <div class="fl-busy">
@@ -242,9 +244,9 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
 
       <ol class="how-steps">
         <li>
-          <span class="how-stick how-stick--slow" aria-hidden="true">
+          <span class="how-stick" aria-hidden="true">
             <b class="how-num">1</b>
-            <svg viewBox="0 0 146 48">
+            <svg class="dv-stick dv-stick--slow" viewBox="0 0 146 48">
               <rect class="hs-plug" x="0" y="8" width="30" height="32" rx="2"/>
               <path class="hs-pins" d="M3 13h20M7 20.5h16M7 27.5h16M3 35h20"/>
               <path class="hs-case" fill-rule="evenodd"
@@ -257,13 +259,13 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           <h3>Dongle in den PC stecken</h3>
           <p>Der MedType-Dongle meldet sich am Windows-PC wie eine normale USB-Tastatur. Eine Installation ist dort
             nicht nötig.</p>
-          <p class="led-note"><span class="led-dot led-dot--blue" aria-hidden="true"></span>LED blinkt langsam blau:
+          <p class="led-note"><span class="led-dot led-dot--blue led-dot--slow" aria-hidden="true"></span>LED blinkt langsam blau:
             bereit</p>
         </li>
         <li>
-          <span class="how-stick how-stick--fast" aria-hidden="true">
+          <span class="how-stick" aria-hidden="true">
             <b class="how-num">2</b>
-            <svg viewBox="0 0 146 48">
+            <svg class="dv-stick dv-stick--fast" viewBox="0 0 146 48">
               <rect class="hs-plug" x="0" y="8" width="30" height="32" rx="2"/>
               <path class="hs-pins" d="M3 13h20M7 20.5h16M7 27.5h16M3 35h20"/>
               <path class="hs-case" fill-rule="evenodd"
@@ -276,13 +278,13 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           <h3>Smartphone koppeln</h3>
           <p>Die Taste am Dongle 3 Sekunden halten, in MedType den Dongle wählen und die Kopplung bestätigen. Das ist
             nur einmal nötig – danach verbindet sich MedType von selbst.</p>
-          <p class="led-note"><span class="led-dot led-dot--blue" aria-hidden="true"></span>LED blinkt schnell blau:
+          <p class="led-note"><span class="led-dot led-dot--blue led-dot--fast" aria-hidden="true"></span>LED blinkt schnell blau:
             Koppelmodus</p>
         </li>
         <li>
-          <span class="how-stick how-stick--typing" aria-hidden="true">
+          <span class="how-stick" aria-hidden="true">
             <b class="how-num">3</b>
-            <svg viewBox="0 0 146 48">
+            <svg class="dv-stick dv-stick--typing" viewBox="0 0 146 48">
               <rect class="hs-plug" x="0" y="8" width="30" height="32" rx="2"/>
               <path class="hs-pins" d="M3 13h20M7 20.5h16M7 27.5h16M3 35h20"/>
               <path class="hs-case" fill-rule="evenodd"
@@ -295,7 +297,7 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           <h3>Tippen</h3>
           <p>Am PC das Zielfeld anklicken und in MedType schreiben. Der Text erscheint genau dort, wo
             der Cursor steht.</p>
-          <p class="led-note"><span class="led-dot led-dot--green" aria-hidden="true"></span>LED grün: verbunden,
+          <p class="led-note"><span class="led-dot led-dot--green led-dot--typing" aria-hidden="true"></span>LED grün: verbunden,
             flackert beim Tippen</p>
         </li>
       </ol>

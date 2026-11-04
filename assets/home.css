@@ -131,27 +131,14 @@
 .how-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 2.25rem; }
 .how-steps li { position: relative; padding-top: 4.4rem; }
 /* Schrittbild: Nummer und Dongle, dessen LED dauerhaft so leuchtet wie am echten Gerät in diesem Schritt
-   (langsam blau, schnell blau, grün mit Flackern beim Tippen). Mit „Bewegung reduzieren“ leuchtet sie ruhig. */
+   (langsam blau, schnell blau, grün mit Flackern beim Tippen; Dongle und LED-Muster aus devices.css). */
 .how-stick {
   position: absolute; top: 0; left: 0;
   display: flex; align-items: center; gap: .75rem;
   height: 3.1rem;
-  color: #2f7bff;
 }
-.how-stick--typing { color: #2fd158; }
 .how-num { min-width: .8em; color: var(--accent); font-size: 1.6rem; font-weight: 800; line-height: 1; }
-.how-stick svg { width: 7.5rem; height: auto; overflow: visible; filter: drop-shadow(0 .3rem .45rem rgba(60, 20, 20, .16)); }
-.hs-plug { fill: #1d1d1f; }
-.hs-pins { stroke: #d6b25e; stroke-width: 3.5; stroke-linecap: round; }
-.hs-case { fill: #f6f6f4; stroke: #cfcfcb; stroke-width: 1; }
-.hs-hole { fill: #d4d4cf; }
-.hs-on { fill: currentColor; }
-.hs-button { fill: #fbfbfa; stroke: #d5d5d0; stroke-width: 1.2; }
-@media (prefers-color-scheme: dark) {
-  .how-stick svg { filter: drop-shadow(0 .3rem .45rem rgba(0, 0, 0, .5)); }
-  .hs-plug { stroke: rgba(255, 255, 255, .22); stroke-width: 1; }
-  .hs-case { fill: #ecebe8; }
-}
+.how-stick .dv-stick { width: 7.5rem; }
 .how-steps h3 { font-size: 1.25rem; line-height: 1.25; letter-spacing: -.01em; margin: 0 0 .45rem; }
 .how-steps p { margin: 0; color: var(--muted); }
 .how-steps .led-note {
@@ -295,7 +282,7 @@
   .hero-visual { --phone: clamp(220px, 21vw, 275px); margin-bottom: -7rem; padding-top: 1.5rem; }
   .hero-icon { width: 84px; height: 84px; }
   .how { padding-top: calc(7rem + 4.5rem); }
-  .how-stick svg { width: 9rem; }
+  .how-stick .dv-stick { width: 9rem; }
   .how-steps li:not(:last-child)::after { left: 11.8rem; }
   .feature { grid-template-columns: 1fr 1fr; gap: 4.5rem; padding: 4rem 0; }
   .feature--flip .feature-media { order: 2; }
@@ -306,16 +293,16 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .hero-visual { animation: rise 1s var(--ease-out) both; }
+  /* Punkte in „LED blinkt …“ blinken wie die LED (Muster aus devices.css) */
+  .led-dot--slow { animation: dv-led-slow 1.5s linear infinite; }
+  .led-dot--fast { animation: dv-led-fast .33s linear infinite; }
+  .led-dot--typing { animation: dv-led-typing 3s linear infinite; }
   .status-dot::after {
     content: ""; position: absolute; inset: 0; border-radius: 50%;
     background: #ffffff;
     animation: ping 2.6s var(--ease-out) 1s 3 both;
   }
 
-  /* Dongle-LEDs in den Schritten: blinken dauerhaft wie am echten Gerät */
-  .how-stick--slow .hs-on { animation: led-slow 1.5s linear infinite; }
-  .how-stick--fast .hs-on { animation: led-fast .33s linear infinite; }
-  .how-stick--typing .hs-on { animation: led-typing 3s linear infinite; }
   @supports (animation-timeline: view()) {
     .stage .phone {
       animation: lift linear both;
@@ -327,14 +314,6 @@
 @keyframes rise { from { transform: translateY(40px); } }
 @keyframes ping { 0% { transform: scale(1); opacity: .7; } 80%, 100% { transform: scale(2.8); opacity: 0; } }
 @keyframes lift { from { transform: translateY(3.5rem); } }
-@keyframes led-slow { 0%, 12% { opacity: 1; } 13%, 100% { opacity: .15; } }
-@keyframes led-fast { 0%, 50% { opacity: 1; } 51%, 100% { opacity: .15; } }
-/* grün, zwischendurch kurzes Flackern wie beim Tippen */
-@keyframes led-typing {
-  0%, 52%, 100% { opacity: 1; }
-  55%, 61%, 67%, 73%, 79%, 85% { opacity: .2; }
-  58%, 64%, 70%, 76%, 82%, 88% { opacity: 1; }
-}
 
 @media print {
   .hero-visual, .stage { display: none; }
