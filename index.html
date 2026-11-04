@@ -34,8 +34,8 @@
   "url": "https://medtype.de/"
 }
 </script>
-<link rel="stylesheet" href="assets/site.css">
-<link rel="stylesheet" href="assets/home.css">
+<link rel="stylesheet" href="assets/site.css?v=4">
+<link rel="stylesheet" href="assets/home.css?v=4">
 <link rel="stylesheet" href="assets/flow.css?v=3">
 </head>
 <body class="home">
@@ -240,9 +240,20 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           passiert.</figcaption>
       </figure>
 
-      <ol class="how-steps" data-play>
+      <ol class="how-steps">
         <li>
-          <span class="how-led how-led--slow" aria-hidden="true">1</span>
+          <span class="how-stick how-stick--slow" aria-hidden="true">
+            <b class="how-num">1</b>
+            <svg viewBox="0 0 146 48">
+              <rect class="hs-plug" x="0" y="8" width="30" height="32" rx="2"/>
+              <path class="hs-pins" d="M3 13h20M7 20.5h16M7 27.5h16M3 35h20"/>
+              <path class="hs-case" fill-rule="evenodd"
+                d="M33 0H122A24 24 0 0 1 122 48H33A7 7 0 0 1 26 41V7A7 7 0 0 1 33 0ZM125 18A5 5 0 0 1 135 18V30A5 5 0 0 1 125 30Z"/>
+              <circle class="hs-hole" cx="53" cy="24" r="3"/>
+              <g class="hs-on"><circle cx="53" cy="24" r="16" opacity=".18"/><circle cx="53" cy="24" r="8.5" opacity=".38"/><circle cx="53" cy="24" r="3"/></g>
+              <circle class="hs-button" cx="71" cy="24" r="7.5"/>
+            </svg>
+          </span>
           <h3>Dongle in den PC stecken</h3>
           <p>Der MedType-Dongle meldet sich am Windows-PC wie eine normale USB-Tastatur. Installieren musst du dort
             nichts.</p>
@@ -250,7 +261,18 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
             bereit</p>
         </li>
         <li>
-          <span class="how-led how-led--fast" aria-hidden="true">2</span>
+          <span class="how-stick how-stick--fast" aria-hidden="true">
+            <b class="how-num">2</b>
+            <svg viewBox="0 0 146 48">
+              <rect class="hs-plug" x="0" y="8" width="30" height="32" rx="2"/>
+              <path class="hs-pins" d="M3 13h20M7 20.5h16M7 27.5h16M3 35h20"/>
+              <path class="hs-case" fill-rule="evenodd"
+                d="M33 0H122A24 24 0 0 1 122 48H33A7 7 0 0 1 26 41V7A7 7 0 0 1 33 0ZM125 18A5 5 0 0 1 135 18V30A5 5 0 0 1 125 30Z"/>
+              <circle class="hs-hole" cx="53" cy="24" r="3"/>
+              <g class="hs-on"><circle cx="53" cy="24" r="16" opacity=".18"/><circle cx="53" cy="24" r="8.5" opacity=".38"/><circle cx="53" cy="24" r="3"/></g>
+              <circle class="hs-button" cx="71" cy="24" r="7.5"/>
+            </svg>
+          </span>
           <h3>Smartphone koppeln</h3>
           <p>Taste am Dongle 3 Sekunden halten, in MedType den Dongle wählen und die Kopplung bestätigen. Das machst
             du nur einmal – danach verbindet sich MedType von selbst.</p>
@@ -258,7 +280,18 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
             Koppelmodus</p>
         </li>
         <li>
-          <span class="how-led how-led--green" aria-hidden="true">3</span>
+          <span class="how-stick how-stick--typing" aria-hidden="true">
+            <b class="how-num">3</b>
+            <svg viewBox="0 0 146 48">
+              <rect class="hs-plug" x="0" y="8" width="30" height="32" rx="2"/>
+              <path class="hs-pins" d="M3 13h20M7 20.5h16M7 27.5h16M3 35h20"/>
+              <path class="hs-case" fill-rule="evenodd"
+                d="M33 0H122A24 24 0 0 1 122 48H33A7 7 0 0 1 26 41V7A7 7 0 0 1 33 0ZM125 18A5 5 0 0 1 135 18V30A5 5 0 0 1 125 30Z"/>
+              <circle class="hs-hole" cx="53" cy="24" r="3"/>
+              <g class="hs-on"><circle cx="53" cy="24" r="16" opacity=".18"/><circle cx="53" cy="24" r="8.5" opacity=".38"/><circle cx="53" cy="24" r="3"/></g>
+              <circle class="hs-button" cx="71" cy="24" r="7.5"/>
+            </svg>
+          </span>
           <h3>Tippen</h3>
           <p>Klick am PC in das Feld, in das der Text soll, und schreib in MedType. Der Text erscheint genau dort, wo
             der Cursor steht.</p>
@@ -429,7 +462,7 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           <p>QWERTZ, Sprache „Deutsch (Deutschland)“. Installieren musst du am PC nichts, und Bluetooth braucht er nicht.</p>
         </li>
       </ul>
-      <p class="needs-note">Kein Konto, kein WLAN, kein Internet nötig. Ohne Dongle probierst du MedType im Demo-Modus aus:
+      <p class="note needs-note">Kein Konto, kein WLAN, kein Internet nötig. Ohne Dongle probierst du MedType im Demo-Modus aus:
         <span class="path">Einstellungen › Demo-Modus</span>.</p>
     </div>
   </section>
@@ -467,23 +500,6 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>
-<script>
-  /* Spielt die kleinen Abläufe ab, sobald sie ins Bild kommen. Ohne Skript bleibt alles im Endzustand stehen. */
-  (function () {
-    if (!("IntersectionObserver" in window)) return;
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("is-playing");
-        io.unobserve(entry.target);
-      });
-    }, { threshold: 0.3 });
-    document.querySelectorAll("[data-play]").forEach(function (el) {
-      el.classList.add("is-armed");
-      io.observe(el);
-    });
-  })();
-</script>
 <script src="assets/flow.js?v=3" defer></script>
 </body>
 </html>

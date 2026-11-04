@@ -75,6 +75,22 @@ a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 .band :focus-visible, .ink :focus-visible { outline-color: #ffffff; }
 
+/* Hinweis: ruhige Fläche mit Info-Symbol (Hilfe, Datenschutz, Startseite) */
+.note {
+  position: relative;
+  margin: 0 0 .9rem;
+  padding: .8rem 1rem .8rem 2.9rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.note::before {
+  content: ""; position: absolute; left: 1rem; top: 1.05rem;
+  width: 1.2rem; height: 1.2rem;
+  background: var(--accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9.2' stroke-width='1.9'/%3E%3Cpath d='M12 11.2v5.3' stroke-width='2.2'/%3E%3Cpath d='M12 7.7v.1' stroke-width='2.6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9.2' stroke-width='1.9'/%3E%3Cpath d='M12 11.2v5.3' stroke-width='2.2'/%3E%3Cpath d='M12 7.7v.1' stroke-width='2.6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
 .wrap {
   max-width: calc(var(--page-w) + 2 * var(--gutter));
   margin-inline: auto;
