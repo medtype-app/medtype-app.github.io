@@ -1,0 +1,401 @@
+/* „So funktioniert’s“: robuster Tablet-PC mit dem MedType-Dongle rechts unten im USB-Anschluss, daneben das
+   Smartphone mit MedType. Nach „Senden“ erscheint der Text Zeichen für Zeichen im Textfeld auf dem Tablet-PC.
+   Die Szene ist eine Illustration in em: Ihre Schriftgröße folgt der Breite (Containerabfrage), so wächst und
+   schrumpft alles gemeinsam. Schmal stehen die Geräte untereinander (24em × 48em), breit nebeneinander (58em × 34em).
+   Ablauf und Zustände (data-state) setzt flow.js; ohne Skript oder mit „Bewegung reduzieren“ zeigt die Szene den
+   Endzustand: Text im Textfeld, auf dem Smartphone „Fertig getippt“. */
+
+.flow {
+  --dot: rgba(120, 60, 60, .13);
+  /* Smartphone (helles Erscheinungsbild der App) */
+  --app-bg: #f2f2f7;
+  --app-card: #ffffff;
+  --app-seg: #e3e3e8;
+  --app-seg-on: #ffffff;
+  --app-text: #000000;
+  --app-muted: #8a8a8e;
+  --app-blue: #0a84ff;
+  --app-link: #007aff;
+  --app-green: #34c759;
+  /* Tablet-PC */
+  --shell-hi: #e8443b;
+  --shell-lo: #b81f22;
+  --bumper: #8b8d92;
+  --bezel: #141416;
+  /* Dongle */
+  --case: #f6f6f4;
+  --case-line: #cfcfcb;
+  --led-on: #2fd158;
+  margin: 0 0 3.25rem;
+}
+@media (prefers-color-scheme: dark) {
+  .flow {
+    --dot: rgba(255, 255, 255, .07);
+    --app-bg: #000000;
+    --app-card: #1c1c1e;
+    --app-seg: #1c1c1e;
+    --app-seg-on: #636366;
+    --app-text: #ffffff;
+    --app-muted: #8e8e93;
+    --app-link: #0a84ff;
+    --app-green: #30d158;
+    --shell-hi: #c83a33;
+    --shell-lo: #8e181c;
+    --bumper: #5d5f64;
+    --bezel: #0b0b0c;
+    --case: #ecebe8;
+  }
+}
+
+.flow-frame { position: relative; }
+.flow-stage {
+  container: flow / inline-size;
+  padding: 1.5rem .75rem 3.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(var(--dot) 1px, transparent 1.5px) 0 0 / 18px 18px,
+    var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.flow > figcaption { margin-top: .8rem; color: var(--muted); font-size: .92rem; max-width: 40rem; }
+
+.flow-scene {
+  position: relative;
+  width: 24em; height: 48em;
+  margin-inline: auto;
+  font-size: 11px; /* ohne Containerabfragen */
+  font-size: min(16px, 100cqi / 24);
+  line-height: 1.25;
+}
+:where(.flow-scene) p { margin: 0; }
+:where(.flow-scene) svg { display: block; }
+
+/* ---------- Tablet-PC ---------- */
+.fl-pad {
+  position: absolute; left: 0; top: 0;
+  width: 19.6em; aspect-ratio: 1380 / 1000;
+  filter: drop-shadow(0 1.2em 1.4em rgba(70, 8, 18, .22)) drop-shadow(0 .3em .4em rgba(0, 0, 0, .15));
+}
+@media (prefers-color-scheme: dark) {
+  .fl-pad { filter: drop-shadow(0 1.2em 1.4em rgba(0, 0, 0, .55)); }
+}
+.fl-pad-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.fl-shell-hi { stop-color: var(--shell-hi); }
+.fl-shell-lo { stop-color: var(--shell-lo); }
+.fl-bumper { fill: var(--bumper); }
+.fl-bezel { fill: var(--bezel); }
+.fl-cam { fill: #2a2d33; }
+.fl-port { fill: #2a2a2c; }
+
+/* Bildschirm (x 120–1260, y 206–890 der Grafik) mit einer dunklen Fachanwendung: Werkzeugleiste, nummerierte
+   Abschnitte links, rechts das Textfeld mit dem Cursor. Sie bleibt in beiden Erscheinungsbildern dunkel. */
+.fl-screen {
+  position: absolute;
+  left: 8.696%; top: 20.6%; width: 82.609%; height: 68.4%;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  border-radius: .2em;
+  background: #1b1c1f;
+  color: #ececee;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: .66em;
+}
+.fl-toolbar { display: flex; align-items: stretch; height: 2.5em; flex: none; background: #111214; border-bottom: 1px solid #2c2d31; }
+.fl-apps {
+  display: grid; grid-template-columns: repeat(3, .32em); gap: .2em; place-content: center;
+  width: 2.6em; border-right: 1px solid #2c2d31;
+}
+.fl-apps i { width: .32em; height: .32em; border-radius: 1px; background: #f2f2f4; }
+.fl-tool {
+  display: grid; justify-items: center; align-content: center; gap: .1em;
+  width: 3.4em; border-right: 1px solid #2c2d31;
+}
+.fl-tool svg { width: 1.1em; height: 1.1em; fill: none; stroke: #f2f2f4; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.fl-tool em { font-style: normal; font-size: .5em; color: #c9c9cd; }
+.fl-clock { margin-left: auto; display: grid; justify-items: end; align-content: center; padding: 0 .7em; line-height: 1.05; }
+.fl-clock b { font-size: 1.05em; font-weight: 400; }
+.fl-clock small { font-size: .48em; color: #c9c9cd; }
+.fl-body { flex: 1; display: flex; min-height: 0; }
+.fl-nav { list-style: none; margin: 0; padding: 0; width: 5em; flex: none; background: #232428; }
+.fl-nav li {
+  position: relative;
+  display: flex; align-items: center; gap: .35em;
+  padding: .5em .45em;
+  border-bottom: 1px solid #303136;
+  color: #d9d9dc;
+  font-size: .56em; font-weight: 600;
+}
+.fl-nav b { font-size: 1.7em; font-weight: 300; line-height: 1; color: #bcbcc1; }
+.fl-nav li:first-child::before { content: ""; position: absolute; left: 0; top: .5em; bottom: .5em; width: .22em; background: #2fbf5b; }
+.fl-nav .is-on { background: #3a3c42; color: #ffffff; }
+.fl-nav .is-on b { color: #ffffff; }
+.fl-main { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: .55em .6em .4em; }
+.fl-card { padding: .45em .6em .6em; border-left: .22em solid #e0261f; background: #2b2c30; }
+.fl-card-title { font-size: .95em; font-weight: 600; }
+.fl-card .fl-label { margin-top: .3em; color: #a9a9ae; font-size: .55em; }
+.fl-input {
+  min-height: 5.6em;
+  margin-top: .2em;
+  padding: .35em .45em;
+  border-left: .2em solid #2fbf5b;
+  background: #1f2023;
+  font-size: 1.15em; line-height: 1.35;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.fl-caret { display: inline-block; width: 1.5px; height: 1.1em; margin: 0 -1.5px -.2em 0; background: #ffffff; }
+.fl-pages { display: flex; justify-content: center; gap: .3em; margin-top: auto; padding-top: .4em; }
+.fl-pages i { width: 1em; height: .2em; background: #4a4b50; }
+.fl-pages .is-on { background: #3b82d6; }
+
+/* Dongle in der weißen Hülle; steckt mit dem Stecker rechts unten seitlich im Anschluss. LED und Taste liegen
+   hintereinander, die Öse zeigt nach außen. */
+.fl-dongle {
+  position: absolute; left: calc(100% - .35em); top: 78%;
+  width: 4.4em; height: auto;
+  translate: 0 -50%;
+  overflow: visible;
+  filter: drop-shadow(0 .15em .2em rgba(0, 0, 0, .25));
+}
+.fl-case { fill: var(--case); stroke: var(--case-line); stroke-width: 1; }
+.fl-case-edge { stroke: var(--case-line); stroke-width: 1; }
+.fl-button { fill: #fbfbfa; stroke: #d5d5d0; stroke-width: 1.2; }
+.fl-led { fill: var(--led-on); }
+.fl-led-glow { fill: var(--led-on); opacity: .35; }
+
+/* ---------- Funkstrecke und Beschriftungen ---------- */
+.fl-wire { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; }
+.fl-wire--wide { display: none; }
+.fl-dash { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 5 5; opacity: .55; }
+.fl-pulse { stroke: var(--accent); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 6 200; stroke-dashoffset: 6; opacity: 0; }
+.fl-tag {
+  position: absolute;
+  padding: .3em .8em;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: .7em; font-weight: 600; line-height: 1.3; white-space: nowrap; text-align: center;
+  translate: -50% -50%;
+}
+.fl-tag b { color: var(--text); }
+.fl-tag--usb { border-radius: 1em; }
+.fl-tag--usb span, .fl-tag--usb b { display: block; }
+.fl-tag--bt { left: calc(15.3em / .7); top: calc(19.4em / .7); }
+.fl-tag--usb { left: calc(19.6em / .7); top: calc(15.5em / .7); }
+
+/* ---------- Smartphone ---------- */
+.fl-phone {
+  position: absolute; left: 5.5em; top: 25em;
+  width: 13em; height: 23em;
+  padding: .42em;
+  border-radius: 2.15em;
+  background: var(--phone-bezel);
+  box-shadow: var(--shadow-phone), inset 0 0 0 1px rgba(255, 255, 255, .14);
+}
+.fl-app {
+  position: relative;
+  display: flex; flex-direction: column;
+  height: 100%;
+  padding: 0 .65em .5em;
+  overflow: hidden;
+  border-radius: 1.75em;
+  background: var(--app-bg);
+  color: var(--app-text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+}
+/* Notch mit Kameralinse, an den Ecken weich in den Rahmen übergehend */
+.fl-notch {
+  position: absolute; left: 50%; top: 0;
+  width: 4.4em; height: 1.1em;
+  translate: -50% 0;
+  border-radius: 0 0 .8em .8em;
+  background: radial-gradient(circle at 70% 45%, #2a3a5c .1em, #0c0e16 .17em, transparent .2em), var(--phone-bezel);
+}
+.fl-notch::before,
+.fl-notch::after { content: ""; position: absolute; top: 0; width: .45em; height: .45em; }
+.fl-notch::before { right: 100%; background: radial-gradient(circle at 0 100%, transparent .44em, var(--phone-bezel) .45em); }
+.fl-notch::after { left: 100%; background: radial-gradient(circle at 100% 100%, transparent .44em, var(--phone-bezel) .45em); }
+.fl-statusbar {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 1.75em; flex: none;
+  padding: .1em .55em 0 .75em;
+  font-size: .6em; font-weight: 700;
+}
+.fl-statusbar svg { width: 4.4em; height: auto; fill: currentColor; }
+.fl-battery { fill: var(--app-green); }
+.fl-ok { fill: var(--app-green); }
+.fl-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-top: .15em; }
+.fl-chip {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: .35em;
+  padding: .32em .65em .32em .32em;
+  border-radius: 99px;
+  background: var(--app-card);
+  box-shadow: 0 .1em .45em rgba(0, 0, 0, .08), inset 0 0 0 1px rgba(120, 120, 128, .12);
+  font-size: .52em; font-weight: 500;
+}
+.fl-chip svg { width: 1.45em; height: 1.45em; }
+.fl-title { font-size: .66em; font-weight: 700; }
+.fl-round {
+  justify-self: end;
+  display: grid; place-items: center;
+  width: 1.75em; height: 1.75em; border-radius: 50%;
+  background: var(--app-card);
+  box-shadow: 0 .1em .45em rgba(0, 0, 0, .08), inset 0 0 0 1px rgba(120, 120, 128, .12);
+}
+.fl-round svg { width: 1em; height: 1em; }
+.fl-seg {
+  display: grid; grid-template-columns: 1fr 1fr;
+  margin-top: .55em; padding: .14em;
+  border-radius: 99px;
+  background: var(--app-seg);
+  font-size: .5em; font-weight: 600; text-align: center;
+}
+.fl-seg span { padding: .42em 0; border-radius: 99px; }
+.fl-seg .is-on { background: var(--app-seg-on); box-shadow: 0 .15em .5em rgba(0, 0, 0, .1); }
+.fl-row { display: flex; justify-content: space-between; align-items: baseline; margin: .75em .25em 0; }
+.fl-row > span:first-child { color: var(--app-muted); font-size: .6em; font-weight: 600; }
+.fl-link { display: inline-flex; align-items: center; gap: .35em; color: var(--app-link); font-size: .52em; font-weight: 600; }
+.fl-link svg { width: 1.3em; height: 1.3em; }
+.fl-app .fl-field {
+  height: 5.9em; flex: none;
+  margin-top: .38em;
+  padding: .6em .62em;
+  border-radius: .9em;
+  background: var(--app-card);
+  font-size: .64em; line-height: 1.38;
+}
+.fl-app .fl-count { margin: .38em .35em 0; color: var(--app-muted); font-size: .46em; }
+.fl-space { position: relative; flex: 1; }
+.fl-progress {
+  position: absolute; left: 0; right: 0; bottom: .45em;
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .45em;
+  padding: .55em .55em .55em .6em;
+  border-radius: .9em;
+  background: var(--app-card);
+  box-shadow: 0 .2em .8em rgba(0, 0, 0, .06);
+}
+.fl-ptitle { display: flex; align-items: center; gap: .35em; font-size: .52em; font-weight: 700; white-space: nowrap; }
+.fl-ptitle svg { width: 1.35em; height: 1.35em; color: var(--app-link); }
+.fl-pbar { display: block; height: .2em; margin: .35em 0 .25em; border-radius: 99px; background: rgba(120, 120, 128, .2); overflow: hidden; }
+.fl-pbar i { display: block; height: 100%; border-radius: inherit; background: var(--app-blue); transform-origin: 0 50%; transform: scaleX(var(--p, 1)); }
+.fl-psub { color: var(--app-muted); font-size: .44em; font-variant-numeric: tabular-nums; }
+.fl-cancel {
+  padding: .4em .65em;
+  border-radius: 99px;
+  background: rgba(120, 120, 128, .16);
+  color: var(--app-link);
+  font-size: .45em; font-weight: 600;
+}
+.fl-done { display: none; grid-column: 1 / -1; align-items: center; gap: .5em; }
+.fl-done svg { width: 1.15em; height: 1.15em; flex: none; }
+.fl-done p { display: grid; font-size: .5em; line-height: 1.3; }
+.fl-done span { color: var(--app-muted); font-size: .88em; }
+/* Endzustand: „Fertig getippt“ statt Fortschritt */
+.flow:not([data-state]) .fl-busy, .flow:not([data-state]) .fl-cancel,
+.flow[data-state="done"] .fl-busy, .flow[data-state="done"] .fl-cancel { display: none; }
+.flow:not([data-state]) .fl-done, .flow[data-state="done"] .fl-done { display: flex; }
+.fl-send {
+  position: relative;
+  display: flex; align-items: center; justify-content: center; gap: .45em;
+  height: 2.05em; flex: none;
+  border-radius: 99px;
+  background: var(--app-blue);
+  color: #ffffff;
+  font-size: .7em; font-weight: 500;
+}
+.fl-send svg { width: 1.05em; height: 1.05em; fill: currentColor; }
+.fl-tabs {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  margin-top: .42em; padding: .16em;
+  border-radius: 99px;
+  background: var(--app-card);
+  box-shadow: 0 .1em .5em rgba(0, 0, 0, .08), inset 0 0 0 1px rgba(120, 120, 128, .14);
+}
+.fl-tabs span {
+  display: grid; justify-items: center; gap: .15em;
+  padding: .4em 0 .32em;
+  border-radius: 99px;
+  font-size: .34em; font-weight: 600; letter-spacing: -.01em; white-space: nowrap;
+}
+.fl-tabs svg { width: 2.6em; height: 2.6em; fill: currentColor; }
+.fl-tabs .is-on { background: rgba(120, 120, 128, .14); color: var(--app-link); }
+
+/* ---------- Breit: Tablet-PC links, Smartphone rechts ---------- */
+@container flow (min-width: 560px) {
+  .flow-scene { width: 58em; height: 34em; font-size: min(16px, 100cqi / 58); }
+  .fl-pad { top: 6em; width: 32em; }
+  .fl-screen { font-size: .8em; }
+  .fl-nav { width: 7em; }
+  .fl-nav li { font-size: .62em; }
+  .fl-input { font-size: 1.35em; }
+  .fl-dongle { left: calc(100% - .45em); width: 5.75em; }
+  .fl-wire--narrow { display: none; }
+  .fl-wire--wide { display: block; }
+  .fl-tag { font-size: .66em; }
+  .fl-tag--bt { left: calc(43.6em / .66); top: calc(4.1em / .66); }
+  .fl-tag--usb { left: calc(36.5em / .66); top: calc(27.6em / .66); }
+  .fl-phone { left: 45em; top: 7.5em; height: 26em; }
+}
+@media (min-width: 56rem) {
+  .flow-stage { padding: 2.5rem 2.25rem 3.75rem; }
+}
+
+/* ---------- Ablauf (nur mit Bewegung; flow.js setzt data-state) ---------- */
+.flow-replay {
+  position: absolute; right: .9rem; bottom: .9rem;
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .35rem .85rem .35rem .7rem;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit; font-size: .88rem; font-weight: 600;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.flow-replay svg { width: 1rem; height: 1rem; }
+.flow-replay:hover { border-color: var(--accent); background: var(--accent-soft); }
+.flow-replay:active { transform: scale(.97); }
+.flow-replay:focus-visible { border-radius: 99px; }
+.fl-send.is-replayable { cursor: pointer; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fl-progress { transition: opacity .35s var(--ease-out), translate .45s var(--ease-out); }
+  .flow[data-state="ready"] .fl-progress,
+  .flow[data-state="tap"] .fl-progress { opacity: 0; translate: 0 1.2em; }
+
+  .fl-send { transition: scale .18s ease, filter .18s ease; }
+  .flow[data-state="tap"] .fl-send { scale: .95; filter: brightness(1.15); }
+  .fl-send::after {
+    content: ""; position: absolute; width: 2.4em; height: 2.4em; border-radius: 50%;
+    background: rgba(255, 255, 255, .45); opacity: 0; pointer-events: none;
+  }
+  .flow[data-state="tap"] .fl-send::after { animation: fl-touch .5s ease-out both; }
+
+  .flow[data-state="sending"] .fl-pulse { animation: fl-pulse 1.2s linear infinite; }
+  .flow[data-state="sending"] .fl-pulse--2 { animation-delay: .4s; }
+  .flow[data-state="sending"] .fl-pulse--3 { animation-delay: .8s; }
+  .flow[data-state="sending"] .fl-led,
+  .flow[data-state="sending"] .fl-led-glow { animation: fl-flicker .14s steps(2, jump-none) infinite; }
+
+  .flow[data-state="ready"] .fl-caret,
+  .flow[data-state="tap"] .fl-caret,
+  .flow[data-state="done"] .fl-caret { animation: fl-blink 1.06s steps(2, jump-none) infinite; }
+}
+@keyframes fl-touch { from { opacity: 1; scale: .3; } to { opacity: 0; scale: 1.4; } }
+@keyframes fl-pulse {
+  0% { opacity: 0; stroke-dashoffset: 6; }
+  12%, 88% { opacity: 1; }
+  100% { opacity: 0; stroke-dashoffset: -100; }
+}
+@keyframes fl-flicker { 50% { opacity: .2; } }
+@keyframes fl-blink { 50% { opacity: 0; } }
+
+@media print {
+  .flow { display: none; }
+}
