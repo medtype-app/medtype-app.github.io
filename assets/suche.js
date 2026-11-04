@@ -471,7 +471,7 @@
   }
 
   /* Springt zur Stelle, klappt die Frage auf und hebt die Stelle kurz hervor */
-  function zeige(s, ohneFokus) {
+  function zeige(s, ohneFokus, sofort) {
     window.clearTimeout(statusZeit); /* keine Ansage mehr, wenn die Suche schon verlassen ist */
     if (s.details && !s.details.open) s.details.open = true;
     var el = s.el;
@@ -479,7 +479,7 @@
     void el.offsetWidth;
     el.classList.add("is-hit");
     window.setTimeout(function () { el.classList.remove("is-hit"); }, 2600);
-    /* Erst Fokus, dann Scrollen: Ein späterer Fokus bricht sanftes Scrollen ab. Weite Wege ohne Animation. */
+    /* Erst Fokus, dann Scrollen: Ein späterer Fokus bricht sanftes Scrollen ab. */
     if (!ohneFokus) {
       var fokus = s.fokus || el;
       if (!fokus.matches("a, button, summary, input")) {
@@ -488,8 +488,9 @@
       }
       fokus.focus({ preventScroll: true });
     }
-    var weit = Math.abs(el.getBoundingClientRect().top) > window.innerHeight * 2;
-    el.scrollIntoView({ behavior: bewegungAus.matches || weit ? "auto" : "smooth", block: "start" });
+    /* Sanft wie die übrigen Sprünge der Seite (doc.js); ohne doc.js direkt */
+    if (window.MedTypeScroll) window.MedTypeScroll.zu(el, sofort);
+    else el.scrollIntoView({ block: "start" });
     try { history.replaceState(null, "", location.pathname + location.search + "#" + s.anker); } catch (e) { /* ohne Verlauf */ }
   }
 
@@ -536,11 +537,12 @@
   });
 
   /* Direkter Link auf eine Stelle (#frage-…, #led-…): Frage aufklappen und hinspringen, auch innerhalb der Seite */
-  function folgeAnker() {
+  function folgeAnker(e) {
     var roh = location.hash.slice(1), ziel;
     if (!roh) return;
     try { ziel = decodeURIComponent(roh); } catch (e) { ziel = roh; }
-    stellen.forEach(function (s) { if (s.el.id === ziel && s.details) zeige(s, true); });
+    /* Beim Laden direkt hin (ohne Animation von oben), bei Änderung der Adresse sanft */
+    stellen.forEach(function (s) { if (s.el.id === ziel && s.details) zeige(s, true, !e); });
   }
   window.addEventListener("hashchange", folgeAnker);
 
