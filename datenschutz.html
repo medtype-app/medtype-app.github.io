@@ -147,7 +147,7 @@
       <li><a href="#verantwortlich">Verantwortlich</a></li>
       <li><a href="#geraet">Was auf deinem Gerät gespeichert wird</a></li>
       <li><a href="#bluetooth">Bluetooth und Dongle</a></li>
-      <li><a href="#update">Dongle-Update</a></li>
+      <li><a href="#update">Dongle-Version und Update</a></li>
       <li><a href="#diktat">Tastatur und Diktat</a></li>
       <li><a href="#keine">Was MedType nicht tut</a></li>
       <li><a href="#apple">App Store und TestFlight</a></li>
@@ -181,13 +181,14 @@
           <tr><td>Einstellungen (z. B. Tippgeschwindigkeit, Pause nach Zeilenumbruch, Haptik, Demo-Modus, App-Icon)</td>
             <td>Damit die App so arbeitet, wie du es eingestellt hast.</td></tr>
           <tr><td>Der zuletzt verbundene Dongle (Kennung und Name) und seine Software-Version</td><td>Damit sich MedType
-            beim Start automatisch verbindet und dir passende Updates anbietet.</td></tr>
+            beim Start automatisch verbindet und die Version anzeigen kann.</td></tr>
         </tbody>
       </table>
     </div>
     <p>Der Verlauf in „Live tippen“ und die „Demo-Ausgabe“ liegen nur im Arbeitsspeicher und sind weg, sobald die App
       beendet wird.</p>
-    <p>Du löschst die Daten, indem du Bausteine und Entwürfe in der App löschst oder die App entfernst. Nutzt du
+    <p>Du löschst die Daten, indem du Bausteine und Entwürfe in der App löschst oder die App entfernst. Mit „Dongle
+      vergessen“ (Einstellungen › Dongle) löscht MedType den gemerkten Dongle samt Software-Version. Nutzt du
       Backups deines Smartphones (iCloud-Backup oder Backup am Computer), sichert iOS die App-Daten wie bei jeder anderen
       App mit. Das steuerst du in den Einstellungen deines Smartphones; MedType hat darauf keinen Einfluss.</p>
   </section>
@@ -210,11 +211,12 @@
   </section>
 
   <section class="card" aria-labelledby="update">
-    <h2 id="update"><span class="no">4</span>Dongle-Update</h2>
-    <p>Neue Software für den Dongle ist Teil der App. Für ein Update lädt MedType nichts aus dem Internet, sondern
-      überträgt die mitgelieferte Datei per Bluetooth auf deinen Dongle. Dazu fragt die App die Software-Version des
-      Dongles ab und merkt sie sich auf deinem Gerät.</p>
-    <p>Für das Update nutzt MedType eine Open-Source-Programmbibliothek von Nordic Semiconductor. Sie läuft nur auf
+    <h2 id="update"><span class="no">4</span>Dongle-Version und Update</h2>
+    <p>MedType fragt die Software-Version deines Dongles ab, zeigt sie an und merkt sie sich auf deinem Gerät. Die App
+      bringt derzeit keine Dongle-Software mit und bietet für einen echten Dongle kein Update an. Kommt Dongle-Software
+      künftig mit einem App-Update, lädt MedType auch dann nichts aus dem Internet, sondern überträgt die in der App
+      enthaltene Datei per Bluetooth auf deinen Dongle.</p>
+    <p>Dafür enthält MedType eine Open-Source-Programmbibliothek von Nordic Semiconductor. Sie läuft nur auf
       deinem Gerät und sendet keine Daten an Nordic Semiconductor oder andere.</p>
   </section>
 
@@ -307,7 +309,7 @@
     <h2 id="aenderungen"><span class="no">12</span>Änderungen</h2>
     <p>Ändert sich MedType so, dass diese Erklärung nicht mehr passt, passen wir sie an. Es gilt die Fassung auf
       dieser Seite.</p>
-    <p class="muted">Stand: 4. November 2026 · gilt für MedType ab 1.2</p>
+    <p class="muted">Stand: 4. November 2026 · gilt für MedType ab 1.2.1</p>
   </section>
 
 </main>

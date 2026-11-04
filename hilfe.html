@@ -6,14 +6,14 @@
 <meta name="color-scheme" content="light dark">
 <title>Hilfe zu MedType – Smartphone als Tastatur am Windows-PC</title>
 <script>/* Adresse ohne „.html“ anzeigen */(function(){var p=location.pathname;if(/\.html$/.test(p)){history.replaceState(null,"",(/\/index\.html$/.test(p)?p.replace(/index\.html$/,""):p.replace(/\.html$/,""))+location.search+location.hash)}})();</script>
-<meta name="description" content="Hilfe zu MedType: dein Smartphone oder Tablet als Tastatur für den Windows-PC. Koppeln, Diktat, Remote Desktop und Citrix, Dongle-Update und häufige Fragen.">
+<meta name="description" content="Hilfe zu MedType: dein Smartphone oder Tablet als Tastatur für den Windows-PC. Koppeln, Diktat, Remote Desktop und Citrix, Dongle-Version und häufige Fragen.">
 <meta name="theme-color" content="#e0261f" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#9e1a1f" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="de_DE">
 <meta property="og:site_name" content="MedType">
 <meta property="og:title" content="Hilfe zu MedType – Smartphone als Tastatur am PC">
-<meta property="og:description" content="Voraussetzungen, erste Schritte, Koppeln, Diktat, Remote Desktop und Citrix, Dongle-Update und häufige Fragen zu MedType.">
+<meta property="og:description" content="Voraussetzungen, erste Schritte, Koppeln, Diktat, Remote Desktop und Citrix, Dongle-Version und häufige Fragen zu MedType.">
 <meta property="og:url" content="https://medtype.de/hilfe">
 <meta property="og:image" content="https://medtype.de/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -110,6 +110,26 @@
   details > div { padding: 0 0 .6rem; }
   .msg { font-style: italic; }
 
+  /* Suche in den häufigen Fragen (nur mit JavaScript sichtbar) */
+  .faq-search { margin: .6rem 0 .4rem; }
+  .faq-search label { display: block; font-weight: 600; margin-bottom: .35rem; }
+  .faq-search input {
+    width: 100%; box-sizing: border-box;
+    font: inherit; color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: .65rem .9rem;
+    -webkit-appearance: none; appearance: none;
+  }
+  .faq-search input::placeholder { color: var(--muted); opacity: 1; }
+  .faq-search input:hover { border-color: var(--muted); }
+  .faq-search input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
+  .faq-status { margin: .4rem 0 0; min-height: 1.4em; font-size: .95rem; color: var(--muted); }
+  .faq-filtering details { border-bottom: 1px solid var(--line); margin-bottom: -1px; }
+  .faq-filtering h3 { margin-bottom: .6rem; }
+  [hidden] { display: none !important; }
+  mark { background: var(--accent-soft); color: inherit; border-radius: 3px; padding: 0 .1em; }
+
   @media (max-width: 30rem) {
     .card { padding: 1.15rem 1rem 1rem; }
     table.stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -202,7 +222,8 @@
     <p>Schalte in MedType unter <span class="path">Einstellungen › Demo-Modus</span> den Demo-Modus ein. Tippe dann
       oben links auf den Verbindungsstatus und wähle „Demo-Dongle“. MedType tut jetzt so, als wäre ein Dongle
       verbunden. Was am PC angekommen wäre, siehst du unter <span class="path">Einstellungen › Demo-Modus ›
-      Demo-Ausgabe</span>. Am PC wird dabei nichts getippt.</p>
+      Demo-Ausgabe</span>. Am PC wird dabei nichts getippt. Auch ein simuliertes Dongle-Update lässt sich dort
+      ausprobieren.</p>
     <p>Für den echten Dongle schaltest du den Demo-Modus wieder aus.</p>
   </section>
 
@@ -229,6 +250,12 @@
 
   <section class="card" aria-labelledby="faq">
     <h2 id="faq">Häufige Fragen</h2>
+
+    <div class="faq-search" id="faq-search" hidden>
+      <label for="faq-q">Fragen durchsuchen</label>
+      <input type="search" id="faq-q" placeholder="Fragen durchsuchen …" autocomplete="off" enterkeyhint="search" aria-describedby="faq-status">
+      <p class="faq-status" id="faq-status" role="status" aria-live="polite"></p>
+    </div>
 
     <h3>Allgemein</h3>
 
@@ -349,11 +376,29 @@
     </details>
 
     <details>
+      <summary>Wie nehme ich einen Dongle aus MedType heraus („Dongle vergessen“)?</summary>
+      <div>
+        <p>Öffne <span class="path">Einstellungen</span>, tippe auf die Dongle-Zeile und ganz unten auf das rote
+          „Dongle vergessen“. Bestätige danach die Rückfrage. MedType trennt die Verbindung und verbindet sich danach nicht mehr von
+          selbst mit diesem Dongle, auch nicht nach einem Neustart. Während eines Dongle-Updates geht das nicht.</p>
+        <p>Die Kopplung zwischen Smartphone und Dongle bleibt dabei bestehen. Über „Dongle verbinden …“ wählst du den
+          Dongle jederzeit wieder, ohne Koppelmodus – solange er nicht am Smartphone ignoriert, am Dongle zurückgesetzt
+          oder mit einem anderen Smartphone gekoppelt wurde.</p>
+        <p><strong>Ganz entfernen</strong> (z. B. zum Weitergeben oder für ein anderes Smartphone): Wähle am Smartphone
+          unter <span class="path">Einstellungen › Bluetooth</span> beim Dongle ⓘ und „Dieses Gerät ignorieren“. Halte
+          am Dongle (steckt am PC) die Taste 10 Sekunden gedrückt, bis die LED 3× rot blinkt. Das löscht alle
+          Kopplungen. Danach muss der Dongle beim nächsten Verbinden neu gekoppelt werden.</p>
+      </div>
+    </details>
+
+    <details>
       <summary>Die App zeigt „Verbindung verloren“.</summary>
       <div>
         <p>Der Dongle wurde abgezogen, der PC ist aus oder das Smartphone ist außer Reichweite. MedType verbindet sich von
           selbst neu, sobald der Dongle wieder erreichbar ist. Prüf danach den Text am PC: Was vor dem Abbruch nicht mehr
           angekommen ist, wurde nicht getippt.</p>
+        <p>Läuft MedType im Hintergrund, verbindet es sich aus Rücksicht auf den Akku seltener neu. Öffne dann die App:
+          Sie holt das Verbinden sofort nach.</p>
       </div>
     </details>
 
@@ -430,38 +475,39 @@
       </div>
     </details>
 
-    <h3>Dongle-Update</h3>
+    <h3>Dongle-Version und Update</h3>
 
     <details>
       <summary>Wie aktualisiere ich den Dongle?</summary>
       <div>
-        <p>Neue Software für den Dongle bringt MedType mit; heruntergeladen wird nichts. Gibt es ein Update, steht in
-          den Einstellungen unter der Dongle-Zeile blau „Update auf … verfügbar“.</p>
-        <ol>
-          <li>Dongle im PC eingesteckt und mit MedType verbunden lassen.</li>
-          <li>„Update auf … verfügbar“ antippen und starten.</li>
-          <li>App geöffnet und das Smartphone in der Nähe lassen. Am Ende startet der Dongle neu: Die LED ist dann bis zu
-            etwa 20 Sekunden aus, und Windows meldet die Tastatur kurz ab. Nicht abziehen.</li>
-          <li>MedType prüft danach selbst, ob die neue Software läuft.</li>
-        </ol>
+        <p>Derzeit bringt MedType keine Dongle-Software mit. Mit einem echten Dongle zeigt die App deshalb nur dessen
+          Version an (in der Dongle-Zeile der Einstellungen, z. B. „Verbunden · Version 4.2“, und auf der Dongle-Seite
+          unter „Version“) und bietet kein Update an. Hat dein Dongle eine ältere Software, wird er einmal am PC
+          aktualisiert – schreib uns.</p>
+        <p>Neue Dongle-Software kommt künftig mit einem App-Update und wird dann per Bluetooth aufgespielt. Der Dongle
+          bleibt dabei am PC. Wie das Update abläuft, kannst du im Demo-Modus mit einem simulierten Update ausprobieren:
+          Dongle-Zeile antippen und „Update auf … verfügbar“ wählen.</p>
       </div>
     </details>
 
     <details>
-      <summary>Was bedeuten die Meldungen beim Update?</summary>
+      <summary>Was bedeuten die Meldungen zur Dongle-Software?</summary>
       <div>
+        <p>Die ersten beiden Meldungen können mit einem echten Dongle erscheinen. Die übrigen gehören zum Fenster
+          „Dongle-Update“, das es derzeit nur im Demo-Modus gibt und das für künftige Dongle-Software gilt.</p>
         <div class="table-wrap">
           <table class="stack">
             <thead><tr><th scope="col">Meldung</th><th scope="col">Was du tust</th></tr></thead>
             <tbody>
+              <tr><td>„Funk-Updates gibt es ab Dongle-Version 3 …“</td><td>Dein Dongle hat eine sehr alte Software
+                (Version 2 oder älter). Er muss einmal am PC aktualisiert werden – schreib uns. Schon aktualisiert?
+                Schalte Bluetooth am Smartphone kurz aus und wieder ein oder steck den Dongle neu ein.</td></tr>
+              <tr><td>„App und Dongle passen nicht zusammen. Der Dongle braucht ein Update.“</td><td>Die Software des
+                Dongles ist zu alt für diese Funktion. Der Dongle wird einmal am PC aktualisiert – schreib uns.</td></tr>
               <tr><td>„Fast fertig“</td><td>Die neue Software läuft, ist aber noch nicht bestätigt. Lass den Dongle
                 eingesteckt und mit MedType verbunden; dann bestätigt er sich selbst.</td></tr>
               <tr><td>„Update wurde zurückgenommen“</td><td>Die bisherige Software läuft wieder. Dongle einstecken, MedType
                 geöffnet lassen und das Update erneut starten.</td></tr>
-              <tr><td>„Funk-Updates gibt es ab Dongle-Version 3 …“</td><td>Dein Dongle ist zu alt für Updates per App.
-                Er muss einmal am PC aktualisiert werden – schreib uns.</td></tr>
-              <tr><td>„App und Dongle passen nicht zusammen. Der Dongle braucht ein Update.“</td><td>Den Dongle
-                aktualisieren, wie oben beschrieben.</td></tr>
               <tr><td>„Der Dongle tippt gerade noch …“</td><td>Warten, bis das Tippen fertig ist, dann starten.</td></tr>
             </tbody>
           </table>
@@ -494,7 +540,9 @@
     <details>
       <summary>Woher bekomme ich einen MedType-Dongle?</summary>
       <div>
-        <p>Schreib uns an die E-Mail-Adresse unten.</p>
+        <p>Über „Dongle anfragen“ auf der <a href="./">Startseite</a> oder per E-Mail an
+          <a href="mailto:store@medtype.de?subject=Dongle%20f%C3%BCr%20MedType">store@medtype.de</a>. Den Preis nennen
+          wir dir auf Anfrage.</p>
       </div>
     </details>
   </section>
@@ -509,7 +557,7 @@
       <span class="path">Einstellungen › Info</span>.</div>
   </section>
 
-  <p class="stand">Stand: 15. Oktober 2026 · MedType 1.2</p>
+  <p class="stand">Stand: 4. November 2026 · MedType 1.2.1</p>
 
 </main>
 
@@ -528,5 +576,108 @@
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>
+<script>
+/* Suche in den häufigen Fragen: filtert beim Tippen, ohne Bibliotheken. */
+(function () {
+  var box = document.getElementById("faq-search");
+  var input = document.getElementById("faq-q");
+  var status = document.getElementById("faq-status");
+  var section = document.querySelector('section[aria-labelledby="faq"]');
+  if (!box || !input || !status || !section) return;
+  /* Vor dem ersten norm()-Aufruf festlegen (die Fragen werden gleich unten durchsucht). */
+  var MAP = { "ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss" };
+  var items = Array.prototype.slice.call(section.querySelectorAll("details")).map(function (d) {
+    var s = d.querySelector("summary");
+    return { el: d, summary: s, title: s.textContent, normAll: norm(d.textContent).text, normKurz: norm(d.textContent, true).text, wasOpen: d.open };
+  });
+  var heads = Array.prototype.slice.call(section.querySelectorAll("h3"));
+  var total = items.length;
+
+  /* Kleinschreibung; lang: ä=ae, ö=oe, ü=ue, ß=ss; kurz: ä=a, ö=o, ü=u, ß=ss (damit „uber“ auch „über“ findet).
+     map[i] = Position des Zeichens im Original (1:1, Leerraum bleibt erhalten) */
+  function norm(str, kurz) {
+    var out = "", map = [];
+    for (var i = 0; i < str.length; i++) {
+      var c = str.charAt(i).toLowerCase();
+      var r = c === "ß" ? "ss" : (!kurz && MAP[c]) || c.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      for (var j = 0; j < r.length; j++) { out += r.charAt(j); map.push(i); }
+    }
+    return { text: out, map: map };
+  }
+  /* Suchbegriffe in beiden Schreibweisen; lang[i] und kurz[i] gehören zum selben Wort */
+  function terms(q) {
+    return { lang: norm(q).text.split(/\s+/).filter(Boolean), kurz: norm(q, true).text.split(/\s+/).filter(Boolean) };
+  }
+  function setTitle(item, ts) {
+    var s = item.summary, t = item.title;
+    while (s.firstChild) s.removeChild(s.firstChild);
+    if (!ts.lang.length) { s.appendChild(document.createTextNode(t)); return; }
+    var flags = [], i, k;
+    for (i = 0; i < t.length; i++) flags.push(false);
+    [[norm(t), ts.lang], [norm(t, true), ts.kurz]].forEach(function (paar) {
+      var n = paar[0];
+      paar[1].forEach(function (term) {
+        var from = 0, at;
+        while ((at = n.text.indexOf(term, from)) !== -1) {
+          for (k = at; k < at + term.length; k++) flags[n.map[k]] = true;
+          from = at + term.length;
+        }
+      });
+    });
+    var buf = "", on = false;
+    function flush() {
+      if (!buf) return;
+      var node = document.createTextNode(buf);
+      if (on) { var m = document.createElement("mark"); m.appendChild(node); s.appendChild(m); }
+      else s.appendChild(node);
+      buf = "";
+    }
+    for (i = 0; i < t.length; i++) {
+      if (flags[i] !== on) { flush(); on = flags[i]; }
+      buf += t.charAt(i);
+    }
+    flush();
+  }
+  function apply() {
+    var ts = terms(input.value), shown = [];
+    var leer = !ts.lang.length;
+    section.classList.toggle("faq-filtering", !leer);
+    items.forEach(function (it) {
+      var ok = ts.lang.every(function (t, i) {
+        return it.normAll.indexOf(t) !== -1 || it.normKurz.indexOf(ts.kurz[i]) !== -1;
+      });
+      it.el.hidden = !ok;
+      if (ok) shown.push(it);
+      setTitle(it, ok ? ts : { lang: [], kurz: [] });
+    });
+    items.forEach(function (it) { if (leer) it.el.open = it.wasOpen; else if (!it.el.hidden) it.el.open = shown.length === 1; });
+    heads.forEach(function (h) {
+      var n = h.nextElementSibling, any = false;
+      while (n && n.tagName !== "H3") { if (n.tagName === "DETAILS" && !n.hidden) any = true; n = n.nextElementSibling; }
+      h.hidden = !any;
+    });
+    if (leer) status.textContent = "";
+    else if (!shown.length) {
+      status.textContent = "Keine passende Frage gefunden – ";
+      var a = document.createElement("a");
+      a.href = "mailto:support@medtype.de"; a.textContent = "support@medtype.de";
+      status.appendChild(a);
+    } else status.textContent = shown.length + " von " + total + " Fragen";
+  }
+  items.forEach(function (it) {
+    it.el.addEventListener("toggle", function () { if (!input.value.trim()) it.wasOpen = it.el.open; });
+  });
+  input.addEventListener("input", apply);
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && input.value) { input.value = ""; apply(); }
+  });
+  try {
+    var q = new URLSearchParams(location.search).get("q");
+    if (q) input.value = q.slice(0, 100);
+  } catch (e) {}
+  box.hidden = false;
+  if (input.value) apply();
+})();
+</script>
 </body>
 </html>
