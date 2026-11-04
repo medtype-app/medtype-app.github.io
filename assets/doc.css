@@ -62,6 +62,51 @@
 .search-status { margin: .65rem 0 0 1.25rem; min-height: 1.5em; font-size: .95rem; font-weight: 600; }
 .search-status a { color: #ffffff; }
 
+/* Trefferliste unter dem Suchfeld: Art der Stelle, Titel und Ausschnitt mit markierten Suchwörtern */
+.search-results {
+  list-style: none;
+  max-width: 38rem; margin: .35rem 0 0; padding: .35rem;
+  border-radius: 22px;
+  background: var(--surface); color: var(--text);
+  box-shadow: 0 18px 40px -18px rgba(60, 0, 10, .85);
+}
+.search-results li { margin: 0; }
+.search-results li + li { border-top: 1px solid var(--line); }
+.search-hit {
+  display: grid; gap: .2rem;
+  padding: .75rem .9rem;
+  border-radius: 16px;
+  color: inherit; text-decoration: none;
+  transition: background-color .15s ease;
+}
+.search-hit:hover { background: var(--surface-2); }
+.search-hit:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; background: var(--surface-2); }
+.search-kind { color: var(--accent); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.search-title { font-size: 1.02rem; font-weight: 700; line-height: 1.35; }
+.search-snippet { color: var(--muted); font-size: .93rem; line-height: 1.5; }
+.search-more {
+  display: block; width: 100%;
+  padding: .7rem .9rem;
+  border: 0; border-radius: 16px;
+  background: none; color: var(--accent);
+  font: inherit; font-weight: 700; text-align: left;
+  cursor: pointer;
+}
+.search-more:hover, .search-more:focus-visible { background: var(--surface-2); }
+.search-more:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+
+/* Ziel eines Treffers: kurz hervorgehoben */
+[data-treffer] { scroll-margin-top: 1.25rem; }
+.is-hit { animation: treffer 2.6s var(--ease-out); border-radius: 12px; }
+tr.is-hit > td { animation: treffer 2.6s var(--ease-out); }
+@keyframes treffer {
+  from { background-color: var(--accent-soft); box-shadow: 0 0 0 .45rem var(--accent-soft); }
+  to { background-color: transparent; box-shadow: 0 0 0 .45rem transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .is-hit, tr.is-hit > td { animation: none; background-color: var(--accent-soft); }
+}
+
 /* Themen als Abkürzungen */
 .topics { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.1rem 0 0; padding: 0; }
 .topics a {
@@ -76,7 +121,7 @@
 }
 .topics a:hover { background: rgba(40, 0, 8, .24); border-color: #ffffff; }
 .topics a:focus-visible { border-radius: 999px; }
-.is-searching .topics { display: none; }
+.is-searching .topics-nav { display: none; }
 
 /* Inhalt mit Verzeichnis */
 .doc-layout {

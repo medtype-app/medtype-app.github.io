@@ -24,7 +24,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="canonical" href="https://medtype.de/hilfe">
 <link rel="stylesheet" href="assets/site.css?v=4">
-<link rel="stylesheet" href="assets/doc.css?v=3">
+<link rel="stylesheet" href="assets/doc.css?v=4">
 <link rel="stylesheet" href="assets/devices.css?v=2">
 </head>
 <body class="doc">
@@ -55,12 +55,13 @@
         <label class="sr-only" for="suche-q">Hilfe durchsuchen</label>
         <div class="search-field">
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input type="search" id="suche-q" placeholder="Hilfe durchsuchen …" autocomplete="off" enterkeyhint="search" aria-describedby="suche-status">
+          <input type="search" id="suche-q" placeholder="Hilfe durchsuchen …" autocomplete="off" enterkeyhint="search" maxlength="100" aria-describedby="suche-status" aria-controls="suche-ergebnisse">
         </div>
         <p class="search-status" id="suche-status" role="status" aria-live="polite"></p>
+        <ol class="search-results" id="suche-ergebnisse" role="list" aria-label="Treffer" hidden></ol>
       </div>
 
-      <nav aria-label="Themen">
+      <nav class="topics-nav" aria-label="Themen">
         <ul class="topics">
           <li><a href="#start">Erste Schritte</a></li>
           <li><a href="#led">LED am Dongle</a></li>
@@ -546,6 +547,8 @@
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>
-<script src="assets/doc.js?v=2"></script>
+<script src="assets/doc.js?v=3"></script>
+<script src="assets/suche-daten.js?v=1"></script>
+<script src="assets/suche.js?v=1"></script>
 </body>
 </html>
