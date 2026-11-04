@@ -24,82 +24,12 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="canonical" href="https://medtype.de/datenschutz">
 <link rel="stylesheet" href="assets/site.css?v=4">
-<style>
-  .hero h1 {
-    font-size: clamp(2rem, 1.4rem + 3vw, 3rem);
-    line-height: 1.1;
-    letter-spacing: -.02em;
-    margin: 2rem 0 .6rem;
-    -webkit-hyphens: auto; hyphens: auto;
-  }
-  .hero p { margin: 0; font-size: 1.12rem; max-width: 34rem; }
-
-  main {
-    max-width: calc(var(--measure) + 2 * var(--gutter));
-    /* Der Inhalt beginnt mit Abstand unter dem roten Band (nicht hineinragend). */
-    margin: 1.75rem auto 0;
-    padding: 0 var(--gutter) 3rem;
-  }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.4rem 1.4rem 1.15rem;
-    margin-bottom: 1.25rem;
-  }
-  h2 { font-size: 1.3rem; line-height: 1.25; letter-spacing: -.01em; margin: 0 0 .8rem; }
-  h3 { font-size: 1.05rem; margin: 1.2rem 0 .4rem; }
-  p { margin: 0 0 .9rem; }
-  ul { margin: 0 0 .9rem; padding-left: 1.25rem; }
-  li { margin-bottom: .35rem; }
-  .muted { color: var(--muted); }
-  .path { font-weight: 600; }
-  .contact p { margin-bottom: .4rem; }
-  .stand { color: var(--muted); font-size: .9rem; margin: 1.5rem 0 0; }
-
-  .table-wrap { overflow-x: auto; margin: 0 0 .9rem; }
-  table { border-collapse: collapse; width: 100%; font-size: .97rem; }
-  th, td { text-align: left; vertical-align: top; padding: .55rem .6rem; border-bottom: 1px solid var(--line); }
-  th { font-weight: 600; color: var(--muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
-
-  h2 .no { color: var(--accent); font-variant-numeric: tabular-nums; margin-right: .35rem; }
-
-  /* Kurzfassung */
-  .summary { border: 2px solid var(--ok); background: var(--surface); }
-  .facts { list-style: none; padding: 0; margin: 0; display: grid; gap: .55rem; }
-  .facts li { display: flex; gap: .7rem; align-items: flex-start; margin: 0; }
-  .facts li::before {
-    content: "✓";
-    flex: none;
-    width: 1.6rem; height: 1.6rem; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--ok-soft); color: var(--ok);
-    font-weight: 700; font-size: .9rem;
-    margin-top: .05rem;
-  }
-
-  .toc ol { margin: 0; padding-left: 1.4rem; columns: 2 15rem; column-gap: 2rem; }
-  .toc li { break-inside: avoid; }
-
-  @media (max-width: 30rem) {
-    .card { padding: 1.15rem 1rem 1rem; }
-    table.stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-    table.stack tr { display: block; padding: .55rem 0; border-bottom: 1px solid var(--line); }
-    table.stack td { display: block; border: 0; padding: .1rem 0; width: auto; }
-    table.stack td:first-child { font-weight: 600; }
-  }
-
-  @media print {
-    .toc { display: none; }
-    .card { box-shadow: none; }
-  }
-</style>
+<link rel="stylesheet" href="assets/doc.css?v=1">
 </head>
-<body>
+<body class="doc">
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
-<header class="band">
+<header class="band doc-band">
   <div class="band-inner">
     <div class="topnav">
       <a class="brand" href="./">
@@ -114,28 +44,17 @@
         </ul>
       </nav>
     </div>
-    <div class="hero">
+    <div class="doc-hero">
+      <p class="kicker">Datenschutz</p>
       <h1>Datenschutz&shy;erklärung</h1>
-      <p>für die App MedType auf Smartphone und Tablet – und für diese Webseite.</p>
+      <p class="lead">für die App MedType auf Smartphone und Tablet – und für diese Webseite.</p>
     </div>
   </div>
 </header>
 
-<main id="inhalt">
-
-  <section class="card summary" aria-labelledby="kurz">
-    <h2 id="kurz">Kurz gesagt</h2>
-    <ul class="facts">
-      <li>MedType erfasst keine personenbezogenen Daten. Wir bekommen nichts von dem, was du in der App schreibst.</li>
-      <li>Kein Konto, kein Server, keine Cloud. Die App nutzt keine Internetverbindung.</li>
-      <li>Bausteine und Entwürfe bleiben auf deinem Smartphone.</li>
-      <li>Texte gehen nur per Bluetooth an deinen eigenen MedType-Dongle – verschlüsselt.</li>
-      <li>Kein Tracking, keine Analyse, keine Werbung, keine Dienste von Drittanbietern.</li>
-    </ul>
-  </section>
-
-  <nav class="card toc" aria-labelledby="toc">
-    <h2 id="toc">Inhalt</h2>
+<div class="doc-layout">
+  <nav class="toc" aria-labelledby="toc">
+    <p class="toc-title" id="toc">Inhalt</p>
     <ol>
       <li><a href="#verantwortlich">Verantwortlich</a></li>
       <li><a href="#geraet">Was auf deinem Gerät gespeichert wird</a></li>
@@ -152,14 +71,28 @@
     </ol>
   </nav>
 
-  <section class="card contact" aria-labelledby="verantwortlich">
+<main id="inhalt" class="doc-main">
+
+  <section class="ink-panel" aria-labelledby="kurz">
+    <h2 id="kurz">Kurz gesagt</h2>
+    <ul class="facts">
+      <li>MedType erfasst keine personenbezogenen Daten. Wir bekommen nichts von dem, was du in der App schreibst.</li>
+      <li>Kein Konto, kein Server, keine Cloud. Die App nutzt keine Internetverbindung.</li>
+      <li>Bausteine und Entwürfe bleiben auf deinem Smartphone.</li>
+      <li>Texte gehen nur per Bluetooth an deinen eigenen MedType-Dongle – verschlüsselt.</li>
+      <li>Kein Tracking, keine Analyse, keine Werbung, keine Dienste von Drittanbietern.</li>
+    </ul>
+  </section>
+
+
+  <section class="doc-section" aria-labelledby="verantwortlich">
     <h2 id="verantwortlich"><span class="no">1</span>Verantwortlich</h2>
     <p>Verantwortlich im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:</p>
     <p><strong>Leonard Biron</strong></p>
     <p>E-Mail: <a href="mailto:support@medtype.de">support@medtype.de</a></p>
   </section>
 
-  <section class="card" aria-labelledby="geraet">
+  <section class="doc-section" aria-labelledby="geraet">
     <h2 id="geraet"><span class="no">2</span>Was auf deinem Gerät gespeichert wird</h2>
     <p>Damit die App funktioniert, speichert sie einige Dinge <strong>nur auf deinem Smartphone oder Tablet</strong>. Über MedType
       geht davon nur etwas an deinen eigenen Dongle – was genau, steht unter 3. Wir haben keinen Zugriff darauf.</p>
@@ -186,7 +119,7 @@
       App mit. Das steuerst du in den Einstellungen deines Smartphones; MedType hat darauf keinen Einfluss.</p>
   </section>
 
-  <section class="card" aria-labelledby="bluetooth">
+  <section class="doc-section" aria-labelledby="bluetooth">
     <h2 id="bluetooth"><span class="no">3</span>Bluetooth und Dongle</h2>
     <p>MedType fragt nach dem Zugriff auf Bluetooth, um deinen eigenen MedType-Dongle zu finden und sich mit ihm zu
       verbinden. In der Liste zeigt die App nur MedType-Dongles; andere Bluetooth-Geräte in der Nähe merkt sie sich
@@ -203,7 +136,7 @@
     <p>Im Demo-Modus sendet MedType nichts per Bluetooth.</p>
   </section>
 
-  <section class="card" aria-labelledby="update">
+  <section class="doc-section" aria-labelledby="update">
     <h2 id="update"><span class="no">4</span>Dongle-Version und Update</h2>
     <p>MedType fragt die Software-Version deines Dongles ab, zeigt sie an und merkt sie sich auf deinem Gerät. Die App
       bringt derzeit keine Dongle-Software mit und bietet für einen echten Dongle kein Update an. Kommt Dongle-Software
@@ -213,7 +146,7 @@
       deinem Gerät und sendet keine Daten an Nordic Semiconductor oder andere.</p>
   </section>
 
-  <section class="card" aria-labelledby="diktat">
+  <section class="doc-section" aria-labelledby="diktat">
     <h2 id="diktat"><span class="no">5</span>Tastatur und Diktat</h2>
     <p>Du schreibst mit der Tastatur deines Smartphones. Das Diktat ist eine Funktion von iOS: Je nach Gerät und
       Einstellung verarbeitet Apple die Sprache auf dem Smartphone oder auf Servern von Apple. Dafür gelten die
@@ -221,7 +154,7 @@
     <p>Nutzt du eine Tastatur-App eines anderen Anbieters, gelten für sie deren Datenschutzhinweise.</p>
   </section>
 
-  <section class="card" aria-labelledby="keine">
+  <section class="doc-section" aria-labelledby="keine">
     <h2 id="keine"><span class="no">6</span>Was MedType nicht tut</h2>
     <ul>
       <li>keine Anmeldung und kein Konto</li>
@@ -233,7 +166,7 @@
     <p class="muted">Das Mikrofon für das Diktat gehört zur Tastatur von iOS, nicht zu MedType (siehe 5).</p>
   </section>
 
-  <section class="card" aria-labelledby="apple">
+  <section class="doc-section" aria-labelledby="apple">
     <h2 id="apple"><span class="no">7</span>App Store und TestFlight</h2>
     <p>Du lädst MedType über den App Store von Apple (oder zum Testen über TestFlight). Dabei verarbeitet Apple Daten
       wie deine Apple-Account-Angaben, Käufe und Geräteinformationen in eigener Verantwortung. Es gelten die
@@ -249,7 +182,7 @@
       (Art. 6 Abs. 1 lit. f DSGVO), und löschen sie, sobald wir sie dafür nicht mehr brauchen.</p>
   </section>
 
-  <section class="card" aria-labelledby="kontakt">
+  <section class="doc-section" aria-labelledby="kontakt">
     <h2 id="kontakt"><span class="no">8</span>Wenn du uns schreibst</h2>
     <p>Schreibst du uns eine E-Mail, verarbeiten wir deine E-Mail-Adresse und deine Nachricht, um dir zu antworten
       (Art. 6 Abs. 1 lit. b und f DSGVO). Wir löschen die Nachricht, wenn deine Frage erledigt ist und keine
@@ -263,7 +196,7 @@
       Bildschirmfotos.</div>
   </section>
 
-  <section class="card" aria-labelledby="webseite">
+  <section class="doc-section" aria-labelledby="webseite">
     <h2 id="webseite"><span class="no">9</span>Diese Webseite</h2>
     <p>Diese Seite liegt bei GitHub Pages, einem Dienst der GitHub Inc. (USA). Dabei können Daten in die USA übertragen werden; Einzelheiten stehen in der <a href="https://docs.github.com/de/site-policy/privacy-policies/github-general-privacy-statement">Datenschutzerklärung von GitHub</a>. Beim Aufruf verarbeitet der Anbieter technisch notwendige Daten wie deine
       IP-Adresse, Datum und Uhrzeit, die aufgerufene Seite und deinen Browser in Server-Protokollen, um die Seite
@@ -272,7 +205,7 @@
       Servern.</p>
   </section>
 
-  <section class="card" aria-labelledby="rechte">
+  <section class="doc-section" aria-labelledby="rechte">
     <h2 id="rechte"><span class="no">10</span>Deine Rechte</h2>
     <p>Du hast nach der DSGVO das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17),
       Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Schreib uns
@@ -284,7 +217,7 @@
       dem du wohnst oder arbeitest (Art. 77 DSGVO).</p>
   </section>
 
-  <section class="card" aria-labelledby="vertraulich">
+  <section class="doc-section" aria-labelledby="vertraulich">
     <h2 id="vertraulich"><span class="no">11</span>Vertrauliche Texte</h2>
     <p>MedType sieht nicht, was du schreibst. Am PC landet der Text in dem Programm, in das du gerade tippst – dort
       gelten die Regeln dieses Programms und, wenn es welche gibt, die deiner Organisation zu Datenschutz und
@@ -298,7 +231,7 @@
     </ul>
   </section>
 
-  <section class="card" aria-labelledby="aenderungen">
+  <section class="doc-section" aria-labelledby="aenderungen">
     <h2 id="aenderungen"><span class="no">12</span>Änderungen</h2>
     <p>Ändert sich MedType so, dass diese Erklärung nicht mehr passt, passen wir sie an. Es gilt die Fassung auf
       dieser Seite.</p>
@@ -306,6 +239,7 @@
   </section>
 
 </main>
+</div>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -322,5 +256,6 @@
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>
+<script src="assets/doc.js?v=1"></script>
 </body>
 </html>

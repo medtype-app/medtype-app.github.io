@@ -24,123 +24,12 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="canonical" href="https://medtype.de/hilfe">
 <link rel="stylesheet" href="assets/site.css?v=4">
-<style>
-  .hero h1 {
-    font-size: clamp(2rem, 1.4rem + 3vw, 3rem);
-    line-height: 1.1;
-    letter-spacing: -.02em;
-    margin: 2rem 0 .6rem;
-    -webkit-hyphens: auto; hyphens: auto;
-  }
-  .hero p { margin: 0; font-size: 1.12rem; max-width: 34rem; }
-
-  main {
-    max-width: calc(var(--measure) + 2 * var(--gutter));
-    /* Der Inhalt beginnt mit Abstand unter dem roten Band (nicht hineinragend). */
-    margin: 1.75rem auto 0;
-    padding: 0 var(--gutter) 3rem;
-  }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 1.4rem 1.4rem 1.15rem;
-    margin-bottom: 1.25rem;
-  }
-  h2 { font-size: 1.3rem; line-height: 1.25; letter-spacing: -.01em; margin: 0 0 .8rem; }
-  h3 { font-size: 1.05rem; margin: 1.2rem 0 .4rem; }
-  p { margin: 0 0 .9rem; }
-  ul { margin: 0 0 .9rem; padding-left: 1.25rem; }
-  li { margin-bottom: .35rem; }
-  .muted { color: var(--muted); }
-  .path { font-weight: 600; }
-  .contact p { margin-bottom: .4rem; }
-  .stand { color: var(--muted); font-size: .9rem; margin: 1.5rem 0 0; }
-
-  .table-wrap { overflow-x: auto; margin: 0 0 .9rem; }
-  table { border-collapse: collapse; width: 100%; font-size: .97rem; }
-  th, td { text-align: left; vertical-align: top; padding: .55rem .6rem; border-bottom: 1px solid var(--line); }
-  th { font-weight: 600; color: var(--muted); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em; }
-
-  .lead { font-size: 1.05rem; }
-
-  /* Schritte */
-  ol.steps { list-style: none; counter-reset: step; padding: 0; margin: 0; }
-  ol.steps li { counter-increment: step; position: relative; padding: 0 0 1rem 3rem; margin: 0; }
-  ol.steps li::before {
-    content: counter(step);
-    position: absolute; left: 0; top: -.05rem;
-    width: 2.1rem; height: 2.1rem; border-radius: 50%;
-    display: grid; place-items: center;
-    background: var(--accent); color: var(--surface);
-    font-weight: 700; font-size: .95rem;
-  }
-  ol.steps li:not(:last-child)::after {
-    content: ""; position: absolute; left: 1.03rem; top: 2.3rem; bottom: .25rem;
-    width: 2px; background: var(--line);
-  }
-  td:first-child { width: 42%; }
-
-  /* Häufige Fragen */
-  details { border-top: 1px solid var(--line); padding: .2rem 0; }
-  details:last-of-type { border-bottom: 1px solid var(--line); }
-  summary {
-    cursor: pointer;
-    list-style: none;
-    font-weight: 600;
-    padding: .75rem 2rem .75rem 0;
-    position: relative;
-  }
-  summary::-webkit-details-marker { display: none; }
-  summary::after {
-    content: "+";
-    position: absolute; right: .25rem; top: .55rem;
-    font-size: 1.4rem; font-weight: 400; color: var(--accent);
-    transition: transform .2s ease;
-  }
-  details[open] summary::after { transform: rotate(45deg); }
-  details > div { padding: 0 0 .6rem; }
-  .msg { font-style: italic; }
-
-  /* Suche in den häufigen Fragen (nur mit JavaScript sichtbar) */
-  .faq-search { margin: .6rem 0 .4rem; }
-  .faq-search label { display: block; font-weight: 600; margin-bottom: .35rem; }
-  .faq-search input {
-    width: 100%; box-sizing: border-box;
-    font: inherit; color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--line); border-radius: var(--radius);
-    padding: .65rem .9rem;
-    -webkit-appearance: none; appearance: none;
-  }
-  .faq-search input::placeholder { color: var(--muted); opacity: 1; }
-  .faq-search input:hover { border-color: var(--muted); }
-  .faq-search input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-color: var(--accent); }
-  .faq-status { margin: .4rem 0 0; min-height: 1.4em; font-size: .95rem; color: var(--muted); }
-  .faq-filtering details { border-bottom: 1px solid var(--line); margin-bottom: -1px; }
-  .faq-filtering h3 { margin-bottom: .6rem; }
-  [hidden] { display: none !important; }
-  mark { background: var(--accent-soft); color: inherit; border-radius: 3px; padding: 0 .1em; }
-
-  @media (max-width: 30rem) {
-    .card { padding: 1.15rem 1rem 1rem; }
-    table.stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-    table.stack tr { display: block; padding: .55rem 0; border-bottom: 1px solid var(--line); }
-    table.stack td { display: block; border: 0; padding: .1rem 0; width: auto; }
-    table.stack td:first-child { font-weight: 600; }
-  }
-
-  @media print {
-    .card { box-shadow: none; }
-    details > div { display: block !important; }
-  }
-</style>
+<link rel="stylesheet" href="assets/doc.css?v=1">
 </head>
-<body>
+<body class="doc">
 <a class="skip" href="#inhalt">Zum Inhalt springen</a>
 
-<header class="band">
+<header class="band doc-band">
   <div class="band-inner">
     <div class="topnav">
       <a class="brand" href="./">
@@ -155,17 +44,60 @@
         </ul>
       </nav>
     </div>
-    <div class="hero">
+    <div class="doc-hero">
+      <p class="kicker">Hilfe</p>
       <h1>Hilfe zu MedType</h1>
-      <p>Dein Smartphone oder Tablet als Tastatur für deinen Windows-PC – ohne Installation am PC. Hier findest du, was du brauchst, wie du loslegst und was bei
+      <p class="lead">Dein Smartphone oder Tablet als Tastatur für deinen Windows-PC – ohne Installation am PC. Hier findest du, was du brauchst, wie du loslegst und was bei
         Problemen hilft.</p>
+
+      <div class="hero-search" id="suche" role="search" hidden>
+        <label class="sr-only" for="suche-q">Hilfe durchsuchen</label>
+        <div class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="suche-q" placeholder="Hilfe durchsuchen …" autocomplete="off" enterkeyhint="search" aria-describedby="suche-status">
+        </div>
+        <p class="search-status" id="suche-status" role="status" aria-live="polite"></p>
+      </div>
+
+      <nav aria-label="Themen">
+        <ul class="topics">
+          <li><a href="#start">Erste Schritte</a></li>
+          <li><a href="#led">LED am Dongle</a></li>
+          <li><a href="#faq-koppeln">Koppeln und Verbinden</a></li>
+          <li><a href="#faq-tippen">Tippen am PC</a></li>
+          <li><a href="#faq-update">Dongle-Update</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
     </div>
   </div>
 </header>
 
-<main id="inhalt">
+<div class="doc-layout">
+  <nav class="toc toc--wide-only" aria-labelledby="toc-titel">
+    <p class="toc-title" id="toc-titel">Auf dieser Seite</p>
+    <ul>
+      <li><a href="#was">Was ist MedType?</a></li>
+      <li><a href="#brauchst">Das brauchst du</a></li>
+      <li><a href="#start">Erste Schritte</a></li>
+      <li><a href="#demo">Ohne Dongle ausprobieren</a></li>
+      <li><a href="#led">Was die LED am Dongle zeigt</a></li>
+      <li><a href="#faq">Häufige Fragen</a>
+        <ul>
+          <li><a href="#faq-allgemein">Allgemein</a></li>
+          <li><a href="#faq-koppeln">Koppeln und Verbinden</a></li>
+          <li><a href="#faq-tippen">Tippen am PC</a></li>
+          <li><a href="#faq-update">Dongle-Version und Update</a></li>
+          <li><a href="#faq-daten">Daten und Sonstiges</a></li>
+        </ul>
+      </li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+  </nav>
 
-  <section class="card" aria-labelledby="was">
+<main id="inhalt" class="doc-main">
+
+  <section class="doc-section" aria-labelledby="was" data-suchbar>
     <h2 id="was">Was ist MedType?</h2>
     <p class="lead">Du schreibst in der App auf dem Smartphone, und der Text erscheint am PC genau dort, wo der Cursor
       steht – in jedem Programm, in das du tippen kannst.</p>
@@ -180,9 +112,9 @@
     </ul>
   </section>
 
-  <section class="card" aria-labelledby="brauchst">
+  <section class="doc-section" aria-labelledby="brauchst" data-suchbar>
     <h2 id="brauchst">Das brauchst du</h2>
-    <ul>
+    <ul class="tiles">
       <li>den <strong>MedType-USB-Dongle</strong>, eingesteckt direkt am PC</li>
       <li>einen <strong>Windows-PC mit deutscher Tastaturbelegung (QWERTZ)</strong>, Sprache „Deutsch
         (Deutschland)“</li>
@@ -191,7 +123,7 @@
     <p class="muted">Ein Konto, ein WLAN oder eine Internetverbindung brauchst du nicht.</p>
   </section>
 
-  <section class="card" aria-labelledby="start">
+  <section class="doc-section" aria-labelledby="start" data-suchbar>
     <h2 id="start">Erste Schritte</h2>
     <ol class="steps">
       <li><strong>Dongle einstecken.</strong> Steck den Dongle direkt am PC ein. Windows richtet ihn von selbst als
@@ -210,7 +142,7 @@
     <div class="note">Verbinde den Dongle immer in MedType, nicht in den Bluetooth-Einstellungen des Smartphones.</div>
   </section>
 
-  <section class="card" aria-labelledby="demo">
+  <section class="doc-section" aria-labelledby="demo" data-suchbar>
     <h2 id="demo">Ohne Dongle ausprobieren</h2>
     <p>Schalte in MedType unter <span class="path">Einstellungen › Demo-Modus</span> den Demo-Modus ein. Tippe dann
       oben links auf den Verbindungsstatus und wähle „Demo-Dongle“. MedType tut jetzt so, als wäre ein Dongle
@@ -220,36 +152,31 @@
     <p>Für den echten Dongle schaltest du den Demo-Modus wieder aus.</p>
   </section>
 
-  <section class="card" aria-labelledby="led">
+  <section class="doc-section" aria-labelledby="led" data-suchbar>
     <h2 id="led">Was die LED am Dongle zeigt</h2>
     <div class="table-wrap">
       <table class="stack">
         <thead><tr><th scope="col">LED</th><th scope="col">Bedeutung</th></tr></thead>
         <tbody>
-          <tr><td>blinkt langsam blau</td><td>Bereit, wartet auf dein Smartphone</td></tr>
-          <tr><td>blinkt schnell blau</td><td>Koppelmodus (2 Minuten)</td></tr>
-          <tr><td>leuchtet grün</td><td>Mit dem Smartphone verbunden</td></tr>
-          <tr><td>flackert grün</td><td>Tippt gerade</td></tr>
-          <tr><td>blinkt 3× grün</td><td>Kopplung gespeichert</td></tr>
-          <tr><td>kurz rot</td><td>Etwas wurde abgewiesen, z. B. ein Zeichen, das der Dongle nicht tippen kann, oder
+          <tr><td><span class="led" aria-hidden="true"></span>blinkt langsam blau</td><td>Bereit, wartet auf dein Smartphone</td></tr>
+          <tr><td><span class="led" aria-hidden="true"></span>blinkt schnell blau</td><td>Koppelmodus (2 Minuten)</td></tr>
+          <tr><td><span class="led led--green" aria-hidden="true"></span>leuchtet grün</td><td>Mit dem Smartphone verbunden</td></tr>
+          <tr><td><span class="led led--green" aria-hidden="true"></span>flackert grün</td><td>Tippt gerade</td></tr>
+          <tr><td><span class="led led--green" aria-hidden="true"></span>blinkt 3× grün</td><td>Kopplung gespeichert</td></tr>
+          <tr><td><span class="led led--red" aria-hidden="true"></span>kurz rot</td><td>Etwas wurde abgewiesen, z. B. ein Zeichen, das der Dongle nicht tippen kann, oder
             ein Gerät, das nicht gekoppelt ist</td></tr>
-          <tr><td>blinkt 3× rot</td><td>Werkszustand: alle Kopplungen gelöscht</td></tr>
-          <tr><td>leuchtet dauerhaft rot</td><td>Startfehler: Dongle abziehen und wieder einstecken</td></tr>
-          <tr><td>aus</td><td>Kein Strom – oder ein Update läuft gerade (bis etwa 20 Sekunden, nicht abziehen)</td></tr>
+          <tr><td><span class="led led--red" aria-hidden="true"></span>blinkt 3× rot</td><td>Werkszustand: alle Kopplungen gelöscht</td></tr>
+          <tr><td><span class="led led--red" aria-hidden="true"></span>leuchtet dauerhaft rot</td><td>Startfehler: Dongle abziehen und wieder einstecken</td></tr>
+          <tr><td><span class="led led--off" aria-hidden="true"></span>aus</td><td>Kein Strom – oder ein Update läuft gerade (bis etwa 20 Sekunden, nicht abziehen)</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section class="card" aria-labelledby="faq">
+  <section class="doc-section" id="fragen" aria-labelledby="faq">
     <h2 id="faq">Häufige Fragen</h2>
 
-    <div class="faq-search" id="faq-search" hidden>
-      <label for="faq-q">Fragen durchsuchen</label>
-      <input type="search" id="faq-q" placeholder="Fragen durchsuchen …" autocomplete="off" enterkeyhint="search" aria-describedby="faq-status">
-      <p class="faq-status" id="faq-status" role="status" aria-live="polite"></p>
-    </div>
-
+    <div class="faq-group" id="faq-allgemein">
     <h3>Allgemein</h3>
 
     <details>
@@ -303,7 +230,9 @@
           Windows-PC mit deutscher Tastaturbelegung (QWERTZ, „Deutsch (Deutschland)“).</p>
       </div>
     </details>
+    </div>
 
+    <div class="faq-group" id="faq-koppeln">
     <h3>Koppeln und Verbinden</h3>
 
     <details>
@@ -394,7 +323,9 @@
           Sie holt das Verbinden sofort nach.</p>
       </div>
     </details>
+    </div>
 
+    <div class="faq-group" id="faq-tippen">
     <h3>Tippen am PC</h3>
 
     <details>
@@ -467,7 +398,9 @@
           nicht, zieh den Dongle kurz ab – das leert seinen Speicher.</p>
       </div>
     </details>
+    </div>
 
+    <div class="faq-group" id="faq-update">
     <h3>Dongle-Version und Update</h3>
 
     <details>
@@ -507,7 +440,9 @@
         </div>
       </div>
     </details>
+    </div>
 
+    <div class="faq-group" id="faq-daten">
     <h3>Daten und Sonstiges</h3>
 
     <details>
@@ -538,13 +473,14 @@
           wir dir auf Anfrage.</p>
       </div>
     </details>
+    </div>
   </section>
 
-  <section class="card contact" aria-labelledby="kontakt">
+  <section class="doc-section doc-section--contact" aria-labelledby="kontakt">
     <h2 id="kontakt">Kontakt</h2>
     <p><strong>Leonard Biron</strong></p>
     <p>E-Mail: <a href="mailto:support@medtype.de">support@medtype.de</a></p>
-    <div class="note" style="margin-top:.9rem">Bitte schick uns keine vertraulichen oder personenbezogenen Daten – auch
+    <div class="note">Bitte schick uns keine vertraulichen oder personenbezogenen Daten – auch
       nicht in Bildschirmfotos.
       Beschreib das Problem und nenne die Meldung, die MedType zeigt, und die Version unter
       <span class="path">Einstellungen › Info</span>.</div>
@@ -553,6 +489,7 @@
   <p class="stand">Stand: 4. November 2026 · MedType 1.2.1</p>
 
 </main>
+</div>
 
 <footer class="site-footer">
   <div class="wrap">
@@ -569,108 +506,6 @@
       Apple Inc. Windows ist eine Marke der Microsoft Corporation. Bluetooth ist eine Marke der Bluetooth SIG, Inc.</p>
   </div>
 </footer>
-<script>
-/* Suche in den häufigen Fragen: filtert beim Tippen, ohne Bibliotheken. */
-(function () {
-  var box = document.getElementById("faq-search");
-  var input = document.getElementById("faq-q");
-  var status = document.getElementById("faq-status");
-  var section = document.querySelector('section[aria-labelledby="faq"]');
-  if (!box || !input || !status || !section) return;
-  /* Vor dem ersten norm()-Aufruf festlegen (die Fragen werden gleich unten durchsucht). */
-  var MAP = { "ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss" };
-  var items = Array.prototype.slice.call(section.querySelectorAll("details")).map(function (d) {
-    var s = d.querySelector("summary");
-    return { el: d, summary: s, title: s.textContent, normAll: norm(d.textContent).text, normKurz: norm(d.textContent, true).text, wasOpen: d.open };
-  });
-  var heads = Array.prototype.slice.call(section.querySelectorAll("h3"));
-  var total = items.length;
-
-  /* Kleinschreibung; lang: ä=ae, ö=oe, ü=ue, ß=ss; kurz: ä=a, ö=o, ü=u, ß=ss (damit „uber“ auch „über“ findet).
-     map[i] = Position des Zeichens im Original (1:1, Leerraum bleibt erhalten) */
-  function norm(str, kurz) {
-    var out = "", map = [];
-    for (var i = 0; i < str.length; i++) {
-      var c = str.charAt(i).toLowerCase();
-      var r = c === "ß" ? "ss" : (!kurz && MAP[c]) || c.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      for (var j = 0; j < r.length; j++) { out += r.charAt(j); map.push(i); }
-    }
-    return { text: out, map: map };
-  }
-  /* Suchbegriffe in beiden Schreibweisen; lang[i] und kurz[i] gehören zum selben Wort */
-  function terms(q) {
-    return { lang: norm(q).text.split(/\s+/).filter(Boolean), kurz: norm(q, true).text.split(/\s+/).filter(Boolean) };
-  }
-  function setTitle(item, ts) {
-    var s = item.summary, t = item.title;
-    while (s.firstChild) s.removeChild(s.firstChild);
-    if (!ts.lang.length) { s.appendChild(document.createTextNode(t)); return; }
-    var flags = [], i, k;
-    for (i = 0; i < t.length; i++) flags.push(false);
-    [[norm(t), ts.lang], [norm(t, true), ts.kurz]].forEach(function (paar) {
-      var n = paar[0];
-      paar[1].forEach(function (term) {
-        var from = 0, at;
-        while ((at = n.text.indexOf(term, from)) !== -1) {
-          for (k = at; k < at + term.length; k++) flags[n.map[k]] = true;
-          from = at + term.length;
-        }
-      });
-    });
-    var buf = "", on = false;
-    function flush() {
-      if (!buf) return;
-      var node = document.createTextNode(buf);
-      if (on) { var m = document.createElement("mark"); m.appendChild(node); s.appendChild(m); }
-      else s.appendChild(node);
-      buf = "";
-    }
-    for (i = 0; i < t.length; i++) {
-      if (flags[i] !== on) { flush(); on = flags[i]; }
-      buf += t.charAt(i);
-    }
-    flush();
-  }
-  function apply() {
-    var ts = terms(input.value), shown = [];
-    var leer = !ts.lang.length;
-    section.classList.toggle("faq-filtering", !leer);
-    items.forEach(function (it) {
-      var ok = ts.lang.every(function (t, i) {
-        return it.normAll.indexOf(t) !== -1 || it.normKurz.indexOf(ts.kurz[i]) !== -1;
-      });
-      it.el.hidden = !ok;
-      if (ok) shown.push(it);
-      setTitle(it, ok ? ts : { lang: [], kurz: [] });
-    });
-    items.forEach(function (it) { if (leer) it.el.open = it.wasOpen; else if (!it.el.hidden) it.el.open = shown.length === 1; });
-    heads.forEach(function (h) {
-      var n = h.nextElementSibling, any = false;
-      while (n && n.tagName !== "H3") { if (n.tagName === "DETAILS" && !n.hidden) any = true; n = n.nextElementSibling; }
-      h.hidden = !any;
-    });
-    if (leer) status.textContent = "";
-    else if (!shown.length) {
-      status.textContent = "Keine passende Frage gefunden – ";
-      var a = document.createElement("a");
-      a.href = "mailto:support@medtype.de"; a.textContent = "support@medtype.de";
-      status.appendChild(a);
-    } else status.textContent = shown.length + " von " + total + " Fragen";
-  }
-  items.forEach(function (it) {
-    it.el.addEventListener("toggle", function () { if (!input.value.trim()) it.wasOpen = it.el.open; });
-  });
-  input.addEventListener("input", apply);
-  input.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && input.value) { input.value = ""; apply(); }
-  });
-  try {
-    var q = new URLSearchParams(location.search).get("q");
-    if (q) input.value = q.slice(0, 100);
-  } catch (e) {}
-  box.hidden = false;
-  if (input.value) apply();
-})();
-</script>
+<script src="assets/doc.js?v=1"></script>
 </body>
 </html>
