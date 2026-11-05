@@ -74,6 +74,9 @@ a { color: var(--accent); text-underline-offset: .15em; }
 a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 .band :focus-visible, .ink :focus-visible { outline-color: #ffffff; }
+/* Links im Fließtext des roten Bands: weiß und unterstrichen statt rot auf rot */
+.band p a:not([class]) { color: var(--on-band); text-decoration-color: rgba(255, 255, 255, .6); }
+.band p a:not([class]):hover { text-decoration-color: #ffffff; }
 
 /* Hinweis: ruhige Fläche mit Info-Symbol (Hilfe, Datenschutz, Startseite) */
 .note {
