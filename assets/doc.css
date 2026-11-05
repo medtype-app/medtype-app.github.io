@@ -1,19 +1,10 @@
-/* MedType – Textseiten (Hilfe, Datenschutz, Impressum) im Stil der Startseite:
-   rotes Band mit Leuchten und Punkteraster, große Überschrift, Inhaltsverzeichnis neben dem Text, ruhige Abschnitte */
+/* MedType – Textseiten (Hilfe, Datenschutz, Impressum, Funktionen) im Stil der Startseite:
+   flaches rotes Band, große Überschrift, Inhaltsverzeichnis neben dem Text, ruhige Abschnitte mit Haarlinien */
 
 .doc { --page-w: var(--wide); }
 
 /* Kopf: Band wie auf der Startseite */
 .doc-band { overflow-x: clip; }
-.doc-band::before,
-.doc-band::after { content: ""; position: absolute; inset: 0; pointer-events: none; }
-.doc-band::before { background: radial-gradient(60% 90% at 85% 100%, rgba(255, 59, 48, .7), transparent 70%); }
-.doc-band::after {
-  background-image: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1.6px);
-  background-size: 22px 22px;
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 35%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 35%, transparent);
-}
 .doc-band .band-inner { padding-bottom: 3.25rem; }
 .doc-hero { max-width: 46rem; padding-top: 2.75rem; }
 .doc-hero h1 {
@@ -28,18 +19,6 @@
 }
 .doc-hero .lead { font-size: clamp(1.05rem, 1rem + .4vw, 1.25rem); line-height: 1.5; max-width: 36rem; margin: 0; }
 
-.kicker {
-  display: flex; align-items: center; gap: .7rem;
-  margin: 0 0 .9rem;
-  color: var(--accent);
-  font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-}
-.kicker::before {
-  content: ""; flex: none; width: 1.75rem; height: 3px; border-radius: 2px;
-  background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
-}
-.band .kicker { color: rgba(255, 255, 255, .88); }
-.band .kicker::before { background: #ffffff; }
 
 /* Suche im Band (nur mit JavaScript sichtbar) */
 .hero-search { margin-top: 1.9rem; max-width: 38rem; }
@@ -52,7 +31,7 @@
   width: 100%;
   font: inherit; font-size: 1.1rem; color: var(--text);
   background: var(--surface);
-  border: 0; border-radius: 999px;
+  border: 0; border-radius: var(--r-2);
   padding: 1rem 1.25rem 1rem 3.25rem;
   box-shadow: 0 18px 40px -18px rgba(60, 0, 10, .85);
   -webkit-appearance: none; appearance: none;
@@ -66,7 +45,7 @@
 .search-results {
   list-style: none;
   max-width: 38rem; margin: .35rem 0 0; padding: .35rem;
-  border-radius: 22px;
+  border-radius: var(--r-2);
   background: var(--surface); color: var(--text);
   box-shadow: 0 18px 40px -18px rgba(60, 0, 10, .85);
 }
@@ -107,20 +86,28 @@ tr.is-hit > td { animation: treffer 2.6s var(--ease-out); }
   .is-hit, tr.is-hit > td { animation: none; background-color: var(--accent-soft); }
 }
 
-/* Themen als Abkürzungen */
-.topics { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; margin: 1.1rem 0 0; padding: 0; }
-.topics a {
-  display: inline-block;
-  padding: .4rem .9rem;
-  border: 1.5px solid rgba(255, 255, 255, .55);
-  border-radius: 999px;
-  color: var(--on-band);
-  font-size: .92rem; font-weight: 600;
-  text-decoration: none;
-  transition: background-color .2s ease, border-color .2s ease;
+/* Themen als nummerierte Liste mit Haarlinien (statt Pillen) */
+.topics {
+  list-style: none; counter-reset: thema;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: 0 1.5rem;
+  margin: 1.4rem 0 0; padding: 0;
+  border-top: 1px solid rgba(255, 255, 255, .35);
 }
-.topics a:hover { background: rgba(40, 0, 8, .24); border-color: #ffffff; }
-.topics a:focus-visible { border-radius: 999px; }
+.topics li { counter-increment: thema; border-bottom: 1px solid rgba(255, 255, 255, .35); }
+.topics a {
+  display: flex; align-items: baseline; gap: .65rem;
+  padding: .6rem 0;
+  color: var(--on-band);
+  font-size: .95rem; font-weight: 600;
+  text-decoration: none;
+}
+.topics a::before { content: counter(thema, decimal-leading-zero); color: rgba(255, 255, 255, .7); font: 500 .76rem/1 var(--font-mono); }
+.topics a:hover { text-decoration: underline; text-decoration-color: #ffffff; text-underline-offset: .3em; }
+.topics a:focus-visible { border-radius: var(--r-1); }
+/* Breit steht das Verzeichnis neben dem Text, die Themen im Band wären doppelt */
+@media (min-width: 64rem) {
+  body:has(.toc--wide-only) .topics-nav { display: none; }
+}
 .is-searching .topics-nav { display: none; }
 
 /* Inhalt mit Verzeichnis */
@@ -134,20 +121,19 @@ tr.is-hit > td { animation: treffer 2.6s var(--ease-out); }
 
 .toc {
   align-self: start;
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface);
-  padding: 1.1rem 1.2rem;
+  border-top: 2px solid var(--text);
+  padding: .9rem 0 0;
   font-size: .95rem;
 }
-.toc-title { margin: 0 0 .6rem; color: var(--muted); font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.toc-title { margin: 0 0 .6rem; color: var(--muted); font: 500 .76rem/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
 .toc ol, .toc ul { list-style: none; margin: 0; padding: 0; }
 .toc ol { counter-reset: toc; columns: 2 13rem; column-gap: 1.5rem; }
 .toc ol > li { counter-increment: toc; break-inside: avoid; }
-.toc ol > li > a::before { content: counter(toc) "  "; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+.toc ol > li > a::before { content: counter(toc) "  "; color: var(--muted); font-family: var(--font-mono); font-weight: 500; }
 .toc a {
   display: block;
   padding: .3rem .6rem; margin-left: -.6rem;
-  border-radius: 8px;
+  border-radius: var(--r-1);
   color: var(--text); text-decoration: none;
   line-height: 1.35;
 }
@@ -194,13 +180,12 @@ tr.is-hit > td { animation: treffer 2.6s var(--ease-out); }
 
 /* Nummer vor der Überschrift (Datenschutz) */
 .doc-section h2 .no {
-  display: inline-grid; place-items: center;
-  min-width: 2.25rem; height: 2.25rem; padding: 0 .4rem;
-  margin-right: .7rem; vertical-align: .15em;
-  border-radius: 10px;
-  background: var(--accent-soft); color: var(--accent);
-  font-size: 1rem; font-weight: 800; letter-spacing: 0; font-variant-numeric: tabular-nums;
+  display: block;
+  margin: 0 0 .45rem;
+  color: var(--muted);
+  font: 500 .8rem/1 var(--font-mono); letter-spacing: .02em;
 }
+.doc-section h2 .no::before { content: "Abschnitt "; }
 
 /* Hinweise (.note) kommen aus site.css: ruhige Fläche mit Info-Symbol */
 
@@ -210,7 +195,7 @@ tr.is-hit > td { animation: treffer 2.6s var(--ease-out); }
   display: grid; gap: .75rem;
   grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
 }
-.tiles li { margin: 0; padding: 1rem 1.1rem; border-radius: var(--radius); background: var(--surface-2); }
+.tiles li { margin: 0; padding: .9rem 0; border-top: 2px solid var(--text); }
 
 /* Erste Schritte: Nummer, Bild und Text wie „So funktioniert’s“ auf der Startseite. Das Bild zeigt den Dongle
    im USB-Anschluss und das Smartphone in einer kurzen, dauerhaft laufenden Szene (devices.css). */
@@ -263,14 +248,10 @@ td:first-child { width: 40%; font-weight: 600; }
 /* Häufige Fragen */
 .faq-group { margin: 1.5rem 0 0; scroll-margin-top: 1.25rem; }
 .faq-group h3 {
-  display: flex; align-items: center; gap: .6rem;
-  margin: 0 0 .25rem;
-  color: var(--accent);
-  font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-}
-.faq-group h3::before {
-  content: ""; flex: none; width: 1.25rem; height: 3px; border-radius: 2px;
-  background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+  margin: 0 0 .25rem; padding-top: .9rem;
+  border-top: 2px solid var(--text);
+  color: var(--muted);
+  font: 500 .78rem/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase;
 }
 details { border-bottom: 1px solid var(--line); }
 summary {
@@ -284,10 +265,10 @@ summary::-webkit-details-marker { display: none; }
 summary::after {
   content: "+";
   position: absolute; right: .1rem; top: 50%; translate: 0 -50%;
-  width: 1.8rem; height: 1.8rem; border-radius: 50%;
+  width: 1.8rem; height: 1.8rem;
   display: grid; place-items: center;
-  background: var(--accent-soft); color: var(--accent);
-  font-size: 1.3rem; font-weight: 500; line-height: 1;
+  color: var(--accent);
+  font: 400 1.5rem/1 var(--font-mono);
   transition: rotate .25s var(--ease-out);
 }
 summary:hover { color: var(--accent); }
@@ -297,10 +278,7 @@ details > div > :last-child { margin-bottom: 0; }
 mark { background: color-mix(in srgb, var(--brand-1) 22%, transparent); color: inherit; border-radius: 3px; padding: 0 .1em; }
 
 /* Kontakt wie „Fragen?“ auf der Startseite */
-.doc-section--contact {
-  border-top: 4px solid transparent;
-  border-image: linear-gradient(90deg, var(--brand-1), var(--brand-2)) 1;
-}
+.doc-section--contact { border-top: 2px solid var(--text); }
 .doc-section--contact p { margin-bottom: .4rem; }
 .doc-section--contact .note { margin-top: 1rem; }
 
@@ -308,12 +286,11 @@ mark { background: color-mix(in srgb, var(--brand-1) 22%, transparent); color: i
 .ink-panel {
   margin: 0 0 1rem;
   padding: 1.75rem 1.5rem;
-  border-radius: var(--radius-lg);
-  background: radial-gradient(70% 90% at 100% 0%, rgba(200, 16, 46, .5), transparent 62%), var(--ink);
+  border-radius: var(--r-3);
+  background: var(--ink);
   color: var(--ink-text);
   scroll-margin-top: 1.25rem;
 }
-.ink-panel .kicker { color: var(--ink-accent); }
 .ink-panel h2 {
   font-size: clamp(1.55rem, 1.25rem + 1.4vw, 2.1rem);
   font-weight: 800; line-height: 1.12; letter-spacing: -.025em;
@@ -328,10 +305,9 @@ mark { background: color-mix(in srgb, var(--brand-1) 22%, transparent); color: i
 .facts li::before {
   content: "✓";
   flex: none;
-  width: 1.6rem; height: 1.6rem; border-radius: 50%;
-  display: grid; place-items: center;
+  width: 1.2rem;
   margin-top: .05rem;
-  background: rgba(95, 211, 138, .18); color: #5fd38a;
+  color: #5fd38a;
   font-size: .9rem; font-weight: 700;
 }
 
@@ -349,7 +325,7 @@ mark { background: color-mix(in srgb, var(--brand-1) 22%, transparent); color: i
 }
 
 @media print {
-  .doc-band::before, .doc-band::after, .hero-search, .topics, .toc, .guide-visual, .doc-split-visual { display: none; }
+  .hero-search, .topics, .toc, .guide-visual, .doc-split-visual { display: none; }
   .doc-layout { display: block; padding-top: 1rem; }
   .ink-panel { background: none; color: var(--text); border: 1px solid var(--line); }
   details > div { display: block !important; }

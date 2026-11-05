@@ -57,12 +57,8 @@
 .flow-stage {
   container: flow / inline-size;
   padding: 1.5rem .75rem 3.75rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background:
-    radial-gradient(var(--dot) 1px, transparent 1.5px) 0 0 / 18px 18px,
-    var(--surface);
-  box-shadow: var(--shadow);
+  border-radius: var(--r-3);
+  background: var(--surface-2);
   overflow: hidden;
 }
 .flow > figcaption { margin-top: .8rem; color: var(--muted); font-size: .92rem; max-width: 40rem; }
@@ -180,14 +176,14 @@
   position: absolute;
   padding: .3em .8em;
   border: 1px solid var(--line);
-  border-radius: 99px;
+  border-radius: var(--r-1);
   background: var(--surface);
   color: var(--muted);
   font-size: .7em; font-weight: 600; line-height: 1.3; white-space: nowrap; text-align: center;
   translate: -50% -50%;
 }
 .fl-tag b { color: var(--text); }
-.fl-tag--usb { border-radius: 1em; }
+.fl-tag--usb { border-radius: var(--r-1); }
 .fl-tag--usb span, .fl-tag--usb b { display: block; }
 .fl-tag--bt { left: calc(15.3em / .7); top: calc(19.4em / .7); }
 .fl-tag--usb { left: calc(19.6em / .7); top: calc(15.5em / .7); }
@@ -380,7 +376,7 @@
   display: inline-flex; align-items: center; gap: .45rem;
   padding: .35rem .85rem .35rem .7rem;
   border: 1px solid var(--line);
-  border-radius: 99px;
+  border-radius: var(--r-2);
   background: var(--surface);
   color: var(--text);
   font: inherit; font-size: .88rem; font-weight: 600;
