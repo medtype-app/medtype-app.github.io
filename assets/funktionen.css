@@ -13,7 +13,7 @@
 }
 .fx {
   display: grid; gap: 1.5rem;
-  grid-template-areas: "head" "demo" "body";
+  grid-template-areas: "head" "demo" "body" "extra";
   padding: 3rem 0;
   border-top: 1px solid var(--line);
   scroll-margin-top: 1rem;
@@ -22,6 +22,7 @@
 .fx-head, .fx-body { max-width: 40rem; }
 .fx-head { grid-area: head; }
 .fx-body { grid-area: body; }
+.fx-extra { grid-area: extra; }
 .fx-demo { grid-area: demo; margin: 0; min-width: 0; }
 .fx h2 {
   font-size: clamp(1.75rem, 1.35rem + 1.7vw, 2.6rem);
@@ -43,7 +44,7 @@
 .fx-where img { width: 1.5rem; height: 1.5rem; border-radius: 22.5%; }
 .fx-where b { color: var(--text); font-weight: 650; }
 
-.fx-body h3 {
+.fx-body h3, .fx-extra h3 {
   margin: 0 0 .6rem;
   color: var(--muted);
   font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
@@ -84,22 +85,30 @@
   background: var(--accent);
 }
 
+/* Breit: Vorführung und Text nebeneinander, gleich hoch. Kopf und Schritte stehen mittig neben der Vorführung
+   (leere Zeilen oben und unten fangen den Höhenunterschied auf), „Gut zu wissen“ läuft darunter über die volle Breite.
+   Ist der Text höher, läuft die Vorführung beim Scrollen mit. */
 @media (min-width: 70rem) {
   .fx {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    grid-template-areas: "demo head" "demo body";
-    grid-template-rows: auto 1fr;
-    column-gap: 3rem; row-gap: 1.5rem;
+    grid-template-areas: "demo ." "demo head" "demo body" "demo ." "extra extra";
+    grid-template-rows: 1fr auto auto 1fr auto;
+    column-gap: 3.5rem; row-gap: 0;
     align-items: start;
     padding: 4.5rem 0;
   }
   .fx--flip {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    grid-template-areas: "head demo" "body demo";
+    grid-template-areas: ". demo" "head demo" "body demo" ". demo" "extra extra";
   }
-  .fx-head { padding-top: 1rem; }
-  /* Breit: Die Vorführung läuft beim Lesen der Schritte neben dem Text mit, statt oben stehen zu bleiben */
+  /* Nur das Smartphone: schmalere Bühne, mehr Platz für den Text */
+  .fx--solo { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  .fx--solo.fx--flip { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+  .fx-head { margin-bottom: 1.75rem; }
+  .fx-steps { margin-bottom: 0; }
   .fx-demo { position: sticky; top: 1.5rem; }
+  .fx-extra { max-width: none; margin-top: 2.75rem; }
+  .fx-extra .fx-notes { grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); column-gap: 3rem; padding: 1.25rem 1.5rem; }
 }
 
 /* ---------- Bühne ---------- */
@@ -138,11 +147,13 @@
 .fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16, (100svh - var(--fx-reserve)) / 30); }
 .fx-scene--solo .dv-phone { --dv-size: 1em; }
 @container fx (min-width: 31rem) {
+  /* Breit: das Smartphone steht links vor dem größeren Tablet-PC und überdeckt nur dessen Rand */
   .fx-scene {
-    flex-direction: row; justify-content: space-between; gap: 1em; width: 42em;
-    font-size: min(15px, 100cqi / 42, (100svh - var(--fx-reserve)) / 30);
+    flex-direction: row-reverse; justify-content: center; gap: 0; width: 43em;
+    font-size: min(15px, 100cqi / 43, (100svh - var(--fx-reserve)) / 30);
   }
-  .fx-scene .dv-phone { --dv-size: 1em; }
+  .fx-scene .dv-phone { --dv-size: 1em; z-index: 2; margin-right: -3em; }
+  .fx-scene .fx-pc { font-size: 1.2em; }
   .fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16, (100svh - var(--fx-reserve)) / 30); }
 }
 :where(.fx-scene) svg { display: block; }

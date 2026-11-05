@@ -405,7 +405,11 @@
       text(c.q("ins"), "");
       on(c.q("ins"), "is-faded");
       text(c.q("sum"), summary(19));
-      phoneState(c, "is-sheet", false);
+      on(c.q("field"), "is-empty", false);
+      ["is-sheet", "is-busy", "is-done", "is-empty"].forEach(function (k) { phoneState(c, k, false); });
+      pcText(c, "");
+      led(c.q("usb"), "on");
+      on(c.pc, "is-air", false);
     },
     run: function (s, c) {
       s.step(1).wait(1300).step(2).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
@@ -416,7 +420,31 @@
         text(c.q("sum"), summary(19 + KONTROLLE.length));
       });
       s.wait(1800).at(function () { on(c.q("ins"), "is-faded"); });
-      s.wait(1600).step(0);
+      /* „Senden“ tippt Entwurf und Baustein zusammen am PC */
+      var all = "Befund besprochen. " + KONTROLLE;
+      s.wait(500).tap(c.q("send")).at(function () {
+        progress(c, 0, all.length, "Text wird getippt");
+        phoneState(c, "is-busy");
+        on(c.pc, "is-air");
+        led(c.q("usb"), "typing");
+      }).wait(350);
+      s.chars(all, 1000 / SPEED, function (sofar) {
+        pcText(c, sofar);
+        progress(c, sofar.length, all.length);
+      });
+      s.wait(250).at(function () {
+        phoneState(c, "is-done");
+        on(c.pc, "is-air", false);
+        led(c.q("usb"), "on");
+      });
+      s.wait(500).at(function () {
+        text(c.q("text"), "");
+        text(c.q("ins"), "");
+        text(c.q("sum"), summary(0));
+        on(c.q("field"), "is-empty");
+        phoneState(c, "is-empty");
+      });
+      s.wait(2600).at(function () { phoneState(c, "is-busy", false); }).wait(400).step(0);
     }
   };
 
