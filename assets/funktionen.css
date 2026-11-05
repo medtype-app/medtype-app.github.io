@@ -1,0 +1,687 @@
+/* MedType – Seite „Funktionen“: je Funktion eine Vorführung (App auf dem Smartphone, daneben der PC mit dem Dongle)
+   und daneben Schritte und Hinweise. Die Vorführungen steuert funktionen.js; hier stehen Aussehen, Zustände und
+   Übergänge. Grundlage für das Smartphone sind die Bausteine aus devices.css (.dv-phone, .dv-nav, .dv-tabs …).
+   Größen der Szenen in em: Die Schriftgröße folgt der Breite der Bühne (Containerabfrage), so wächst alles gemeinsam. */
+
+.fx-band .doc-hero { max-width: 50rem; }
+
+/* ---------- Abschnitte ---------- */
+.fx-main {
+  max-width: calc(var(--wide) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 1rem var(--gutter) 3rem;
+}
+.fx {
+  display: grid; gap: 1.5rem;
+  grid-template-areas: "head" "demo" "body";
+  padding: 3rem 0;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 1rem;
+}
+.fx-main > .fx:first-child { border-top: 0; }
+.fx-head, .fx-body { max-width: 40rem; }
+.fx-head { grid-area: head; }
+.fx-body { grid-area: body; }
+.fx-demo { grid-area: demo; margin: 0; min-width: 0; }
+.fx h2 {
+  font-size: clamp(1.75rem, 1.35rem + 1.7vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -.032em;
+  margin: 0 0 .9rem;
+  text-wrap: balance;
+}
+.fx-lead { margin: 0; font-size: 1.1rem; line-height: 1.55; }
+.fx-where {
+  display: inline-flex; align-items: center; gap: .45rem;
+  margin: 1rem 0 0; padding: .3rem .8rem .3rem .35rem;
+  border-radius: 99px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: .9rem; font-weight: 600;
+}
+.fx-where img { width: 1.5rem; height: 1.5rem; border-radius: 22.5%; }
+.fx-where b { color: var(--text); font-weight: 650; }
+
+.fx-body h3 {
+  margin: 0 0 .6rem;
+  color: var(--muted);
+  font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+}
+
+/* Schritte: Die Vorführung hebt den Schritt hervor, den sie gerade zeigt */
+.fx-steps { list-style: none; counter-reset: fx; display: grid; gap: .2rem; margin: 0 0 1.5rem; padding: 0; }
+.fx-steps li {
+  counter-increment: fx;
+  position: relative;
+  margin: 0; padding: .55rem .8rem .55rem 3rem;
+  border-radius: 14px;
+  line-height: 1.5;
+  transition: background-color .35s ease;
+}
+.fx-steps li::before {
+  content: counter(fx);
+  position: absolute; left: .7rem; top: .6rem;
+  display: grid; place-items: center;
+  width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: .85rem; font-weight: 800; font-variant-numeric: tabular-nums;
+  transition: background-color .35s ease, color .35s ease;
+}
+.fx-steps li.is-now { background: var(--accent-soft); }
+.fx-steps li.is-now::before { background: var(--accent); color: #ffffff; }
+.path { font-weight: 600; }
+
+/* Gut zu wissen */
+.fx-notes {
+  list-style: none; display: grid; gap: .55rem;
+  margin: 0; padding: 1rem 1.15rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font-size: .96rem; line-height: 1.5;
+}
+.fx-notes li { position: relative; margin: 0; padding-left: 1.4rem; }
+.fx-notes li::before {
+  content: ""; position: absolute; left: .1rem; top: .55em;
+  width: .5rem; height: .5rem; border-radius: 50%;
+  background: var(--accent);
+}
+
+@media (min-width: 70rem) {
+  .fx {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-areas: "demo head" "demo body";
+    grid-template-rows: auto 1fr;
+    column-gap: 3rem; row-gap: 1.5rem;
+    align-items: start;
+    padding: 4.5rem 0;
+  }
+  .fx--flip {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    grid-template-areas: "head demo" "body demo";
+  }
+  .fx-head { padding-top: 1rem; }
+}
+
+/* ---------- Bühne ---------- */
+.fx-stage {
+  --dot: rgba(120, 60, 60, .13);
+  position: relative;
+  container: fx / inline-size;
+  padding: 1.75rem .75rem 4.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: radial-gradient(var(--dot) 1px, transparent 1.5px) 0 0 / 18px 18px, var(--surface);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+@media (prefers-color-scheme: dark) {
+  .fx-stage { --dot: rgba(255, 255, 255, .07); }
+}
+.fx-demo > figcaption { margin-top: .8rem; color: var(--muted); font-size: .92rem; line-height: 1.5; }
+
+/* Anhalten, Weiter, Noch einmal (nur mit JavaScript) */
+.fx-ctrl {
+  position: absolute; right: .9rem; bottom: .9rem; z-index: 5;
+  display: inline-flex; align-items: center; gap: .45rem;
+  min-height: 2.75rem;
+  padding: .4rem 1rem .4rem .85rem;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit; font-size: .88rem; font-weight: 600;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.fx-ctrl svg { width: 1rem; height: 1rem; flex: none; }
+.fx-ctrl:hover { border-color: var(--accent); background: var(--accent-soft); }
+.fx-ctrl:active { transform: scale(.97); }
+.fx-ctrl:focus-visible { border-radius: 99px; }
+
+/* Szene: schmal untereinander (PC oben, Smartphone darunter), breit nebeneinander */
+.fx-scene {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; gap: 1.6em;
+  width: 25em;
+  margin-inline: auto;
+  font-size: 10px; /* ohne Containerabfragen */
+  font-size: min(15px, 100cqi / 25);
+  line-height: 1.25;
+}
+.fx-scene .dv-phone { --dv-size: 1em; }
+.fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16); }
+.fx-scene--solo .dv-phone { --dv-size: 1em; }
+@container fx (min-width: 31rem) {
+  .fx-scene { flex-direction: row; justify-content: space-between; gap: 1em; width: 41em; font-size: min(15px, 100cqi / 41); }
+  .fx-scene .dv-phone { --dv-size: 1em; }
+  .fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16); }
+  .fx-scene--stick { width: 37em; font-size: min(15px, 100cqi / 37); }
+}
+:where(.fx-scene) svg { display: block; }
+
+/* ---------- PC (Laptop) mit Dongle an der Seite ---------- */
+.fx-pc { position: relative; flex: none; width: 25em; padding-right: .4em; }
+.fx-lid {
+  width: 20.5em; margin-left: .8em;
+  padding: .55em .55em .75em;
+  border-radius: .9em .9em .25em .25em;
+  background: #1c1c1f;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 1.2em 2em -1em rgba(60, 10, 20, .45);
+}
+.fx-base {
+  position: relative;
+  width: 22.1em; height: 1.05em;
+  border-radius: .2em .2em 1em 1em / .2em .2em .7em .7em;
+  background: linear-gradient(#e2e2e6, #a7a8ae);
+  box-shadow: 0 .9em 1.4em -.6em rgba(40, 10, 10, .45);
+}
+.fx-base::before {
+  content: ""; position: absolute; left: 50%; top: 0;
+  width: 3.4em; height: .32em; translate: -50% 0;
+  border-radius: 0 0 .4em .4em;
+  background: rgba(0, 0, 0, .16);
+}
+@media (prefers-color-scheme: dark) {
+  .fx-lid { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 1.2em 2em -1em rgba(0, 0, 0, .8); }
+  .fx-base { background: linear-gradient(#b4b5bb, #75767c); }
+}
+/* Dongle steckt rechts in der Seite des Laptops; LED-Zustände wie am echten Gerät */
+.fx-usb {
+  position: absolute; left: 21.75em; bottom: -.12em;
+  width: 3.4em; height: auto;
+  overflow: visible;
+  color: var(--dv-led-blue);
+  filter: drop-shadow(0 .12em .2em rgba(0, 0, 0, .3));
+}
+.fx-waves {
+  position: absolute; left: 22.35em; bottom: 1.25em;
+  width: 2.2em; height: auto;
+  overflow: visible;
+  fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.is-air .fx-waves { opacity: 1; }
+
+/* Bildschirm: dunkle Fachanwendung wie auf der Startseite, in beiden Erscheinungsbildern dunkel */
+.fx-display {
+  display: flex; flex-direction: column;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: .2em;
+  background: #1b1c1f;
+  color: #ececee;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+.fx-display > *, .fx-display :where(span, b, i, em) { display: block; font-style: normal; }
+.fx-winbar {
+  display: flex; align-items: center; gap: .3em;
+  flex: none; height: 1.65em;
+  padding: 0 .6em;
+  background: #111214;
+  border-bottom: 1px solid #2c2d31;
+}
+.fx-winbar > i { width: .42em; height: .42em; border-radius: 50%; background: #4a4b50; }
+.fx-winbar > b { margin-left: .4em; color: #c9c9cd; font-size: .62em; font-weight: 600; }
+.fx-winbody { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: .6em .7em .7em; }
+.fx-wincard { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: .45em .6em .55em; border-left: .2em solid #e0261f; background: #2b2c30; }
+.fx-wincard > b { font-size: .78em; font-weight: 600; }
+.fx-wincard > em { margin-top: .25em; color: #a9a9ae; font-size: .52em; }
+.fx-doc {
+  flex: 1; min-height: 0;
+  margin-top: .25em; padding: .35em .45em;
+  border-left: .18em solid #2fbf5b;
+  background: #1f2023;
+  font-size: .82em; line-height: 1.4;
+  white-space: pre-wrap; overflow-wrap: break-word;
+  overflow: hidden;
+}
+.fx-doc > span { display: inline; }
+.fx-caret {
+  display: inline-block !important;
+  width: 1.5px; height: 1.12em;
+  margin: 0 -1.5px -.22em 0;
+  background: #ffffff;
+}
+.fx-mark { background: rgba(59, 130, 214, .45); border-radius: .15em; }
+
+/* ---------- Dongle groß an der Seite des PCs (Verbinden) ---------- */
+.fx-stickbox { flex: none; display: flex; flex-direction: column; align-items: center; width: 19em; }
+.fx-stickbox .dv-stick { --dv-w: 15em; filter: drop-shadow(0 .3rem .45rem rgba(60, 20, 20, .16)); }
+.fx-stickbox .hs-ring { stroke-dashoffset: 100; }
+.fx-stickbox .hs-press { transition: opacity .2s ease; }
+.fx-stickbox .hs-button { transition: transform .15s ease; }
+.fx-hold .hs-press { opacity: 1; }
+.fx-hold .hs-button { transform: scale(.86); }
+.fx-hold .hs-ring { stroke-dashoffset: 0; transition: stroke-dashoffset 3s linear; }
+.fx-stickcap {
+  position: relative;
+  margin-top: 1.4em;
+  white-space: nowrap;
+  padding: .3em .8em;
+  border: 1px solid var(--line); border-radius: 99px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: .8em; font-weight: 600; text-align: center;
+  transition: color .3s ease;
+}
+@media (prefers-color-scheme: dark) {
+  .fx-stickbox .dv-stick { filter: drop-shadow(0 .3rem .45rem rgba(0, 0, 0, .5)); }
+}
+
+/* LED-Zustände (gelten für den großen und den kleinen Dongle) */
+.fx-led-on, .fx-led-typing, .fx-led-paired { color: var(--dv-led-green); }
+@media (prefers-reduced-motion: no-preference) {
+  .fx-led-slow .hs-on { animation: dv-led-slow 1.5s linear infinite; }
+  .fx-led-fast .hs-on { animation: dv-led-fast .33s linear infinite; }
+  .fx-led-typing .hs-on { animation: fx-flicker .16s steps(2, jump-none) infinite; }
+  .fx-led-paired .hs-on { animation: dv-led-saved 3s linear 1 both; }
+  .is-air .fx-waves path { animation: fx-wave 1s ease-out infinite; }
+  .is-air .fx-waves path:nth-child(2) { animation-delay: .2s; }
+  .is-air .fx-waves path:nth-child(3) { animation-delay: .4s; }
+}
+@keyframes fx-flicker { from { opacity: 1; } to { opacity: .2; } }
+@keyframes fx-wave { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
+
+/* ---------- Smartphone: Ergänzungen zu devices.css ---------- */
+.fx-phone {
+  --kb-bg: #d1d3d9;
+  --kb-key: #ffffff;
+  --kb-key2: #abb0ba;
+  --kb-down: #b9bdc6;
+  --app-bubble: rgba(10, 132, 255, .16);
+  --app-lift: 0 .5em 1.2em rgba(0, 0, 0, .18);
+}
+@media (prefers-color-scheme: dark) {
+  .fx-phone {
+    --kb-bg: #2b2b2e;
+    --kb-key: #6b6b70;
+    --kb-key2: #47474b;
+    --kb-down: #8a8a90;
+    --app-bubble: rgba(10, 132, 255, .3);
+    --app-lift: 0 .5em 1.2em rgba(0, 0, 0, .6);
+  }
+}
+.fx-phone .dv-app { overflow: hidden; }
+.fx-phone .dv-form { display: flex; flex-direction: column; }
+.fx-caret-blue {
+  display: inline-block !important;
+  width: .1em; height: 1.15em;
+  margin: 0 -.1em -.2em 0;
+  border-radius: 1px;
+  background: var(--app-link);
+}
+
+/* Fingertipp: Kreis an der angetippten Stelle (Lage setzt funktionen.js) */
+.fx-touch {
+  position: absolute; z-index: 30; left: 50%; top: 50%;
+  width: 2.5em; height: 2.5em; margin: -1.25em 0 0 -1.25em;
+  border-radius: 50%;
+  background: var(--app-tap);
+  box-shadow: 0 0 0 .12em rgba(255, 255, 255, .55);
+  opacity: 0;
+  pointer-events: none;
+}
+.fx-touch.is-tap { animation: fx-tap .6s ease-out; }
+.fx-touch.is-hold { opacity: 1; transform: scale(.8); transition: left .7s var(--ease-out), top .7s var(--ease-out); }
+@keyframes fx-tap {
+  0% { opacity: 1; transform: scale(.45); }
+  35% { opacity: .9; transform: scale(.8); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+.is-pressed { filter: brightness(.88); }
+@media (prefers-color-scheme: dark) { .is-pressed { filter: brightness(1.35); } }
+
+/* Navigationsleiste: Symbolgruppe rechts (Tastatur ausblenden, Papierkorb) und „+“ */
+.fx-roundpair {
+  display: flex; align-items: center; gap: .55em;
+  height: 1.75em; padding: 0 .55em;
+  border-radius: 99px;
+  background: var(--app-card);
+  box-shadow: 0 .1em .45em rgba(0, 0, 0, .08), inset 0 0 0 1px rgba(120, 120, 128, .12);
+}
+.fx-roundpair svg { width: .95em; height: .95em; }
+.fx-nav-plain { grid-template-columns: auto 1fr auto; }
+.fx-back svg { width: .8em; height: .8em; }
+
+/* Verbindungsstatus mit Wechsel (Nicht verbunden → Verbindet … → Verbunden) */
+.fx-chip > * { transition: opacity .25s ease; }
+.fx-chip > :not(.is-on) { opacity: 0; }
+
+/* Großer Titel, Suchfeld und Listen (Bausteine, Einfügen, Einstellungen) */
+.fx-big { margin: .1em .7em .35em; font-size: 1.05em; font-weight: 800; letter-spacing: -.01em; }
+.fx-search {
+  display: flex; align-items: center; gap: .35em;
+  margin: 0 .7em .5em; padding: .42em .6em;
+  border-radius: 99px;
+  background: var(--app-fill);
+  color: var(--app-muted);
+}
+.fx-search svg { width: .8em; height: .8em; }
+.fx-search em { font-size: .5em; }
+.fx-search .fx-q { color: var(--app-text); }
+.fx-list { position: relative; margin: 0 .7em; border-radius: .9em; background: var(--app-card); }
+.fx-row {
+  position: relative;
+  display: flex; align-items: center; gap: .5em;
+  height: 3.05em;
+  padding: 0 .7em;
+  background: var(--app-card);
+  border-radius: .9em;
+  transition: transform .45s var(--ease-out), box-shadow .3s ease, opacity .3s ease;
+}
+.fx-row::after {
+  content: ""; position: absolute; left: .7em; right: 0; bottom: 0;
+  height: 1px; background: var(--app-sep);
+}
+.fx-row:last-child::after { display: none; }
+.fx-row-text { flex: 1; min-width: 0; }
+.fx-row-text b { font-size: .56em; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fx-row-text em {
+  margin-top: .2em;
+  color: var(--app-muted);
+  font-size: .46em; line-height: 1.3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.fx-row > svg { width: 1em; height: 1em; color: var(--app-faint); }
+.fx-row > .fx-ins { color: var(--app-link); }
+.fx-row.is-lift { z-index: 3; box-shadow: var(--app-lift); }
+.fx-row.is-lift::after { display: none; }
+.fx-row.is-new { animation: fx-new 1.4s ease; }
+@keyframes fx-new { 0%, 30% { background: var(--app-bubble); } 100% { background: var(--app-card); } }
+.fx-row.is-hidden { display: none; }
+.fx-foot { margin: .4em 1.3em 0; color: var(--app-muted); }
+.fx-foot em { font-size: .42em; line-height: 1.35; }
+
+/* Fortschritt beim Tippen (Aufbau aus devices.css, hier von funktionen.js geschaltet) */
+.fx-phone .dv-progress { transform: translateY(.6em); transition: opacity .3s ease, transform .4s var(--ease-out); }
+.fx-phone.is-busy .dv-progress { opacity: 1; transform: none; }
+.fx-phone .dv-busy, .fx-phone .dv-cancel { transition: opacity .2s ease; }
+.fx-phone .dv-done { transition: opacity .25s ease; }
+.fx-phone.is-done .dv-busy, .fx-phone.is-done .dv-cancel { opacity: 0; }
+.fx-phone.is-done .dv-done { opacity: 1; }
+.fx-phone .dv-pbar i { transform: scaleX(var(--p, 0)); }
+.fx-phone .dv-cancel { padding: .3em .6em; border-radius: 99px; background: var(--app-fill); color: var(--app-link); }
+.fx-phone .dv-cancel em { font-size: .48em; font-weight: 600; }
+.fx-phone .dv-send-on { opacity: 1; transition: opacity .2s ease; }
+.fx-phone.is-empty .dv-send-on, .fx-phone.is-busy .dv-send-on { opacity: 0; }
+.fx-phone .dv-send-off { opacity: 1; }
+
+/* ---------- Vorschreiben ---------- */
+.fx-field {
+  position: relative;
+  height: 8.6em;
+  padding: .5em .6em;
+  border-radius: .9em;
+  background: var(--app-card);
+  overflow: hidden;
+}
+.fx-field > * { font-size: .58em; line-height: 1.38; }
+.fx-field .fx-text { white-space: pre-wrap; overflow-wrap: break-word; }
+.fx-field .fx-text > span { display: inline; }
+.fx-field .fx-ph { position: absolute; left: 1.03em; right: 1.03em; top: .86em; color: var(--app-faint); }
+.fx-field:not(.is-empty) .fx-ph { display: none; }
+.fx-hl { background: var(--app-bubble); border-radius: .2em; transition: background-color 1.2s ease; }
+.fx-hl.is-faded { background: transparent; }
+
+/* ---------- Live tippen ---------- */
+.fx-history {
+  flex: 1; min-height: 0;
+  display: flex; flex-wrap: wrap; align-content: flex-end; justify-content: flex-end; gap: .3em;
+  padding: .5em .7em .55em;
+  overflow: hidden;
+}
+.fx-history > i {
+  padding: .3em .55em;
+  border-radius: 99px;
+  background: var(--app-bubble);
+  animation: fx-bubble .35s var(--ease-out) both;
+}
+.fx-history > i em { font-size: .5em; white-space: pre; }
+@keyframes fx-bubble { from { opacity: 0; transform: translateY(.8em) scale(.9); } to { opacity: 1; transform: none; } }
+.fx-liveline {
+  display: flex; align-items: center; gap: .4em;
+  margin: 0 .7em; padding: .45em .6em;
+  border-radius: 99px;
+  background: var(--app-fill);
+}
+.fx-liveline > svg { width: .9em; height: .9em; color: var(--app-link); }
+.fx-liveline .fx-text { flex: 1; min-width: 0; font-size: .56em; white-space: pre; overflow: hidden; }
+.fx-liveline .fx-text > span { display: inline; }
+.fx-badge { display: flex !important; align-items: center; gap: .3em; color: var(--app-muted); }
+.fx-badge::before { content: ""; width: .45em; height: .45em; border-radius: 50%; background: var(--app-green); }
+.fx-badge em { font-size: .44em; font-weight: 600; }
+.fx-wave { display: flex !important; align-items: center; gap: .1em; height: .9em; }
+.fx-wave i { width: .12em; height: 30%; border-radius: 99px; background: var(--app-link); }
+@media (prefers-reduced-motion: no-preference) {
+  .is-dictating .fx-wave i { animation: fx-voice .5s ease-in-out infinite alternate; }
+  .is-dictating .fx-wave i:nth-child(2) { animation-delay: .15s; }
+  .is-dictating .fx-wave i:nth-child(3) { animation-delay: .3s; }
+  .is-dictating .fx-wave i:nth-child(4) { animation-delay: .1s; }
+}
+@keyframes fx-voice { from { height: 25%; } to { height: 100%; } }
+.fx-liveline .fx-wave { display: none !important; }
+.is-dictating .fx-liveline .fx-wave { display: flex !important; }
+.is-dictating .fx-liveline > svg { display: none; }
+.fx-arrows { display: flex; gap: .45em; padding: .55em .7em; }
+.fx-arrows > span {
+  display: grid; place-items: center;
+  width: 1.95em; height: 1.95em; border-radius: 50%;
+  background: var(--app-fill);
+  color: var(--app-link);
+}
+.fx-arrows svg { width: .85em; height: .85em; }
+
+/* Bildschirmtastatur (Deutsch) */
+.fx-kb { flex: none; padding: .45em .22em .4em; border-radius: 1em 1em 0 0; background: var(--kb-bg); }
+.fx-kb-row { display: flex; justify-content: center; gap: .16em; }
+.fx-kb-row + .fx-kb-row { margin-top: .3em; }
+.fx-key {
+  display: grid; place-items: center;
+  width: 1.04em; height: 1.55em;
+  border-radius: .24em;
+  background: var(--kb-key);
+  box-shadow: 0 .07em 0 rgba(0, 0, 0, .28);
+  color: var(--app-text);
+}
+.fx-key em { font-size: .58em; }
+.fx-key svg { width: .7em; height: .7em; }
+.fx-key--wide { width: 1.6em; background: var(--kb-key2); }
+.fx-key--mode { width: 2.6em; background: var(--kb-key2); }
+.fx-key--mode em { font-size: .46em; }
+.fx-key--space { flex: 1; max-width: 6.2em; }
+.fx-key--ret { width: 2.6em; background: var(--kb-key2); }
+.fx-key.is-down { background: var(--kb-down); }
+.fx-kb-extra { display: flex; justify-content: space-between; padding: .35em .55em 0; color: var(--app-text); }
+.fx-kb-extra svg { width: 1.05em; height: 1.05em; }
+.fx-mic { display: grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%; transition: background-color .2s ease, color .2s ease; }
+.is-dictating .fx-mic { background: var(--app-link); color: #ffffff; }
+
+/* ---------- Blätter (von unten) und Systemabfrage ---------- */
+.fx-dim { position: absolute; z-index: 10; inset: 0; background: rgba(0, 0, 0, .25); opacity: 0; transition: opacity .35s ease; pointer-events: none; }
+.fx-sheet {
+  position: absolute; z-index: 11; left: 0; right: 0; top: 4.2em; bottom: 0;
+  padding: .45em .7em;
+  border-radius: 1.4em 1.4em 0 0;
+  background: var(--app-sheet);
+  box-shadow: 0 -.3em 1.2em rgba(0, 0, 0, .14);
+  transform: translateY(105%);
+  transition: transform .5s var(--ease-out);
+}
+.fx-sheet--half { top: 11.2em; }
+.is-sheet .fx-dim { opacity: 1; }
+.is-sheet .fx-sheet { transform: none; }
+.fx-sheet .fx-list, .fx-sheet .fx-row { background: var(--app-sheet-card); }
+.fx-sheet .fx-list { margin: 0; }
+.fx-sheet .fx-search { margin: 0 0 .55em; }
+.fx-sheetnav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; margin-bottom: .5em; }
+.fx-sheetnav > b { grid-column: 2; font-size: .58em; font-weight: 700; white-space: nowrap; }
+.fx-sheetnav > :first-child { justify-self: start; }
+.fx-sheetnav > :last-child { justify-self: end; }
+.fx-sheetnav .dv-pill { color: var(--app-text); }
+.fx-sheetnav .fx-save { background: var(--app-blue); color: #ffffff; transition: opacity .2s ease; }
+.fx-save.is-off { opacity: .35; }
+.fx-input {
+  display: block;
+  padding: .55em .7em;
+  border-radius: .8em;
+  background: var(--app-sheet-card);
+}
+.fx-input > em { font-size: .56em; line-height: 1.35; white-space: pre-wrap; }
+.fx-input .fx-ph { color: var(--app-faint); }
+.fx-input--tall { height: 6.2em; }
+.fx-sheet .dv-sec { margin: .55em .6em .3em; }
+.fx-sheet .dv-sec:first-of-type { margin-top: 0; }
+
+.fx-phone .dv-alert { z-index: 25; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
+.fx-phone .dv-alert-box { transform: scale(1.12); transition: transform .3s var(--ease-out); }
+.fx-phone.is-alert .dv-alert { opacity: 1; }
+.fx-phone.is-alert .dv-alert-box { transform: none; }
+
+/* „Dongle verbinden“: Zeile mit Kopplungsstatus */
+.fx-dev { display: flex; align-items: center; gap: .45em; padding: .5em .65em; }
+.fx-dev .dv-dev-text { flex: 1; min-width: 0; }
+.fx-pairhint { display: grid; margin-top: .12em; }
+.fx-pairhint > * { grid-area: 1 / 1; transition: opacity .25s ease; }
+.fx-pairhint > em { color: var(--app-muted); font-size: .46em; }
+.fx-pairhint .dv-pairing { opacity: 0; margin: 0; }
+.is-ready .fx-pairhint > em { opacity: 0; }
+.is-ready .fx-pairhint .dv-pairing { opacity: 1; }
+.fx-dev .dv-spinner { width: 1em; height: 1em; opacity: 0; }
+.is-linking .fx-dev .dv-spinner { opacity: 1; }
+.is-linking .fx-dev .dv-bars { display: none; }
+.fx-hintbox { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .45s var(--ease-out), opacity .3s ease; }
+.fx-hintbox > * { overflow: hidden; min-height: 0; }
+.is-linked .fx-hintbox { grid-template-rows: 0fr; opacity: 0; }
+
+/* ---------- Einstellungen und Dongle-Seite ---------- */
+.fx-settings .dv-form { padding-top: .2em; }
+.fx-settings .dv-sec { margin: .55em .6em .3em; }
+.fx-settings .dv-sec:first-child { margin-top: .1em; }
+.fx-settings .dv-li { min-height: 2.05em; }
+.fx-blue { color: var(--app-link); }
+.fx-red { color: #ff3b30; }
+.fx-li-v { display: flex !important; align-items: center; gap: .3em; color: var(--app-muted); }
+.fx-li-v em { font-size: .52em; }
+.fx-li-v svg { width: .75em; height: .75em; }
+.fx-li-v .dv-ok { width: .85em; height: .85em; }
+.fx-pen { color: var(--app-link); }
+.fx-result { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ease-out); }
+.fx-result > * { overflow: hidden; min-height: 0; }
+.is-result .fx-result { grid-template-rows: 1fr; }
+.fx-result .dv-sep { margin-left: 2.1em; }
+.fx-res { display: flex !important; align-items: flex-start; gap: .45em; padding: .45em .65em; }
+.fx-res .dv-ok { width: 1.05em; height: 1.05em; margin-top: .05em; }
+.fx-res b { font-size: .54em; font-weight: 500; }
+.fx-res b span { display: inline; color: var(--app-green); font-weight: 650; }
+.fx-res em { margin-top: .2em; color: var(--app-muted); font-size: .42em; line-height: 1.35; }
+.fx-check { display: flex !important; align-items: center; justify-content: space-between; }
+.fx-check .dv-spinner { width: .9em; height: .9em; opacity: 0; }
+.is-checking .fx-check .dv-spinner { opacity: 1; }
+.fx-name { transition: opacity .2s ease; }
+
+/* Regler für die Tippgeschwindigkeit */
+.fx-speed { padding: .5em .65em .55em; }
+.fx-speed-head { display: flex !important; justify-content: space-between; }
+.fx-speed-head em { font-size: .54em; }
+.fx-speed-head em + em { color: var(--app-muted); font-variant-numeric: tabular-nums; }
+.fx-slider { display: flex !important; align-items: center; gap: .45em; margin-top: .45em; color: var(--app-muted); }
+.fx-slider > svg { width: 1em; height: 1em; }
+.fx-track { position: relative; flex: 1; height: .26em; border-radius: 99px; background: rgba(120, 120, 128, .2); }
+.fx-track > i {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: calc(var(--v, .1) * 100%);
+  border-radius: inherit;
+  background: var(--app-blue);
+}
+.fx-track > b {
+  position: absolute; top: 50%; left: calc(var(--v, .1) * 100%);
+  width: 1.15em; height: 1.15em; margin: -.575em 0 0 -.575em;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 .1em .4em rgba(0, 0, 0, .25), 0 0 0 .5px rgba(0, 0, 0, .06);
+}
+.fx-track.is-moving > i, .fx-track.is-moving > b { transition: width .8s var(--ease-out), left .8s var(--ease-out); }
+.fx-icons { display: flex !important; gap: .3em; }
+.fx-icons img { width: 1.25em; height: 1.25em; border-radius: .3em; }
+
+@media print {
+  .fx-demo, .fx-ctrl { display: none; }
+  .fx { display: block; }
+}
+
+/* ---------- Ergänzungen: Zähler, Seiten, Zustände ---------- */
+.fx-art { display: block; }
+.fx-grow { flex: 1; min-height: 0; }
+.fx-pcount { color: var(--app-muted); font-size: .42em; font-variant-numeric: tabular-nums; }
+.fx-input .fx-caret-blue { display: none !important; }
+.fx-input.is-focus .fx-caret-blue { display: inline-block !important; }
+.fx-input > em > span { display: inline; }
+@media (prefers-reduced-motion: no-preference) {
+  .fx-caret, .fx-caret-blue { animation: fx-blink 1.06s steps(2, jump-none) infinite; }
+}
+@keyframes fx-blink { from { opacity: 1; } to { opacity: 0; } }
+
+/* Einstellungen › Dongle: zwei Seiten, die zweite schiebt sich von rechts herein */
+.fx-pages { position: relative; flex: 1; min-height: 0; overflow: hidden; }
+.fx-page {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  background: var(--app-bg);
+  transition: transform .5s var(--ease-out);
+}
+.fx-page--b { transform: translateX(100%); box-shadow: -.4em 0 1em rgba(0, 0, 0, .08); }
+.is-pushed > .fx-page--a { transform: translateX(-30%); }
+.is-pushed > .fx-page--b { transform: none; }
+.fx-navleft { display: flex !important; align-items: center; gap: .3em; }
+.fx-navleft .dv-round { width: 1.75em; }
+.fx-two em:first-child { font-size: .54em; }
+.fx-two .fx-sub { margin-top: .15em; color: var(--app-muted); font-size: .44em; }
+.dv-li.fx-tall { min-height: 2.6em; }
+.dv-li.fx-tall > em { line-height: 1.3; }
+.fx-gap { margin-top: .7em; }
+.fx-page--b .dv-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+/* „Dongle verbinden“: Verbunden-Anzeige und Häkchen */
+.fx-pairhint .fx-linked { opacity: 0; color: var(--app-green); font-weight: 600; }
+.is-linked .fx-pairhint > em:first-child { opacity: 0; }
+.is-linked .fx-pairhint .fx-linked { opacity: 1; }
+.fx-devok { display: none !important; width: 1em; height: 1em; }
+.is-linked .fx-devok { display: grid !important; }
+.is-linked .fx-dev .dv-bars { display: none; }
+.fx-near { display: flex !important; align-items: center; gap: .35em; }
+.fx-near .dv-spinner { width: .8em; height: .8em; }
+
+/* ---------- Außerdem an Bord ---------- */
+.fx-more { padding: 3.5rem 0 1rem; border-top: 1px solid var(--line); scroll-margin-top: 1rem; }
+.fx-more h2 {
+  font-size: clamp(1.75rem, 1.35rem + 1.7vw, 2.6rem);
+  font-weight: 800; line-height: 1.06; letter-spacing: -.032em;
+  margin: 0 0 1.5rem;
+}
+.fx-grid {
+  list-style: none; margin: 0 0 2.5rem; padding: 0;
+  display: grid; gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+.fx-grid li {
+  margin: 0; padding: 1.15rem 1.25rem 1.25rem;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface);
+}
+.fx-grid h3 { margin: 0 0 .35rem; font-size: 1.05rem; line-height: 1.3; }
+.fx-grid h3::before {
+  content: ""; display: block;
+  width: 1.5rem; height: 3px; margin-bottom: .75rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+}
+.fx-grid p { margin: 0; color: var(--muted); font-size: .96rem; line-height: 1.5; }
+.fx-end { max-width: 40rem; margin: 0; font-size: 1.05rem; }
+
+/* Angehalten: auch Blinken, Flackern und Übergänge in der Szene stehen still */
+.fx-demo.is-paused .fx-scene *,
+.fx-demo.is-paused .fx-scene *::before,
+.fx-demo.is-paused .fx-scene *::after { animation-play-state: paused !important; }

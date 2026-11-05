@@ -1,0 +1,657 @@
+/* MedType – Seite „Funktionen“: spielt die Vorführungen ab. Jede Vorführung ist ein Ablauf aus Schritten mit Zeitpunkt
+   (Script). Sie startet, sobald sie ins Bild kommt, hält an, wenn sie aus dem Bild scrollt, und lässt sich über den
+   Knopf anhalten, fortsetzen und wiederholen. Mit „Bewegung reduzieren“ startet nichts von selbst: Die Szene zeigt den
+   Endzustand, und der Knopf spielt die Vorführung auf Wunsch ab. Ohne Skript bleibt der Endzustand aus dem HTML stehen. */
+(function () {
+  "use strict";
+
+  var figures = document.querySelectorAll(".fx-demo[data-demo]");
+  if (!figures.length || !window.requestAnimationFrame) return;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var MAX_STEP_MS = 250; // längster Zeitsprung pro Bild (gedrosselte Tabs springen nicht durch die ganze Vorführung)
+  var SPEED = 30; // Zeichen pro Sekunde, Standard der App
+  var KONTROLLE = "Kontrolle in vier Wochen, bei Beschwerden bitte früher vorstellen.";
+
+  /* ---------- Werkzeuge ---------- */
+
+  function restart(el, cls) {
+    el.classList.remove(cls);
+    void el.offsetWidth;
+    el.classList.add(cls);
+  }
+
+  function context(fig) {
+    var c = { fig: fig };
+    c.q = function (name) { return fig.querySelector('[data-fx="' + name + '"]'); };
+    c.phone = c.q("phone");
+    c.screen = c.q("screen");
+    c.touch = c.q("touch");
+    c.steps = fig.closest(".fx").querySelectorAll(".fx-steps > li");
+    c.pc = fig.querySelector(".fx-pc");
+    c.before = c.q("before");
+    c.after = c.q("after");
+    c.row = function (key) { return fig.querySelector('[data-row="' + key + '"]'); };
+    c.key = function (k) { return /^[a-zäöü ]$|^(shift|back|ret)$/.test(k) ? fig.querySelector('.fx-key[data-k="' + k + '"]') : null; };
+    return c;
+  }
+
+  /* Lage des Fingers: Mitte des Ziels, in Prozent des Bildschirms (die Szene skaliert mit) */
+  function aim(c, el, x) {
+    var s = c.screen.getBoundingClientRect();
+    var r = el.getBoundingClientRect();
+    if (!s.width || !s.height) return;
+    var left = x === undefined ? r.left + r.width / 2 : x;
+    c.touch.style.left = ((left - s.left) / s.width * 100) + "%";
+    c.touch.style.top = ((r.top + r.height / 2 - s.top) / s.height * 100) + "%";
+  }
+
+  function on(el, cls, yes) { if (el) el.classList.toggle(cls, yes !== false); }
+  function text(el, value) { if (el) el.textContent = value; }
+  function phoneState(c, cls, yes) { on(c.phone, cls, yes); }
+
+  function led(el, state) {
+    if (!el) return;
+    ["slow", "fast", "on", "typing", "paired"].forEach(function (s) { el.classList.remove("fx-led-" + s); });
+    el.classList.add("fx-led-" + state);
+  }
+
+  function pcText(c, before, after) {
+    text(c.before, before);
+    text(c.after, after || "");
+  }
+
+  function summary(n) {
+    return n ? n + " Zeichen · ca. " + Math.ceil(n / SPEED) + " Sek." : "0 Zeichen";
+  }
+
+  function progress(c, done, total, title) {
+    if (title) text(c.q("ptitle"), title);
+    text(c.q("pcount"), done + " von " + total + " Zeichen");
+    var bar = c.fig.querySelector(".dv-pbar i");
+    if (bar) bar.style.setProperty("--p", total ? done / total : 0);
+  }
+
+  function bubble(c, word) {
+    var i = document.createElement("i");
+    var em = document.createElement("em");
+    em.textContent = word;
+    i.appendChild(em);
+    c.q("history").appendChild(i);
+  }
+
+  /* ---------- Ablauf ---------- */
+
+  function Script(c) { this.c = c; this.t = 0; this.ev = []; }
+  Script.prototype.at = function (fn) { this.ev.push({ t: this.t, fn: fn }); return this; };
+  Script.prototype.wait = function (ms) { this.t += ms; return this; };
+  Script.prototype.step = function (n) {
+    var steps = this.c.steps;
+    return this.at(function () {
+      Array.prototype.forEach.call(steps, function (li, i) { li.classList.toggle("is-now", i === n - 1); });
+    });
+  };
+  /* Fingertipp mit kurzem Druck auf das Ziel; el darf eine Funktion sein (Ziel erst beim Abspielen bekannt) */
+  Script.prototype.tap = function (el) {
+    var c = this.c;
+    var target = null;
+    this.at(function () {
+      target = typeof el === "function" ? el() : el;
+      if (!target) return;
+      aim(c, target);
+      restart(c.touch, "is-tap");
+      target.classList.add("is-pressed");
+    });
+    this.wait(180).at(function () { if (target) target.classList.remove("is-pressed"); });
+    return this.wait(120);
+  };
+  /* Zeichen für Zeichen: fn(bisher, zeichen) nach jeweils ms; nach Zeilenumbrüchen etwas länger */
+  Script.prototype.chars = function (str, ms, fn) {
+    for (var i = 1; i <= str.length; i++) {
+      this.wait(ms + (str.charAt(i - 2) === "\n" ? 140 : 0));
+      this.at(fn.bind(null, str.slice(0, i), str.charAt(i - 1)));
+    }
+    return this;
+  };
+  /* Taste auf der Bildschirmtastatur kurz hervorheben */
+  Script.prototype.key = function (k) {
+    var c = this.c;
+    return this.at(function () {
+      if (c.down) c.down.classList.remove("is-down");
+      c.down = c.key(k);
+      if (c.down) c.down.classList.add("is-down");
+    });
+  };
+  Script.prototype.release = function () {
+    var c = this.c;
+    return this.at(function () { if (c.down) c.down.classList.remove("is-down"); c.down = null; });
+  };
+  /* Live tippen: Zeichen in die Eingabezeile und sofort an den PC; ein Leerzeichen schickt das Wort in den Verlauf */
+  Script.prototype.live = function (str, ms) {
+    var c = this.c;
+    var s = this;
+    str.split("").forEach(function (ch) {
+      var upper = ch !== ch.toLowerCase();
+      if (upper) s.wait(ms / 2).key("shift");
+      s.wait(upper ? ms / 2 : ms).key(ch === " " ? " " : ch.toLowerCase()).at(function () {
+        var line = c.q("line");
+        c.before.textContent += ch;
+        if (ch === " ") {
+          if (line.textContent) bubble(c, line.textContent);
+          line.textContent = "";
+        } else {
+          line.textContent += ch;
+        }
+      });
+    });
+    return this.wait(ms).release();
+  };
+  Script.prototype.backspace = function (n, ms) {
+    var c = this.c;
+    for (var i = 0; i < n; i++) {
+      this.wait(ms).key("back").at(function () {
+        var line = c.q("line");
+        line.textContent = line.textContent.slice(0, -1);
+        c.before.textContent = c.before.textContent.slice(0, -1);
+      });
+    }
+    return this.wait(ms).release();
+  };
+
+  /* ---------- Vorführungen ---------- */
+
+  var DEMOS = {};
+
+  DEMOS.vorschreiben = {
+    reset: function (c) {
+      text(c.q("text"), "");
+      text(c.q("sum"), summary(0));
+      on(c.q("field"), "is-empty");
+      phoneState(c, "is-empty");
+      phoneState(c, "is-busy", false);
+      phoneState(c, "is-done", false);
+      pcText(c, "");
+      led(c.q("usb"), "on");
+      on(c.pc, "is-air", false);
+    },
+    run: function (s, c) {
+      var draft = "Befund besprochen.\nKontrolle in vier Wochen.";
+      s.step(1).wait(1100).step(2);
+      s.chars(draft, 60, function (sofar) {
+        text(c.q("text"), sofar);
+        text(c.q("sum"), summary(sofar.length));
+        on(c.q("field"), "is-empty", false);
+        phoneState(c, "is-empty", false);
+      });
+      s.wait(800).step(3).tap(c.q("send"));
+      s.at(function () {
+        progress(c, 0, draft.length, "Text wird getippt");
+        phoneState(c, "is-busy");
+        on(c.pc, "is-air");
+        led(c.q("usb"), "typing");
+      }).wait(350);
+      s.chars(draft, 1000 / SPEED, function (sofar) {
+        pcText(c, sofar);
+        progress(c, sofar.length, draft.length);
+      });
+      s.wait(250).step(4).at(function () {
+        phoneState(c, "is-done");
+        on(c.pc, "is-air", false);
+        led(c.q("usb"), "on");
+      });
+      s.wait(500).at(function () {
+        text(c.q("text"), "");
+        text(c.q("sum"), summary(0));
+        on(c.q("field"), "is-empty");
+        phoneState(c, "is-empty");
+      });
+      s.wait(2600).step(0);
+    }
+  };
+
+  DEMOS["live-tippen"] = {
+    reset: function (c) {
+      c.q("history").textContent = "";
+      ["Blutdruck", "128/82", "mmHg,"].forEach(function (w) { bubble(c, w); });
+      text(c.q("line"), "");
+      pcText(c, "Blutdruck 128/82 mmHg, ");
+      led(c.q("usb"), "on");
+    },
+    run: function (s, c) {
+      s.step(1).wait(1000).step(2).at(function () { led(c.q("usb"), "typing"); });
+      s.live("Puls kräftig, rhythmish", 150);
+      s.wait(500).step(3).backspace(2, 260);
+      s.wait(300).step(2).live("sch.", 150).at(function () { led(c.q("usb"), "on"); });
+      s.wait(700).step(4);
+      var arrows = c.fig.querySelectorAll(".fx-arrows > span");
+      function move(dir) {
+        return function () {
+          var b = c.before.textContent;
+          var a = c.after.textContent;
+          if (dir < 0 && b) pcText(c, b.slice(0, -1), b.slice(-1) + a);
+          if (dir > 0 && a) pcText(c, b + a.charAt(0), a.slice(1));
+        };
+      }
+      for (var i = 0; i < 3; i++) s.tap(arrows[0]).at(move(-1)).wait(220);
+      s.wait(400);
+      for (var j = 0; j < 3; j++) s.tap(arrows[3]).at(move(1)).wait(220);
+      s.wait(2200).step(0);
+    }
+  };
+
+  DEMOS.diktieren = {
+    reset: function (c) {
+      c.q("history").textContent = "";
+      text(c.q("line"), "");
+      pcText(c, "");
+      phoneState(c, "is-dictating", false);
+      led(c.q("usb"), "on");
+    },
+    run: function (s, c) {
+      var words = ["Patient", " wach", " und", " orientiert,", " keine", " Schmerzen."];
+      s.step(1).wait(1000).tap(c.q("mic")).at(function () { phoneState(c, "is-dictating"); });
+      s.wait(900).step(2);
+      words.forEach(function (w, i) {
+        s.wait(i ? 520 : 0).at(function () {
+          var line = c.q("line");
+          line.textContent += w;
+          led(c.q("usb"), "typing");
+          on(c.pc, "is-air");
+          c.before.textContent += w;
+        }).wait(160).at(function () {
+          led(c.q("usb"), "on");
+          on(c.pc, "is-air", false);
+        });
+      });
+      s.wait(1600).step(3).at(function () { phoneState(c, "is-dictating", false); }).wait(500);
+      s.at(function () {
+        var line = c.q("line");
+        line.textContent.split(" ").forEach(function (w) { bubble(c, w); });
+        line.textContent = "";
+      });
+      s.wait(2600).step(0);
+    }
+  };
+
+  DEMOS.bausteine = {
+    reset: function (c) {
+      var list = c.q("list");
+      var row = c.row("kontrolle");
+      list.appendChild(row);
+      row.classList.add("is-hidden");
+      row.classList.remove("is-new", "is-lift");
+      Array.prototype.forEach.call(list.children, function (r) { r.style.transform = ""; r.style.transitionDuration = ""; });
+      phoneState(c, "is-sheet", false);
+      text(c.q("title"), "");
+      text(c.q("body"), "");
+      c.q("tph").hidden = false;
+      c.q("bph").hidden = false;
+      on(c.q("tbox"), "is-focus", false);
+      on(c.q("bbox"), "is-focus", false);
+      on(c.q("save"), "is-off");
+      c.touch.classList.remove("is-hold");
+    },
+    run: function (s, c) {
+      s.step(1).wait(1100).tap(c.q("plus")).at(function () { phoneState(c, "is-sheet"); });
+      s.wait(800).step(2).at(function () { on(c.q("tbox"), "is-focus"); });
+      s.chars("Kontrolle", 90, function (sofar) {
+        text(c.q("title"), sofar);
+        c.q("tph").hidden = true;
+        on(c.q("save"), "is-off", false);
+      });
+      s.wait(400).at(function () {
+        on(c.q("tbox"), "is-focus", false);
+        on(c.q("bbox"), "is-focus");
+      });
+      s.chars(KONTROLLE, 32, function (sofar) {
+        text(c.q("body"), sofar);
+        c.q("bph").hidden = true;
+      });
+      s.wait(600).tap(c.q("save")).at(function () { phoneState(c, "is-sheet", false); });
+      s.wait(550).at(function () {
+        var row = c.row("kontrolle");
+        row.classList.remove("is-hidden");
+        restart(row, "is-new");
+      });
+      /* An den drei Strichen nach oben ziehen */
+      var rowH = 0;
+      s.wait(1500).step(3).at(function () {
+        var row = c.row("kontrolle");
+        rowH = row.getBoundingClientRect().height;
+        aim(c, row.querySelector("svg"));
+        c.touch.classList.add("is-hold");
+        row.classList.add("is-lift");
+      });
+      s.wait(450).at(function () {
+        var list = c.q("list");
+        var row = c.row("kontrolle");
+        var screenH = c.screen.getBoundingClientRect().height;
+        var others = Array.prototype.filter.call(list.children, function (r) { return r !== row && !r.classList.contains("is-hidden"); });
+        row.style.transitionDuration = ".8s";
+        row.style.transform = "translateY(" + (-rowH * others.length) + "px)";
+        others.forEach(function (r) { r.style.transform = "translateY(" + rowH + "px)"; });
+        c.touch.style.top = (parseFloat(c.touch.style.top) - rowH * others.length / screenH * 100) + "%";
+      });
+      s.wait(1000).at(function () {
+        var list = c.q("list");
+        var row = c.row("kontrolle");
+        c.touch.classList.remove("is-hold");
+        row.classList.remove("is-lift", "is-new");
+        Array.prototype.forEach.call(list.children, function (r) { r.style.transition = "none"; r.style.transform = ""; });
+        list.insertBefore(row, list.firstChild);
+        void list.offsetWidth;
+        Array.prototype.forEach.call(list.children, function (r) { r.style.transition = ""; r.style.transitionDuration = ""; });
+      });
+      s.wait(2400).step(0);
+    }
+  };
+
+  DEMOS.einfuegen = {
+    reset: function (c) {
+      pcText(c, "Befund besprochen. ");
+      phoneState(c, "is-busy", false);
+      phoneState(c, "is-done", false);
+      led(c.q("usb"), "on");
+      on(c.pc, "is-air", false);
+    },
+    run: function (s, c) {
+      s.step(1).wait(1200).step(2).tap(c.row("kontrolle"));
+      s.at(function () {
+        progress(c, 0, KONTROLLE.length, "„Kontrolle“ wird getippt");
+        phoneState(c, "is-busy");
+        on(c.pc, "is-air");
+        led(c.q("usb"), "typing");
+      }).step(3).wait(350);
+      s.chars(KONTROLLE, 1000 / SPEED, function (sofar) {
+        pcText(c, "Befund besprochen. " + sofar);
+        progress(c, sofar.length, KONTROLLE.length);
+      });
+      s.wait(250).at(function () {
+        phoneState(c, "is-done");
+        on(c.pc, "is-air", false);
+        led(c.q("usb"), "on");
+      });
+      s.wait(2400).at(function () { phoneState(c, "is-busy", false); }).wait(400).step(0);
+    }
+  };
+
+  DEMOS["baustein-im-text"] = {
+    reset: function (c) {
+      text(c.q("text"), "Befund besprochen. ");
+      text(c.q("ins"), "");
+      on(c.q("ins"), "is-faded");
+      text(c.q("sum"), summary(19));
+      phoneState(c, "is-sheet", false);
+    },
+    run: function (s, c) {
+      s.step(1).wait(1300).step(2).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
+      s.wait(1100).tap(function () { return c.row("kontrolle"); }).at(function () { phoneState(c, "is-sheet", false); });
+      s.wait(380).step(3).at(function () {
+        text(c.q("ins"), KONTROLLE);
+        on(c.q("ins"), "is-faded", false);
+        text(c.q("sum"), summary(19 + KONTROLLE.length));
+      });
+      s.wait(1800).at(function () { on(c.q("ins"), "is-faded"); });
+      s.wait(1600).step(0);
+    }
+  };
+
+  DEMOS.verbinden = {
+    reset: function (c) {
+      var stick = c.q("stick");
+      led(stick, "slow");
+      stick.classList.remove("fx-hold");
+      text(c.q("cap"), "LED blinkt langsam blau: bereit");
+      chipState(c, "x");
+      ["is-linked", "is-ready", "is-linking", "is-sheet", "is-alert"].forEach(function (k) { phoneState(c, k, false); });
+    },
+    run: function (s, c) {
+      var stick = c.q("stick");
+      s.step(1).wait(1600).step(2).at(function () {
+        stick.classList.add("fx-hold");
+        text(c.q("cap"), "Taste 3 Sekunden halten …");
+      });
+      s.wait(3000).at(function () {
+        stick.classList.remove("fx-hold");
+        led(stick, "fast");
+        text(c.q("cap"), "LED blinkt schnell blau: Koppelmodus");
+      });
+      s.wait(1300).step(3).tap(c.q("chip")).at(function () {
+        phoneState(c, "is-sheet");
+        phoneState(c, "is-ready");
+      });
+      s.wait(1300).tap(c.q("dev")).at(function () { phoneState(c, "is-linking"); });
+      s.wait(900).step(4).at(function () { phoneState(c, "is-alert"); });
+      s.wait(1200).tap(c.q("koppeln")).at(function () {
+        phoneState(c, "is-alert", false);
+        chipState(c, "link");
+        led(stick, "paired");
+        text(c.q("cap"), "LED leuchtet grün: verbunden");
+      });
+      s.wait(1100).at(function () {
+        chipState(c, "ok");
+        phoneState(c, "is-linking", false);
+        phoneState(c, "is-ready", false);
+        phoneState(c, "is-linked");
+      });
+      s.wait(1300).tap(c.q("fertig")).at(function () { phoneState(c, "is-sheet", false); });
+      s.wait(2200).step(0);
+    }
+  };
+
+  function chipState(c, key) {
+    Array.prototype.forEach.call(c.q("chip").children, function (el) {
+      el.classList.toggle("is-on", el.getAttribute("data-chip") === key);
+    });
+  }
+
+  DEMOS.dongle = {
+    reset: function (c) {
+      var pages = c.q("pages");
+      ["is-pushed", "is-result", "is-checking"].forEach(function (k) { pages.classList.remove(k); });
+      ["name", "title", "aname", "newname"].forEach(function (k) { text(c.q(k), "MedType Dongle"); });
+      phoneState(c, "is-sheet", false);
+    },
+    run: function (s, c) {
+      var pages = c.q("pages");
+      s.step(1).wait(1100).tap(c.q("dongle-row")).at(function () { pages.classList.add("is-pushed"); });
+      s.wait(1200).step(2).tap(c.q("check")).at(function () { pages.classList.add("is-checking"); });
+      s.wait(1400).at(function () {
+        pages.classList.remove("is-checking");
+        pages.classList.add("is-result");
+      });
+      s.wait(1800).step(3).tap(c.q("namerow")).at(function () { phoneState(c, "is-sheet"); });
+      s.wait(900);
+      var old = "MedType Dongle";
+      for (var i = old.length - 1; i >= 0; i--) {
+        s.wait(45).at(text.bind(null, c.q("newname"), old.slice(0, i)));
+      }
+      s.wait(250).chars("PC 1", 150, function (sofar) { text(c.q("newname"), sofar); });
+      s.wait(500).tap(c.q("save")).at(function () { phoneState(c, "is-sheet", false); });
+      s.wait(400).at(function () {
+        ["name", "title", "aname"].forEach(function (k) { text(c.q(k), "PC 1"); });
+      });
+      s.wait(1500).step(4).wait(2400).step(0);
+    }
+  };
+
+  function speedValue(v) { return (v - 5) / 245; }
+
+  DEMOS.tippgeschwindigkeit = {
+    reset: function (c) {
+      pcText(c, "");
+      text(c.q("speed"), "30 Zeichen/s");
+      c.q("track").style.setProperty("--v", speedValue(30));
+      led(c.q("usb"), "on");
+      on(c.pc, "is-air", false);
+      c.touch.classList.remove("is-hold");
+    },
+    run: function (s, c) {
+      var done = "";
+      function typeLine(line, speed) {
+        s.at(function () { on(c.pc, "is-air"); led(c.q("usb"), "typing"); });
+        s.chars(line, 1000 / speed, function (sofar) { pcText(c, done + sofar); });
+        s.at(function () {
+          done += line;
+          on(c.pc, "is-air", false);
+          led(c.q("usb"), "on");
+        });
+      }
+      function drag(from, to) {
+        var track = c.q("track");
+        s.at(function () {
+          aim(c, c.q("knob"));
+          c.touch.classList.add("is-hold");
+        }).wait(350).at(function () {
+          var r = track.getBoundingClientRect();
+          track.classList.add("is-moving");
+          track.style.setProperty("--v", speedValue(to));
+          aim(c, c.q("knob"), r.left + speedValue(to) * r.width);
+        });
+        var stepsN = 6;
+        for (var i = 1; i <= stepsN; i++) {
+          s.wait(110).at(text.bind(null, c.q("speed"), Math.round((from + (to - from) * i / stepsN) / 5) * 5 + " Zeichen/s"));
+        }
+        s.wait(250).at(function () {
+          c.touch.classList.remove("is-hold");
+          track.classList.remove("is-moving");
+        });
+      }
+      s.step(2).wait(900);
+      typeLine("Blutdruck 128/82 mmHg,\n", 30);
+      s.wait(700).step(1);
+      drag(30, 10);
+      s.wait(500).step(3);
+      typeLine("Puls 72/min,\n", 10);
+      s.wait(700).step(1);
+      drag(10, 120);
+      s.wait(500).step(2);
+      typeLine("Atmung unauffällig.", 120);
+      s.wait(2400).step(0);
+    }
+  };
+
+  /* ---------- Abspielen ---------- */
+
+  var ICONS = {
+    pause: '<path d="M6.5 4v12M13.5 4v12"/>',
+    play: '<path d="M6 3.8v12.4L16 10z" fill="currentColor"/>',
+    again: '<path d="M3.5 10a6.5 6.5 0 1 0 2-4.7"/><path d="M3.5 3v3.5H7"/>'
+  };
+
+  function Player(fig, def) {
+    this.fig = fig;
+    this.def = def;
+    this.c = context(fig);
+    this.state = "idle";
+    this.autoPaused = false;
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "fx-ctrl";
+    fig.querySelector(".fx-stage").appendChild(btn);
+    this.btn = btn;
+    var self = this;
+    btn.addEventListener("click", function () { self.toggle(); });
+    this.frame = function (now) { self.tick(now); };
+  }
+
+  Player.prototype.label = function (icon, words) {
+    this.btn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"' +
+      ' stroke-linejoin="round" aria-hidden="true">' + ICONS[icon] + "</svg>" + words;
+  };
+
+  Player.prototype.build = function () {
+    /* Reste eines früheren Durchlaufs (gedrückte Tasten, Fingertipp) entfernen */
+    Array.prototype.forEach.call(this.fig.querySelectorAll(".is-down, .is-pressed, .is-tap"), function (el) {
+      el.classList.remove("is-down", "is-pressed", "is-tap");
+    });
+    this.c.down = null;
+    var s = new Script(this.c);
+    this.def.reset(this.c);
+    this.def.run(s, this.c);
+    this.events = s.ev.sort(function (a, b) { return a.t - b.t; });
+    this.end = s.t;
+    this.idx = 0;
+    this.clock = 0;
+  };
+
+  Player.prototype.play = function () {
+    this.build();
+    this.resume();
+  };
+
+  Player.prototype.resume = function () {
+    this.state = "playing";
+    this.autoPaused = false;
+    this.last = null;
+    this.fig.classList.remove("is-paused");
+    this.label("pause", "Anhalten");
+    window.cancelAnimationFrame(this.raf);
+    this.raf = window.requestAnimationFrame(this.frame);
+  };
+
+  Player.prototype.pause = function (auto) {
+    if (this.state !== "playing") return;
+    this.state = "paused";
+    this.autoPaused = !!auto;
+    window.cancelAnimationFrame(this.raf);
+    this.fig.classList.add("is-paused");
+    this.label("play", "Weiter");
+  };
+
+  Player.prototype.tick = function (now) {
+    if (this.state !== "playing") return;
+    if (this.last !== null) this.clock += Math.min(now - this.last, MAX_STEP_MS);
+    this.last = now;
+    while (this.idx < this.events.length && this.events[this.idx].t <= this.clock) {
+      this.events[this.idx++].fn();
+    }
+    if (this.idx >= this.events.length && this.clock >= this.end) {
+      this.state = "ended";
+      this.label("again", "Noch einmal");
+      return;
+    }
+    this.raf = window.requestAnimationFrame(this.frame);
+  };
+
+  Player.prototype.toggle = function () {
+    if (this.state === "playing") this.pause(false);
+    else if (this.state === "paused") this.resume();
+    else this.play();
+  };
+
+  var players = [];
+  Array.prototype.forEach.call(figures, function (fig) {
+    var def = DEMOS[fig.getAttribute("data-demo")];
+    if (!def) return;
+    var p = new Player(fig, def);
+    fig.classList.add("is-scripted");
+    players.push(p);
+    if (reduce) {
+      p.state = "ended";
+      p.label("play", "Vorführung abspielen");
+    } else {
+      p.def.reset(p.c);
+      p.label("play", "Abspielen");
+    }
+  });
+
+  if (reduce || !("IntersectionObserver" in window)) return;
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var p = players.filter(function (x) { return x.fig === entry.target; })[0];
+      if (!p) return;
+      /* Genug zu sehen: knapp die Hälfte der Vorführung oder, bei niedrigem Fenster, mehr als die Hälfte des Fensters */
+      var rb = entry.rootBounds;
+      var fills = rb && entry.intersectionRect.height >= rb.height * 0.6;
+      if (entry.intersectionRatio >= 0.45 || fills) {
+        if (p.state === "idle") p.play();
+        else if (p.state === "paused" && p.autoPaused) p.resume();
+      } else if (!entry.isIntersecting) {
+        p.pause(true);
+      }
+    });
+  }, { threshold: [0, 0.2, 0.3, 0.45] });
+  players.forEach(function (p) { io.observe(p.fig); });
+})();
