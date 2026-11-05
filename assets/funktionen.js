@@ -1,7 +1,6 @@
 /* MedType – Seite „Funktionen“: spielt die Vorführungen ab. Jede Vorführung ist ein Ablauf aus Schritten mit Zeitpunkt
-   (Script). Sie startet, sobald sie ins Bild kommt, hält an, wenn sie aus dem Bild scrollt, und lässt sich über den
-   Knopf anhalten, fortsetzen und wiederholen. Mit „Bewegung reduzieren“ startet nichts von selbst: Die Szene zeigt den
-   Endzustand, und der Knopf spielt die Vorführung auf Wunsch ab. Ohne Skript bleibt der Endzustand aus dem HTML stehen. */
+   (Script). Sie läuft dauerhaft in Schleife, solange sie im Bild ist, und hält außerhalb des Bildes an. Mit „Bewegung
+   reduzieren“ oder ohne Skript bleibt der Endzustand aus dem HTML stehen. */
 (function () {
   "use strict";
 
@@ -544,36 +543,19 @@
     }
   };
 
-  /* ---------- Abspielen ---------- */
+  /* ---------- Abspielen ----------
+     Jede Vorführung läuft dauerhaft in Schleife, solange sie zu sehen ist; außerhalb des Bildes hält sie an. */
 
-  var ICONS = {
-    pause: '<path d="M6.5 4v12M13.5 4v12"/>',
-    play: '<path d="M6 3.8v12.4L16 10z" fill="currentColor"/>',
-    again: '<path d="M3.5 10a6.5 6.5 0 1 0 2-4.7"/><path d="M3.5 3v3.5H7"/>'
-  };
+  var LOOP_PAUSE_MS = 1800; // Endzustand stehen lassen, dann von vorn
 
   function Player(fig, def) {
     this.fig = fig;
     this.def = def;
     this.c = context(fig);
     this.state = "idle";
-    this.autoPaused = false;
-    var btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "fx-ctrl";
-    var heading = fig.closest(".fx").getAttribute("aria-labelledby");
-    if (heading) btn.setAttribute("aria-describedby", heading);
-    fig.querySelector(".fx-stage").appendChild(btn);
-    this.btn = btn;
     var self = this;
-    btn.addEventListener("click", function () { self.toggle(); });
     this.frame = function (now) { self.tick(now); };
   }
-
-  Player.prototype.label = function (icon, words) {
-    this.btn.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"' +
-      ' stroke-linejoin="round" aria-hidden="true">' + ICONS[icon] + "</svg>" + words;
-  };
 
   Player.prototype.build = function () {
     /* Reste eines früheren Durchlaufs (gedrückte Tasten, Fingertipp) entfernen */
@@ -585,35 +567,27 @@
     this.def.reset(this.c);
     this.def.run(s, this.c);
     this.events = s.ev.sort(function (a, b) { return a.t - b.t; });
-    this.end = s.t;
+    this.end = s.t + LOOP_PAUSE_MS;
     this.idx = 0;
     this.clock = 0;
   };
 
-  Player.prototype.play = function () {
-    this.build();
-    this.resume();
-  };
-
   Player.prototype.resume = function () {
+    if (this.state === "idle") this.build();
     this.state = "playing";
-    this.autoPaused = false;
     this.last = null;
     this.fig.classList.remove("is-paused");
     this.freeze(false);
-    this.label("pause", "Anhalten");
     window.cancelAnimationFrame(this.raf);
     this.raf = window.requestAnimationFrame(this.frame);
   };
 
-  Player.prototype.pause = function (auto) {
+  Player.prototype.pause = function () {
     if (this.state !== "playing") return;
     this.state = "paused";
-    this.autoPaused = !!auto;
     window.cancelAnimationFrame(this.raf);
     this.fig.classList.add("is-paused");
     this.freeze(true);
-    this.label("play", "Weiter");
   };
 
   /* Übergänge und Animationen der Szene anhalten bzw. fortsetzen (CSS allein hält Übergänge nicht an) */
@@ -632,37 +606,21 @@
     while (this.idx < this.events.length && this.events[this.idx].t <= this.clock) {
       this.events[this.idx++].fn();
     }
-    if (this.idx >= this.events.length && this.clock >= this.end) {
-      this.state = "ended";
-      this.label("again", "Noch einmal");
-      return;
-    }
+    if (this.idx >= this.events.length && this.clock >= this.end) this.build();
     this.raf = window.requestAnimationFrame(this.frame);
-  };
-
-  Player.prototype.toggle = function () {
-    if (this.state === "playing") this.pause(false);
-    else if (this.state === "paused") this.resume();
-    else this.play();
   };
 
   var players = [];
   Array.prototype.forEach.call(figures, function (fig) {
     var def = DEMOS[fig.getAttribute("data-demo")];
     if (!def) return;
-    var p = new Player(fig, def);
-    fig.classList.add("is-scripted");
-    players.push(p);
-    if (reduce) {
-      p.state = "ended";
-      p.label("play", "Vorführung abspielen");
-    } else {
-      p.def.reset(p.c);
-      p.label("play", "Abspielen");
-    }
+    players.push(new Player(fig, def));
   });
 
+  /* Mit „Bewegung reduzieren“ (oder ohne IntersectionObserver) bleibt der Endzustand aus dem HTML stehen */
   if (reduce || !("IntersectionObserver" in window)) return;
+
+  players.forEach(function (p) { p.def.reset(p.c); });
 
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
@@ -671,12 +629,8 @@
       /* Genug zu sehen: knapp die Hälfte der Vorführung oder, bei niedrigem Fenster, mehr als die Hälfte des Fensters */
       var rb = entry.rootBounds;
       var fills = rb && entry.intersectionRect.height >= rb.height * 0.6;
-      if (entry.intersectionRatio >= 0.45 || fills) {
-        if (p.state === "idle") p.play();
-        else if (p.state === "paused" && p.autoPaused) p.resume();
-      } else if (!entry.isIntersecting) {
-        p.pause(true);
-      }
+      if (entry.intersectionRatio >= 0.45 || fills) p.resume();
+      else if (!entry.isIntersecting) p.pause();
     });
   }, { threshold: [0, 0.2, 0.3, 0.45] });
   players.forEach(function (p) { io.observe(p.fig); });

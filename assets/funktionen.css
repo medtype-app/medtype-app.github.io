@@ -49,31 +49,25 @@
   font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
 }
 
-/* Schritte: Die Vorführung hebt den Schritt hervor, den sie gerade zeigt */
-.fx-steps { list-style: none; counter-reset: fx; display: grid; gap: .2rem; margin: 0 0 1.5rem; padding: 0; }
+/* Schritte wie „Erste Schritte“ in der Hilfe: große rote Zahl, Trennlinien. Während die Vorführung einen Schritt
+   zeigt, treten die anderen etwas zurück. */
+.fx-steps { list-style: none; counter-reset: fx; margin: 0 0 1.5rem; padding: 0; }
 .fx-steps li {
   counter-increment: fx;
-  position: relative;
-  margin: 0; padding: .55rem .8rem .55rem 3rem;
-  border-radius: 14px;
+  display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: .9rem; align-items: baseline;
+  margin: 0; padding: .9rem 0;
+  border-top: 1px solid var(--line);
   line-height: 1.5;
-  transition: background-color .35s ease;
+  transition: opacity .35s ease;
 }
+.fx-steps li:first-child { border-top: 0; padding-top: .2rem; }
 .fx-steps li::before {
   content: counter(fx);
-  position: absolute; left: .7rem; top: .6rem;
-  display: grid; place-items: center;
-  width: 1.6rem; height: 1.6rem; border-radius: 50%;
-  background: var(--accent-soft); color: var(--accent);
-  font-size: .85rem; font-weight: 800; font-variant-numeric: tabular-nums;
-  transition: background-color .35s ease, color .35s ease;
+  color: var(--accent);
+  font-size: 1.6rem; font-weight: 800; line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
-.fx-steps li.is-now { background: var(--accent-soft); }
-.fx-steps li.is-now::before { background: var(--accent); color: #ffffff; }
-@media (prefers-color-scheme: dark) {
-  .fx-steps li.is-now::before { color: #1c1918; }
-}
-.path { font-weight: 600; }
+.fx-steps:has(.is-now) li:not(.is-now) { opacity: .45; }
 
 /* Gut zu wissen */
 .fx-notes {
@@ -111,7 +105,7 @@
   --dot: rgba(120, 60, 60, .13);
   position: relative;
   container: fx / inline-size;
-  padding: 1.75rem .75rem 4.25rem;
+  padding: 1.75rem .75rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
   background: radial-gradient(var(--dot) 1px, transparent 1.5px) 0 0 / 18px 18px, var(--surface);
@@ -122,26 +116,6 @@
   .fx-stage { --dot: rgba(255, 255, 255, .07); }
 }
 .fx-demo > figcaption { margin-top: .8rem; color: var(--muted); font-size: .92rem; line-height: 1.5; }
-
-/* Anhalten, Weiter, Noch einmal (nur mit JavaScript) */
-.fx-ctrl {
-  position: absolute; right: .9rem; bottom: .9rem; z-index: 5;
-  display: inline-flex; align-items: center; gap: .45rem;
-  min-height: 2.75rem;
-  padding: .4rem 1rem .4rem .85rem;
-  border: 1px solid var(--line);
-  border-radius: 99px;
-  background: var(--surface);
-  color: var(--text);
-  font: inherit; font-size: .88rem; font-weight: 600;
-  box-shadow: var(--shadow);
-  cursor: pointer;
-  transition: background-color .15s ease, border-color .15s ease;
-}
-.fx-ctrl svg { width: 1rem; height: 1rem; flex: none; }
-.fx-ctrl:hover { border-color: var(--accent); background: var(--accent-soft); }
-.fx-ctrl:active { transform: scale(.97); }
-.fx-ctrl:focus-visible { border-radius: 99px; }
 
 /* Szene: schmal untereinander (PC oben, Smartphone darunter), breit nebeneinander */
 .fx-scene {
@@ -540,7 +514,7 @@
 .fx-sheet .dv-sec:first-of-type { margin-top: 0; }
 
 @media print {
-  .fx-demo, .fx-ctrl { display: none; }
+  .fx-demo { display: none; }
   .fx { display: block; }
 }
 
