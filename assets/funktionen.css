@@ -98,6 +98,8 @@
     grid-template-areas: "head demo" "body demo";
   }
   .fx-head { padding-top: 1rem; }
+  /* Breit: Die Vorführung läuft beim Lesen der Schritte neben dem Text mit, statt oben stehen zu bleiben */
+  .fx-demo { position: sticky; top: 1.5rem; }
 }
 
 /* ---------- Bühne ---------- */
