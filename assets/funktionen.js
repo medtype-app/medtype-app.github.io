@@ -9,6 +9,7 @@
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var MAX_STEP_MS = 250; // längster Zeitsprung pro Bild (gedrosselte Tabs springen nicht durch die ganze Vorführung)
+  var MIN_STEP_MS = 2000; // so lange bleibt jeder Schritt mindestens sichtbar
   var SPEED = 30; // Zeichen pro Sekunde, Standard der App
   var KONTROLLE = "Kontrolle in vier Wochen, bei Beschwerden bitte früher vorstellen.";
 
@@ -99,7 +100,11 @@
   function Script(c) { this.c = c; this.t = 0; this.ev = []; }
   Script.prototype.at = function (fn) { this.ev.push({ t: this.t, fn: fn }); return this; };
   Script.prototype.wait = function (ms) { this.t += ms; return this; };
+  /* Schritt wechseln: Jeder Schritt bleibt mindestens MIN_STEP_MS stehen, damit Zeile und Vorgang zu verfolgen sind.
+     Kommt der nächste Schritt früher, wartet die Vorführung so lange an dieser Stelle. */
   Script.prototype.step = function (n) {
+    if (this.stepAt !== undefined && this.t - this.stepAt < MIN_STEP_MS) this.wait(MIN_STEP_MS - (this.t - this.stepAt));
+    this.stepAt = this.t;
     var steps = this.c.steps;
     var c = this.c;
     return this.at(function () {
@@ -379,7 +384,7 @@
       on(c.pc, "is-air", false);
     },
     run: function (s, c) {
-      s.step(1).wait(1200).step(2).tap(c.row("kontrolle"));
+      s.step(1).wait(1200).step(2).wait(1500).tap(c.row("kontrolle"));
       s.at(function () {
         progress(c, 0, KONTROLLE.length, "„Kontrolle“ wird getippt");
         phoneState(c, "is-busy");
