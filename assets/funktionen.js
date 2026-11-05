@@ -10,6 +10,8 @@
 
   var MAX_STEP_MS = 250; // längster Zeitsprung pro Bild (gedrosselte Tabs springen nicht durch die ganze Vorführung)
   var MIN_STEP_MS = 2000; // so lange bleibt jeder Schritt mindestens sichtbar
+  var TAP_PRESS_MS = 420; // einzelner Tipp: Finger kommt an und drückt (der Kreis ist insgesamt 1,5 s zu sehen, CSS fx-tap)
+  var TAP_UP_MS = 330; // dann lässt er los, erst danach reagiert die App
   var SPEED = 30; // Zeichen pro Sekunde, Standard der App
   var KONTROLLE = "Kontrolle in vier Wochen, bei Beschwerden bitte früher vorstellen.";
 
@@ -29,6 +31,8 @@
     c.touch = c.q("touch");
     c.steps = fig.closest(".fx").querySelectorAll(".fx-steps > li");
     c.pc = fig.querySelector(".fx-pc");
+    c.pcscreen = c.pc ? c.pc.querySelector(".fx-screen") : null;
+    c.pctouch = c.q("pctouch");
     c.before = c.q("before");
     c.after = c.q("after");
     c.row = function (key) { return fig.querySelector('[data-row="' + key + '"]'); };
@@ -37,18 +41,26 @@
   }
 
   /* Lage des Fingers: Mitte des Ziels, in Prozent des Bildschirms (die Szene skaliert mit) */
-  function aim(c, el, x) {
-    var s = c.screen.getBoundingClientRect();
+  function place(touch, box, el) {
+    var s = box.getBoundingClientRect();
     var r = el.getBoundingClientRect();
     if (!s.width || !s.height) return;
-    var left = x === undefined ? r.left + r.width / 2 : x;
-    c.touch.style.left = ((left - s.left) / s.width * 100) + "%";
-    c.touch.style.top = ((r.top + r.height / 2 - s.top) / s.height * 100) + "%";
+    touch.style.left = ((r.left + r.width / 2 - s.left) / s.width * 100) + "%";
+    touch.style.top = ((r.top + r.height / 2 - s.top) / s.height * 100) + "%";
   }
+  function aim(c, el) { place(c.touch, c.screen, el); }
 
   function on(el, cls, yes) { if (el) el.classList.toggle(cls, yes !== false); }
   function text(el, value) { if (el) el.textContent = value; }
   function phoneState(c, cls, yes) { on(c.phone, cls, yes); }
+
+  /* Modus oben in „Type“: Live tippen oder Vorschreiben */
+  function setSeg(c, live) {
+    var seg = c.fig.querySelector(".dv-seg");
+    if (!seg) return;
+    on(seg.children[0], "is-on", live);
+    on(seg.children[1], "is-on", !live);
+  }
 
   function led(el, state) {
     if (!el) return;
@@ -112,19 +124,76 @@
       if (c.onStep && n) c.onStep(n);
     });
   };
-  /* Fingertipp mit kurzem Druck auf das Ziel; el darf eine Funktion sein (Ziel erst beim Abspielen bekannt) */
-  Script.prototype.tap = function (el) {
+  /* Fingertipp auf das Ziel; el darf eine Funktion sein (Ziel erst beim Abspielen bekannt). Ein einzelner Tipp zeigt den
+     Finger 1,5 s lang: ankommen, drücken, loslassen (dann reagiert die App), ausblenden; die Vorführung läuft nach dem
+     Loslassen weiter. quick: kurzer Tipp für schnelle Folgen wie die Pfeiltasten. */
+  Script.prototype.tap = function (el, quick) {
     var c = this.c;
     var target = null;
     this.at(function () {
       target = typeof el === "function" ? el() : el;
       if (!target) return;
       aim(c, target);
-      restart(c.touch, "is-tap");
-      target.classList.add("is-pressed");
+      c.touch.classList.remove("is-tap", "is-tapq", "is-hold");
+      restart(c.touch, quick ? "is-tapq" : "is-tap");
     });
-    this.wait(180).at(function () { if (target) target.classList.remove("is-pressed"); });
-    return this.wait(120);
+    this.wait(quick ? 0 : TAP_PRESS_MS).at(function () { if (target) target.classList.add("is-pressed"); });
+    this.wait(quick ? 180 : TAP_UP_MS - 30).at(function () { if (target) target.classList.remove("is-pressed"); });
+    return this.wait(quick ? 120 : 30);
+  };
+  /* Am PC in das Textfeld tippen: Kreis auf dem Tablet, danach blinkt dort der Cursor */
+  Script.prototype.pcTap = function () {
+    var c = this.c;
+    this.at(function () {
+      if (!c.pctouch) return;
+      place(c.pctouch, c.pcscreen, c.pc.querySelector(".fx-caret"));
+      restart(c.pctouch, "is-tap");
+    });
+    this.wait(TAP_PRESS_MS).at(function () {
+      on(c.pc, "is-blur", false);
+      restart(c.pc.querySelector(".fx-t-doc"), "is-clicked");
+    });
+    return this.wait(TAP_UP_MS);
+  };
+  /* Listenzeile an den drei Strichen auf Platz „to“ ziehen (gezählt ohne ausgeblendete Zeilen) */
+  Script.prototype.drag = function (key, to) {
+    var c = this.c;
+    var st = {};
+    this.at(function () {
+      var row = c.row(key);
+      st.rows = Array.prototype.filter.call(c.q("list").children, function (r) { return !r.classList.contains("is-hidden"); });
+      st.from = st.rows.indexOf(row);
+      st.h = row.getBoundingClientRect().height;
+      c.touch.classList.remove("is-tap", "is-tapq", "is-hold");
+      aim(c, row.querySelector("svg"));
+      void c.touch.offsetWidth;
+      c.touch.classList.add("is-hold");
+      row.classList.add("is-lift");
+    });
+    this.wait(600).at(function () {
+      var row = c.row(key);
+      var d = to - st.from;
+      var screenH = c.screen.getBoundingClientRect().height;
+      row.style.transitionDuration = ".9s";
+      row.style.transform = "translateY(" + st.h * d + "px)";
+      st.rows.forEach(function (r, i) {
+        if (d < 0 && i >= to && i < st.from) r.style.transform = "translateY(" + st.h + "px)";
+        if (d > 0 && i > st.from && i <= to) r.style.transform = "translateY(" + -st.h + "px)";
+      });
+      if (screenH) c.touch.style.top = (parseFloat(c.touch.style.top) + st.h * d / screenH * 100) + "%";
+    });
+    this.wait(1050).at(function () {
+      var list = c.q("list");
+      var row = c.row(key);
+      c.touch.classList.remove("is-hold");
+      row.classList.remove("is-lift", "is-new");
+      Array.prototype.forEach.call(list.children, function (r) { r.style.transition = "none"; r.style.transform = ""; });
+      var ref = st.rows[to];
+      list.insertBefore(row, to < st.from ? ref : ref.nextSibling);
+      void list.offsetWidth;
+      Array.prototype.forEach.call(list.children, function (r) { r.style.transition = ""; r.style.transitionDuration = ""; });
+    });
+    return this.wait(300);
   };
   /* Zeichen für Zeichen: fn(bisher, zeichen) nach jeweils ms; nach Zeilenumbrüchen etwas länger */
   Script.prototype.chars = function (str, ms, fn) {
@@ -146,6 +215,15 @@
   Script.prototype.release = function () {
     var c = this.c;
     return this.at(function () { if (c.down) c.down.classList.remove("is-down"); c.down = null; });
+  };
+  /* Auf der Bildschirmtastatur tippen: Taste kurz hervorheben, Zeichen erscheint (Satzzeichen ohne eigene Taste);
+     fn(bisher, zeichen) */
+  Script.prototype.typeKeys = function (str, ms, fn) {
+    var s = this;
+    str.split("").forEach(function (ch, i) {
+      s.wait(ms).key(ch.toLowerCase()).at(fn.bind(null, str.slice(0, i + 1), ch));
+    });
+    return this.wait(ms).release();
   };
   /* Live tippen: Zeichen in die Eingabezeile und sofort an den PC; ein Leerzeichen schickt das Wort in den Verlauf */
   Script.prototype.live = function (str, ms) {
@@ -194,10 +272,11 @@
       pcText(c, "");
       led(c.q("usb"), "on");
       on(c.pc, "is-air", false);
+      on(c.pc, "is-blur");
     },
     run: function (s, c) {
       var draft = "Befund besprochen.\nKontrolle in vier Wochen.";
-      s.step(1).wait(1100).step(2);
+      s.step(1).wait(500).pcTap().wait(900).step(2);
       s.chars(draft, 60, function (sofar) {
         text(c.q("text"), sofar);
         text(c.q("sum"), summary(sofar.length));
@@ -238,12 +317,18 @@
       text(c.q("line"), "");
       pcText(c, "Blutdruck 128/82 mmHg, ");
       led(c.q("usb"), "on");
+      setSeg(c, false);
+      phoneState(c, "is-modeoff");
     },
     run: function (s, c) {
-      s.step(1).wait(1000).step(2).at(function () { led(c.q("usb"), "typing"); });
-      s.live("Puls kräftig, rhythmish", 150);
-      s.wait(500).step(3).backspace(2, 260);
-      s.wait(300).step(2).live("sch.", 150).at(function () { led(c.q("usb"), "on"); });
+      s.step(1).wait(500).tap(function () { return c.fig.querySelector(".dv-seg").children[0]; }).at(function () {
+        setSeg(c, true);
+        phoneState(c, "is-modeoff", false);
+      });
+      s.wait(900).step(2).at(function () { led(c.q("usb"), "typing"); });
+      s.live("Puls kräftig, rhytmisch", 150);
+      s.wait(500).step(3).backspace(5, 300);
+      s.wait(300).step(2).live("hmisch.", 150).at(function () { led(c.q("usb"), "on"); });
       s.wait(700).step(4);
       var arrows = c.fig.querySelectorAll(".fx-arrows > span");
       function move(dir) {
@@ -260,9 +345,9 @@
           if (dir > 0 && a) pcText(c, b + a.charAt(0), a.slice(1));
         };
       }
-      for (var i = 0; i < 3; i++) s.tap(arrows[0]).at(move(-1)).wait(220);
+      for (var i = 0; i < 3; i++) s.tap(arrows[0], true).at(move(-1)).wait(220);
       s.wait(400);
-      for (var j = 0; j < 3; j++) s.tap(arrows[3]).at(move(1)).wait(220);
+      for (var j = 0; j < 3; j++) s.tap(arrows[3], true).at(move(1)).wait(220);
       s.wait(2200).step(0);
     }
   };
@@ -277,7 +362,7 @@
     },
     run: function (s, c) {
       var words = ["Patient", " wach", " und", " orientiert,", " keine", " Schmerzen."];
-      s.step(1).wait(1000).tap(c.q("mic")).at(function () { phoneState(c, "is-dictating"); });
+      s.step(1).wait(700).tap(c.q("mic")).at(function () { phoneState(c, "is-dictating"); });
       s.wait(900).step(2);
       words.forEach(function (w, i) {
         s.wait(i ? 520 : 0).at(function () {
@@ -305,8 +390,8 @@
   DEMOS.bausteine = {
     reset: function (c) {
       var list = c.q("list");
+      ["abdomen", "labor", "gruss", "kontrolle"].forEach(function (k) { list.appendChild(c.row(k)); });
       var row = c.row("kontrolle");
-      list.appendChild(row);
       row.classList.add("is-hidden");
       row.classList.remove("is-new", "is-lift");
       Array.prototype.forEach.call(list.children, function (r) { r.style.transform = ""; r.style.transitionDuration = ""; });
@@ -342,35 +427,8 @@
         row.classList.remove("is-hidden");
         restart(row, "is-new");
       });
-      /* An den drei Strichen nach oben ziehen */
-      var rowH = 0;
-      s.wait(1500).step(3).at(function () {
-        var row = c.row("kontrolle");
-        rowH = row.getBoundingClientRect().height;
-        aim(c, row.querySelector("svg"));
-        c.touch.classList.add("is-hold");
-        row.classList.add("is-lift");
-      });
-      s.wait(450).at(function () {
-        var list = c.q("list");
-        var row = c.row("kontrolle");
-        var screenH = c.screen.getBoundingClientRect().height;
-        var others = Array.prototype.filter.call(list.children, function (r) { return r !== row && !r.classList.contains("is-hidden"); });
-        row.style.transitionDuration = ".8s";
-        row.style.transform = "translateY(" + (-rowH * others.length) + "px)";
-        others.forEach(function (r) { r.style.transform = "translateY(" + rowH + "px)"; });
-        c.touch.style.top = (parseFloat(c.touch.style.top) - rowH * others.length / screenH * 100) + "%";
-      });
-      s.wait(1000).at(function () {
-        var list = c.q("list");
-        var row = c.row("kontrolle");
-        c.touch.classList.remove("is-hold");
-        row.classList.remove("is-lift", "is-new");
-        Array.prototype.forEach.call(list.children, function (r) { r.style.transition = "none"; r.style.transform = ""; });
-        list.insertBefore(row, list.firstChild);
-        void list.offsetWidth;
-        Array.prototype.forEach.call(list.children, function (r) { r.style.transition = ""; r.style.transitionDuration = ""; });
-      });
+      /* An den drei Strichen ziehen: „Kontrolle“ ganz nach oben, dann „Labor unauffällig“ eine Zeile höher */
+      s.wait(1500).step(3).drag("kontrolle", 0).wait(250).drag("labor", 1);
       s.wait(2400).step(0);
     }
   };
@@ -382,9 +440,10 @@
       phoneState(c, "is-done", false);
       led(c.q("usb"), "on");
       on(c.pc, "is-air", false);
+      on(c.pc, "is-blur");
     },
     run: function (s, c) {
-      s.step(1).wait(1200).step(2).wait(1500).tap(c.row("kontrolle"));
+      s.step(1).wait(500).pcTap().wait(900).step(2).wait(1000).tap(c.row("kontrolle"));
       s.at(function () {
         progress(c, 0, KONTROLLE.length, "„Kontrolle“ wird getippt");
         phoneState(c, "is-busy");
@@ -415,16 +474,20 @@
       pcText(c, "");
       led(c.q("usb"), "on");
       on(c.pc, "is-air", false);
+      on(c.q("field"), "is-blur");
     },
     run: function (s, c) {
-      s.step(1).wait(1300).step(2).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
+      s.step(1).wait(500).tap(function () { return c.q("field").querySelector(".fx-caret-blue"); }).at(function () {
+        on(c.q("field"), "is-blur", false);
+      });
+      s.wait(800).step(2).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
       s.wait(1100).tap(function () { return c.row("kontrolle"); }).at(function () { phoneState(c, "is-sheet", false); });
       s.wait(380).step(3).at(function () {
         text(c.q("ins"), KONTROLLE);
         on(c.q("ins"), "is-faded", false);
         text(c.q("sum"), summary(19 + KONTROLLE.length));
       });
-      s.wait(1800).at(function () { on(c.q("ins"), "is-faded"); });
+      s.wait(1800).at(function () { on(c.q("ins"), "is-faded"); on(c.q("field"), "is-blur"); });
       /* „Senden“ tippt Entwurf und Baustein zusammen am PC */
       var all = "Befund besprochen. " + KONTROLLE;
       s.wait(500).tap(c.q("send")).at(function () {
@@ -453,7 +516,190 @@
     }
   };
 
-  /* Felder in Bausteinen (MedType 1.3): Baustein mit leeren Feldern einfügen, ausfüllen, senden */
+  /* Baustein mit Feldern anlegen (MedType 1.3): Text schreiben, „Feld einfügen“, Name und Vorschläge, „Einfügen“, „Sichern“ */
+  var NEU_FELDER = [
+    { name: "Symptome", options: ["Fieber", "Husten", "Schnupfen"], multi: true },
+    { name: "Zeitraum", options: ["2 Wochen", "4 Wochen", "3 Monaten"] }
+  ];
+  var MULTI_AUS = "Ein Vorschlag führt direkt zum nächsten leeren Feld. „Verbinden mit“ gilt nur bei „Mehrere Vorschläge wählbar“.";
+
+  /* Text des Editors: Textknoten und Felder vor der Einfügemarke */
+  function edAppend(c, str) {
+    var body = c.q("ebody");
+    var caret = body.querySelector(".fx-caret-blue");
+    var prev = caret.previousSibling;
+    if (prev && prev.nodeType === 3) prev.textContent += str;
+    else body.insertBefore(document.createTextNode(str), caret);
+    c.q("bph").hidden = true;
+  }
+
+  function edToken(c, name) {
+    var body = c.q("ebody");
+    var tok = document.createElement("span");
+    tok.className = "fx-tok";
+    tok.textContent = name;
+    body.insertBefore(tok, body.querySelector(".fx-caret-blue"));
+    restart(tok, "is-new");
+  }
+
+  /* Zeile unter dem Text wie in der App: Zeichen ohne Felder, dazu die Zahl der Felder */
+  function edFoot(c) {
+    var n = 0;
+    var f = 0;
+    Array.prototype.forEach.call(c.q("ebody").childNodes, function (node) {
+      if (node.nodeType === 3) n += node.textContent.length;
+      else if (node.classList.contains("fx-tok")) f += 1;
+    });
+    text(c.q("efoot"), f ? n + " Zeichen · " + (f === 1 ? "1 Feld" : f + " Felder") + ". Antippen eines Felds öffnet Name und Vorschläge." : n + " Zeichen");
+  }
+
+  /* Fenster „Neues Feld“ leeren */
+  function fieldSheetReset(c) {
+    text(c.q("nname"), "");
+    c.q("nph").hidden = false;
+    c.q("sugs").textContent = "";
+    text(c.q("stext"), "");
+    c.q("sph").hidden = false;
+    on(c.q("splus"), "is-off");
+    on(c.q("multi"), "is-on", false);
+    on(c.q("join"), "is-off");
+    text(c.q("mfoot"), MULTI_AUS);
+    on(c.q("fins"), "is-off");
+    on(c.q("nbox"), "is-focus", false);
+    on(c.q("snew"), "is-focus", false);
+  }
+
+  function addSuggestion(c, value) {
+    var row = document.createElement("span");
+    row.className = "fx-sug is-new";
+    row.innerHTML = '<i class="fx-minus"></i><em></em><svg viewBox="0 0 20 20"><use href="#i-handle"/></svg>';
+    row.querySelector("em").textContent = value;
+    c.q("sugs").appendChild(row);
+  }
+
+  /* „Feld einfügen“ über der Tastatur: das Fenster „Neues Feld“ kommt von unten */
+  function openFieldSheet(s, c) {
+    s.tap(c.q("insfield")).at(function () {
+      fieldSheetReset(c);
+      on(c.q("bbox"), "is-focus", false);
+      phoneState(c, "is-fsheet");
+    });
+    return s.wait(650).at(function () { on(c.q("nbox"), "is-focus"); });
+  }
+
+  /* Name und Vorschläge eintragen; quick: zweites Feld zügiger */
+  function fillFieldSheet(s, c, f, quick) {
+    s.chars(f.name, quick ? 70 : 85, function (sofar) {
+      text(c.q("nname"), sofar);
+      c.q("nph").hidden = true;
+      on(c.q("fins"), "is-off", false);
+    });
+    s.wait(350).at(function () {
+      on(c.q("nbox"), "is-focus", false);
+      on(c.q("snew"), "is-focus");
+    });
+    f.options.forEach(function (option) {
+      s.wait(quick ? 100 : 200).chars(option, quick ? 45 : 65, function (sofar) {
+        text(c.q("stext"), sofar);
+        c.q("sph").hidden = true;
+        on(c.q("splus"), "is-off", false);
+      });
+      s.wait(quick ? 120 : 200).tap(c.q("splus"), quick).at(function () {
+        addSuggestion(c, option);
+        text(c.q("stext"), "");
+        c.q("sph").hidden = false;
+        on(c.q("splus"), "is-off");
+      });
+    });
+    return s;
+  }
+
+  /* „Einfügen“: Fenster zu, das Feld steht an der Einfügemarke im Text */
+  function insertField(s, c, f) {
+    return s.tap(c.q("fins")).at(function () {
+      phoneState(c, "is-fsheet", false);
+      on(c.q("snew"), "is-focus", false);
+      on(c.q("bbox"), "is-focus");
+      edToken(c, f.name);
+      edFoot(c);
+    });
+  }
+
+  DEMOS["felder-anlegen"] = {
+    reset: function (c) {
+      var row = c.row("beschwerden");
+      row.classList.add("is-hidden");
+      row.classList.remove("is-new");
+      ["is-sheet", "is-kb", "is-fsheet"].forEach(function (k) { phoneState(c, k, false); });
+      text(c.q("title"), "");
+      c.q("tph").hidden = false;
+      var body = c.q("ebody");
+      var caret = body.querySelector(".fx-caret-blue");
+      body.textContent = "";
+      body.appendChild(caret);
+      c.q("bph").hidden = false;
+      edFoot(c);
+      on(c.q("tbox"), "is-focus", false);
+      on(c.q("bbox"), "is-focus", false);
+      on(c.q("save"), "is-off");
+      fieldSheetReset(c);
+      c.touch.classList.remove("is-hold");
+    },
+    run: function (s, c) {
+      var a = NEU_FELDER[0];
+      var b = NEU_FELDER[1];
+      function typed(sofar, ch) {
+        edAppend(c, ch);
+        edFoot(c);
+      }
+      s.step(1).wait(600).tap(c.q("plus")).at(function () {
+        phoneState(c, "is-sheet");
+        phoneState(c, "is-kb");
+        on(c.q("tbox"), "is-focus");
+      });
+      s.wait(650).typeKeys("Beschwerden", 85, function (sofar) {
+        text(c.q("title"), sofar);
+        c.q("tph").hidden = true;
+        on(c.q("save"), "is-off", false);
+      });
+      s.wait(300).at(function () {
+        on(c.q("tbox"), "is-focus", false);
+        on(c.q("bbox"), "is-focus");
+      });
+      s.typeKeys("Beschwerden: ", 65, typed);
+      s.wait(500).step(2);
+      openFieldSheet(s, c);
+      s.wait(500).step(3);
+      fillFieldSheet(s, c, a);
+      s.wait(250).tap(c.q("multi")).at(function () {
+        on(c.q("multi"), "is-on");
+        on(c.q("join"), "is-off", false);
+        text(c.q("mfoot"), "Beispiel: „" + a.options.join(", ") + "“.");
+      });
+      s.wait(1100);
+      insertField(s, c, a);
+      s.wait(900).step(4).typeKeys(". Kontrolle in ", 55, typed);
+      s.wait(250);
+      openFieldSheet(s, c);
+      fillFieldSheet(s, c, b, true);
+      s.wait(400);
+      insertField(s, c, b);
+      s.wait(350).typeKeys(".", 60, typed);
+      s.wait(700).tap(c.q("save")).at(function () {
+        phoneState(c, "is-sheet", false);
+        phoneState(c, "is-kb", false);
+        on(c.q("bbox"), "is-focus", false);
+      });
+      s.wait(550).at(function () {
+        var row = c.row("beschwerden");
+        row.classList.remove("is-hidden");
+        restart(row, "is-new");
+      });
+      s.wait(2800).step(0);
+    }
+  };
+
+  /* Felder ausfüllen (MedType 1.3): Baustein mit leeren Feldern einfügen, ausfüllen, senden */
   var FELDER = [
     { name: "Symptome", options: ["Fieber", "Husten", "Schnupfen"], multi: true, hint: "Mehrere Vorschläge wählbar. Eigener Text direkt über die Tastatur." },
     { name: "Zeitraum", options: ["2 Wochen", "4 Wochen", "3 Monaten"], hint: "Ein Vorschlag führt direkt zum nächsten leeren Feld. Eigener Text direkt über die Tastatur." }
@@ -524,7 +770,7 @@
     },
     run: function (s, c) {
       var done = "Beschwerden: Husten, Fieber. Kontrolle in 4 Wochen.";
-      s.step(2).wait(1200).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
+      s.step(1).wait(1200).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
       s.wait(1100).tap(function () { return c.row("beschwerden"); }).at(function () { phoneState(c, "is-sheet", false); });
       s.wait(380).at(function () {
         insertTemplate(c);
@@ -534,7 +780,7 @@
         fieldBar(c, 1, []);
         phoneState(c, "is-filling");
       });
-      s.wait(1300).step(3).tap(pick(c, "Husten")).at(function () {
+      s.wait(1300).step(2).tap(pick(c, "Husten")).at(function () {
         fieldBar(c, 1, ["Husten"]);
         slotState(c, 1, "Husten", true);
       });
@@ -552,7 +798,7 @@
         slotState(c, 2, "4 Wochen", true);
         on(c.q("fsend"), "is-on");
       });
-      s.wait(1000).step(4).tap(c.q("fsend")).at(function () {
+      s.wait(1000).step(3).tap(c.q("fsend")).at(function () {
         phoneState(c, "is-filling", false);
         slotState(c, 2, "4 Wochen", false);
         text(c.q("sum"), summary(done.length));
@@ -652,8 +898,8 @@
 
   Player.prototype.build = function () {
     /* Reste eines früheren Durchlaufs (gedrückte Tasten, Fingertipp) entfernen */
-    Array.prototype.forEach.call(this.fig.querySelectorAll(".is-down, .is-pressed, .is-tap"), function (el) {
-      el.classList.remove("is-down", "is-pressed", "is-tap");
+    Array.prototype.forEach.call(this.fig.querySelectorAll(".is-down, .is-pressed, .is-tap, .is-tapq, .is-clicked"), function (el) {
+      el.classList.remove("is-down", "is-pressed", "is-tap", "is-tapq", "is-clicked");
     });
     this.c.down = null;
     var s = new Script(this.c);
