@@ -357,3 +357,6 @@ mark { background: color-mix(in srgb, var(--brand-1) 22%, transparent); color: i
 
 /* Impressum */
 address { font-style: normal; margin: 0 0 1rem; }
+
+/* Bilder mit Dauer-Animation außerhalb des Bildes anhalten (doc.js setzt .is-off) */
+.is-off *, .is-off *::before, .is-off *::after { animation-play-state: paused !important; }

@@ -62,6 +62,15 @@
 
   window.MedTypeScroll = { zu: scrolleZu, fokussiere: fokussiere };
 
+  /* Dauerhaft laufende Bilder (Erste Schritte, LED, Demo-Modus) nur im Bild animieren: spart Akku und Rechenzeit */
+  if ("IntersectionObserver" in window) {
+    var bilder = document.querySelectorAll(".guide-visual, .led-state, .doc-split-visual");
+    var aus = new IntersectionObserver(function (eintraege) {
+      eintraege.forEach(function (e) { e.target.classList.toggle("is-off", !e.isIntersecting); });
+    }, { rootMargin: "120px 0px" });
+    Array.prototype.forEach.call(bilder, function (el) { aus.observe(el); });
+  }
+
   document.addEventListener("click", function (e) {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     var a = e.target.closest && e.target.closest("a[href^='#']");

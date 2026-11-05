@@ -34,8 +34,9 @@
   "url": "https://medtype.de/"
 }
 </script>
+<link rel="preload" as="image" href="assets/01-live-tippen.webp" type="image/webp" fetchpriority="high">
 <link rel="stylesheet" href="assets/site.css?v=6">
-<link rel="stylesheet" href="assets/home.css?v=6">
+<link rel="stylesheet" href="assets/home.css?v=7">
 <link rel="stylesheet" href="assets/devices.css?v=3">
 <link rel="stylesheet" href="assets/flow.css?v=4">
 </head>
@@ -46,7 +47,7 @@
   <div class="band-inner">
     <div class="topnav">
       <a class="brand" href="./">
-        <img src="assets/icon-256.png" width="36" height="36" alt="">
+        <img src="assets/icon-96.png" width="36" height="36" alt="">
         <span class="brand-name">MedType</span>
       </a>
       <nav class="site-nav" aria-label="Hauptnavigation">
@@ -89,7 +90,7 @@
         <div class="phone phone--back">
           <picture>
             <source type="image/webp" srcset="assets/02-vorschreiben.webp">
-            <img src="assets/02-vorschreiben.jpg" width="600" height="1304" decoding="async"
+            <img src="assets/02-vorschreiben.jpg" width="600" height="1304" decoding="async" fetchpriority="low"
               alt="MedType im Modus „Vorschreiben“: ein fertig geschriebener Beispieltext, darunter der Schalter „Nach dem Senden leeren“ und der Knopf „Senden“.">
           </picture>
         </div>
@@ -260,7 +261,7 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           <h3>Dongle in den PC stecken</h3>
           <p>Der MedType-Dongle meldet sich am Windows-PC wie eine normale USB-Tastatur. Eine Installation ist dort
             nicht nötig.</p>
-          <p class="led-note"><span class="led-dot led-dot--blue led-dot--slow" aria-hidden="true"></span>LED blinkt langsam blau:
+          <p class="led-note"><span class="led-dot led-dot--blue led-dot--slow" aria-hidden="true"></span><a href="/hilfe#led">LED</a> blinkt langsam blau:
             bereit</p>
         </li>
         <li>
@@ -278,7 +279,7 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           </span>
           <h3>Smartphone koppeln</h3>
           <p>Die Taste am Dongle 3 Sekunden halten, in MedType den Dongle wählen und die Kopplung bestätigen. Das ist
-            nur einmal nötig – danach verbindet sich MedType von selbst.</p>
+            nur einmal nötig – danach verbindet sich MedType von selbst. <a href="/hilfe#start">Alle Schritte in der Hilfe</a>.</p>
           <p class="led-note"><span class="led-dot led-dot--blue led-dot--fast" aria-hidden="true"></span>LED blinkt schnell blau:
             Koppelmodus</p>
         </li>
@@ -326,8 +327,9 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
         <p>Im Modus „Live tippen“ landet jede Eingabe sofort am PC-Cursor. Löschen und Enter wirken direkt dort,
           und die Pfeiltasten über der Tastatur bewegen den Cursor. Fertige Wörter wandern in einen Verlauf darüber –
           so bleibt der Überblick erhalten.</p>
-        <p>Auch Diktieren ist möglich: Was über das Mikrofon der Bildschirmtastatur diktiert wird, tippt MedType
-          direkt am PC.</p>
+        <p>Auch <a href="/funktionen#diktieren">Diktieren</a> ist möglich: Was über das Mikrofon der Bildschirmtastatur
+          diktiert wird, tippt MedType direkt am PC.</p>
+        <p class="feature-more"><a href="/funktionen#live-tippen">Live tippen in der Vorführung <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -350,6 +352,7 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           direkt an der Cursorposition im Entwurf.</p>
         <p>Getippt wird erst nach „Senden“. Der Fortschritt ist sichtbar, ein Abbruch jederzeit möglich.
           Danach leert MedType den Entwurf; das lässt sich abschalten.</p>
+        <p class="feature-more"><a href="/funktionen#vorschreiben">Vorschreiben in der Vorführung <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -372,6 +375,7 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
           genügt ein Tipp, und MedType tippt den Baustein sofort am PC.</p>
         <p>Die Reihenfolge wird per Ziehen festgelegt, die Suche findet jeden Baustein schnell. Die Bausteine bleiben
           auf dem Smartphone – am PC ist kein zusätzliches Programm nötig.</p>
+        <p class="feature-more"><a href="/funktionen#bausteine">Bausteine in der Vorführung <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -400,8 +404,9 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
         <p>Gekoppelt wird einmal per Tastendruck am Dongle, danach verbindet sich MedType beim Start von selbst.
           „Verbindung prüfen“ zeigt auf einen Blick, wie schnell der Dongle antwortet.</p>
         <p>Jeder Dongle kann einen eigenen Namen erhalten, zum Beispiel „PC 1“ oder „Laptop“. Nicht mehr
-          benötigte Dongles lassen sich mit „Dongle vergessen“ aus der App entfernen. Neue Dongle-Software kommt künftig mit einem
+          benötigte Dongles lassen sich mit <a href="/hilfe#frage-wie-wird-ein-dongle-aus-medtype-entfernt-dongle">„Dongle vergessen“</a> aus der App entfernen. Neue Dongle-Software kommt künftig mit einem
           App-Update und wird per Bluetooth aufgespielt – der Dongle bleibt dabei am PC.</p>
+        <p class="feature-more"><a href="/hilfe#start">Koppeln Schritt für Schritt <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
@@ -412,8 +417,8 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
         <li><strong>Pause nach Zeilenumbruch.</strong> Für Programme, die nach Enter einen Moment brauchen.</li>
         <li><strong>Vier App-Icons.</strong> Zur Auswahl in den Einstellungen.</li>
         <li><strong>Hell und dunkel.</strong> Im Hoch- und Querformat, mit VoiceOver bedienbar.</li>
-        <li><strong>Mehrere Dongles.</strong> Für mehrere PCs – der Wechsel dauert in der App nur wenige Tipps, nicht mehr benötigte lassen sich vergessen.</li>
-        <li><strong>Demo-Modus.</strong> Zum Ausprobieren ohne Dongle.</li>
+        <li><strong><a href="/hilfe#frage-lassen-sich-mehrere-dongles-nutzen">Mehrere Dongles.</a></strong> Für mehrere PCs – der Wechsel dauert in der App nur wenige Tipps, nicht mehr benötigte lassen sich vergessen.</li>
+        <li><strong><a href="/hilfe#demo">Demo-Modus.</a></strong> Zum Ausprobieren ohne Dongle.</li>
       </ul>
     </section>
 
@@ -454,17 +459,17 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7.5" y="9" width="9" height="12.5" rx="2.2"/><path d="M9.5 9V3h5v6"/><path d="M11.2 5.5h.01M12.8 5.5h.01"/><circle cx="12" cy="15.5" r="1.2"/></svg>
           </span>
           <h3>MedType-USB-Dongle</h3>
-          <p>Steckt direkt am PC. Anfragen per E-Mail an store@medtype.de.</p>
+          <p>Steckt direkt am PC. Anfragen per E-Mail an store@medtype.de. <a href="/hilfe#brauchst">Alle Voraussetzungen</a>.</p>
         </li>
         <li>
           <span class="needs-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="12.5" rx="1.8"/><path d="M8.5 20.5h7M12 16.5v4"/></svg>
           </span>
           <h3>Windows-PC mit deutscher Tastatur&shy;belegung</h3>
-          <p>QWERTZ, Sprache „Deutsch (Deutschland)“. Am PC ist keine Installation nötig, Bluetooth wird dort nicht benötigt.</p>
+          <p>QWERTZ, Sprache „Deutsch (Deutschland)“. Am PC ist <a href="/hilfe#frage-muss-am-pc-etwas-installiert-werden">keine Installation nötig</a>, Bluetooth wird dort nicht benötigt.</p>
         </li>
       </ul>
-      <p class="note needs-note">Kein Konto, kein WLAN, kein Internet nötig. Ohne Dongle lässt sich MedType im Demo-Modus ausprobieren:
+      <p class="note needs-note">Kein Konto, kein WLAN, kein Internet nötig. Ohne Dongle lässt sich MedType <a href="/hilfe#demo">im Demo-Modus ausprobieren</a>:
         <span class="path">Einstellungen › Demo-Modus</span>.</p>
     </div>
   </section>

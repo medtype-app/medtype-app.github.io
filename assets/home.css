@@ -187,6 +187,10 @@
 .feature-media figcaption { margin-top: .7rem; color: var(--muted); font-size: .9rem; }
 .feature-copy p { margin: 0 0 1rem; }
 .feature-copy p:last-child { margin-bottom: 0; }
+/* Weiter zur Vorführung bzw. zur Hilfe */
+.feature-copy .feature-more { margin-top: 1.25rem; font-weight: 650; }
+.feature-more a { text-decoration: none; }
+.feature-more a:hover { text-decoration: underline; }
 
 /* Außerdem */
 .extras { padding-top: 2.5rem; }
