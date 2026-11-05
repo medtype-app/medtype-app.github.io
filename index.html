@@ -14,7 +14,7 @@
 <meta property="og:locale" content="de_DE">
 <meta property="og:site_name" content="MedType">
 <meta property="og:title" content="MedType – Smartphone als Tastatur für den PC">
-<meta property="og:description" content="Ein USB-Dongle am Windows-PC tippt an der Cursorposition, was in MedType auf Smartphone oder Tablet geschrieben wird. Am PC wird nichts installiert.">
+<meta property="og:description" content="Tippen, diktieren, Textbausteine – der MedType-Dongle tippt den Text am Windows-PC dort, wo der Cursor steht. Keine Installation, kein Konto, keine Cloud.">
 <meta property="og:url" content="https://medtype.de/">
 <meta property="og:image" content="https://medtype.de/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
@@ -35,10 +35,10 @@
 }
 </script>
 <link rel="preload" as="image" href="assets/01-live-tippen.webp" type="image/webp" fetchpriority="high">
-<link rel="stylesheet" href="assets/site.css?v=8">
-<link rel="stylesheet" href="assets/home.css?v=8">
+<link rel="stylesheet" href="assets/site.css?v=7">
+<link rel="stylesheet" href="assets/home.css?v=7">
 <link rel="stylesheet" href="assets/devices.css?v=3">
-<link rel="stylesheet" href="assets/flow.css?v=5">
+<link rel="stylesheet" href="assets/flow.css?v=4">
 </head>
 <body class="home">
 <a class="skip" href="#titel">Zum Inhalt springen</a>
@@ -62,28 +62,28 @@
 
     <div class="hero">
       <div class="hero-copy">
-        <h1 id="titel">Smartphone als Tastatur für den Windows-PC</h1>
-        <p class="hero-lead">Am PC steckt ein USB-Dongle, den Windows als gewöhnliche Tastatur erkennt; installiert wird
-          dort nichts. MedType auf dem Smartphone oder Tablet schickt den Text per Bluetooth an den Dongle, und der Dongle
-          tippt ihn Zeichen für Zeichen an der Cursorposition ein. Das funktioniert in jedem Programm, das
-          Tastatureingaben annimmt.</p>
-        <dl class="plate" aria-label="Kurzdaten">
-          <div><dt>App</dt><dd>MedType 1.2.1 · ab iOS 17 · kostenlos</dd></div>
-          <div><dt>Dongle</dt><dd>USB-Tastatur · ohne Treiber</dd></div>
-          <div><dt>Funk</dt><dd>Bluetooth, verschlüsselt</dd></div>
-          <div><dt>PC</dt><dd>Windows · QWERTZ · ohne Installation</dd></div>
-        </dl>
+        <p class="hero-app">
+          <img class="hero-icon" src="assets/icon-256.png" width="84" height="84" alt="">
+          MedType
+        </p>
+        <h1 id="titel">Vom Smartphone direkt in den PC.</h1>
+        <p class="hero-lead">Das Smartphone oder Tablet wird zur Tastatur für den Windows-PC. Text wird in der App getippt,
+          diktiert oder aus Bausteinen eingefügt – der MedType-Dongle gibt ihn am PC genau
+          dort ein, wo der Cursor steht. In jedem Programm mit Texteingabe.</p>
         <div class="hero-actions">
-          <a class="btn btn--light" href="mailto:store@medtype.de?subject=Dongle%20f%C3%BCr%20MedType">
+          <a class="hero-cta" href="mailto:store@medtype.de?subject=Dongle%20f%C3%BCr%20MedType">
             <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></svg>
             Dongle anfragen
           </a>
+          <a class="hero-link" href="/hilfe">Zur Hilfe <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-meta">
+          <p class="status"><span class="status-dot" aria-hidden="true"></span>Ab jetzt im App Store erhältlich · Version 1.2.1</p>
           <a class="app-store-badge" href="https://apps.apple.com/de/app/medtype/id6821332885"
             aria-label="MedType im App Store laden">
             <img src="assets/app-store-de.svg" alt="Laden im App Store" width="120" height="40">
           </a>
         </div>
-        <p class="hero-mail">Anfragen auch direkt an <a href="mailto:store@medtype.de?subject=Dongle%20f%C3%BCr%20MedType">store@medtype.de</a></p>
       </div>
 
       <div class="hero-visual">
@@ -111,7 +111,8 @@
   <section class="section how" aria-labelledby="so">
     <div class="wrap">
       <div class="section-head">
-        <h2 class="display" id="so">Vom Einstecken bis zum ersten Text</h2>
+        <p class="kicker">In drei Schritten</p>
+        <h2 class="display" id="so">So funktioniert’s</h2>
       </div>
 
       <figure class="flow">
@@ -209,7 +210,7 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
                     <span class="fl-link"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2.5 5h4.5M4.75 2.75v4.5M10 5h7.5M2.5 10.5h15M2.5 15.5h15"/></svg>Baustein einfügen</span>
                   </div>
                   <p class="fl-field"><span class="fl-draft">Hallo vom Smartphone!<br>Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-ph">Text schreiben, einfügen oder diktieren</span></p>
-                  <p class="fl-count"><span class="fl-count-full">70 Zeichen · ca. 3 Sek.</span><span class="fl-count-empty">0 Zeichen</span></p>
+                  <p class="fl-count"><span class="fl-count-full">70 Zeichen · ca. 1 Sek.</span><span class="fl-count-empty">0 Zeichen</span></p>
                   <p class="fl-toggle"><span>Nach dem Senden leeren</span><i class="fl-switch"></i></p>
                   <div class="fl-space">
                     <div class="fl-progress">
@@ -238,8 +239,9 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
             </div>
           </div>
         </div>
-        <figcaption>Nach „Senden“ geht der Text per Bluetooth an den Dongle, und der Dongle tippt ihn auf dem Tablet-PC
-          in das Feld „Freitext“. Was die LED dabei zeigt, steht bei den einzelnen Schritten.</figcaption>
+        <figcaption>In MedType geschrieben, am PC getippt: Der Dongle steckt im USB-Anschluss und gibt den Text
+          Zeichen für Zeichen dort ein, wo der Cursor steht – wie eine Tastatur. Die LED am Dongle zeigt den jeweiligen
+          Zustand.</figcaption>
       </figure>
 
       <ol class="how-steps">
@@ -317,14 +319,14 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
             </picture>
           </div>
         </div>
-        <figcaption>„Live tippen“ im dunklen Erscheinungsbild, etwa für den Nachtdienst.</figcaption>
+        <figcaption>Auch im dunklen Erscheinungsbild, angenehm bei wenig Licht.</figcaption>
       </figure>
       <div class="feature-copy">
-        <p class="label">Tab <b>Type</b> › Live tippen</p>
-        <h2 class="display" id="live">Jeder Tastendruck geht sofort an den PC</h2>
+        <p class="kicker">Live tippen</p>
+        <h2 class="display" id="live">Jeder Buchstabe erscheint sofort am PC.</h2>
         <p>Im Modus „Live tippen“ landet jede Eingabe sofort am PC-Cursor. Löschen und Enter wirken direkt dort,
-          und die Pfeiltasten über der Tastatur bewegen den Cursor. Fertige Wörter rücken in einen Verlauf über der
-          Eingabezeile. So bleibt das zuletzt Getippte lesbar, ohne zum PC zu schauen.</p>
+          und die Pfeiltasten über der Tastatur bewegen den Cursor. Fertige Wörter wandern in einen Verlauf darüber –
+          so bleibt der Überblick erhalten.</p>
         <p>Auch <a href="/funktionen#diktieren">Diktieren</a> ist möglich: Was über das Mikrofon der Bildschirmtastatur
           diktiert wird, tippt MedType direkt am PC.</p>
         <p class="feature-more"><a href="/funktionen#live-tippen">Live tippen in der Vorführung <span aria-hidden="true">→</span></a></p>
@@ -344,13 +346,12 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
         </div>
       </figure>
       <div class="feature-copy">
-        <p class="label">Tab <b>Type</b> › Vorschreiben</p>
-        <h2 class="display" id="vorschreiben">Erst im Entwurf, dann am PC</h2>
-        <p>Der Text entsteht zuerst nur in der App und lässt sich dort korrigieren oder diktieren. Mit „Baustein
-          einfügen“ landen gespeicherte Texte an der Cursorposition im Entwurf.</p>
-        <p>Am PC getippt wird erst nach „Senden“. MedType zeigt dabei den Fortschritt, und „Abbrechen“ hält das Tippen
-          an; was bis dahin getippt ist, bleibt am PC stehen. Danach ist der Entwurf leer, sofern „Nach dem Senden
-          leeren“ eingeschaltet ist.</p>
+        <p class="kicker">Vorschreiben</p>
+        <h2 class="display" id="vorschreiben">Erst in Ruhe schreiben, dann senden.</h2>
+        <p>Text lässt sich in Ruhe schreiben, korrigieren oder diktieren. Mit „Baustein einfügen“ landen gespeicherte Texte
+          direkt an der Cursorposition im Entwurf.</p>
+        <p>Getippt wird erst nach „Senden“. Der Fortschritt ist sichtbar, ein Abbruch jederzeit möglich.
+          Danach leert MedType den Entwurf; das lässt sich abschalten.</p>
         <p class="feature-more"><a href="/funktionen#vorschreiben">Vorschreiben in der Vorführung <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
@@ -368,11 +369,12 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
         </div>
       </figure>
       <div class="feature-copy">
-        <p class="label">Tab <b>Bausteine</b> · Tab <b>Einfügen</b></p>
-        <h2 class="display" id="bausteine">Häufige Sätze als Baustein</h2>
-        <p>Häufige Texte wie ein Normalbefund, eine Grußformel oder eine Adresse werden einmal als Baustein gespeichert.
-          Im Tab „Einfügen“ genügt dann ein Tipp, und der Dongle gibt den ganzen Text am PC ein.</p>
-        <p>Die Suche prüft Titel und Text. Die Reihenfolge wird durch Ziehen festgelegt und gilt in allen Listen.</p>
+        <p class="kicker">Bausteine</p>
+        <h2 class="display" id="bausteine">Textbausteine mit einem Tipp am PC.</h2>
+        <p>Eigene Textbausteine, etwa Standardsätze, Grußformeln oder Adressen, lassen sich anlegen. Im Tab „Einfügen“
+          genügt ein Tipp, und MedType tippt den Baustein sofort am PC.</p>
+        <p>Die Reihenfolge wird per Ziehen festgelegt, die Suche findet jeden Baustein schnell. Die Bausteine bleiben
+          auf dem Smartphone – am PC ist kein zusätzliches Programm nötig.</p>
         <p class="feature-more"><a href="/funktionen#bausteine">Bausteine in der Vorführung <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
@@ -397,26 +399,25 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
         </div>
       </figure>
       <div class="feature-copy">
-        <p class="label"><b>Einstellungen</b> › Dongle</p>
-        <h2 class="display" id="verbindung">Ein Dongle pro PC</h2>
+        <p class="kicker">Verbindung und Dongles</p>
+        <h2 class="display" id="verbindung">Verbindung im Blick, Dongles im Griff.</h2>
         <p>Gekoppelt wird einmal per Tastendruck am Dongle, danach verbindet sich MedType beim Start von selbst.
-          „Verbindung prüfen“ misst die Antwortzeit des Dongles: Bis 100 ms gilt sie als sehr gut, bis 250 ms als in
-          Ordnung.</p>
+          „Verbindung prüfen“ zeigt auf einen Blick, wie schnell der Dongle antwortet.</p>
         <p>Jeder Dongle kann einen eigenen Namen erhalten, zum Beispiel „PC 1“ oder „Laptop“. Nicht mehr
           benötigte Dongles lassen sich mit <a href="/hilfe#frage-wie-wird-ein-dongle-aus-medtype-entfernt-dongle">„Dongle vergessen“</a> aus der App entfernen. Neue Dongle-Software kommt künftig mit einem
-          App-Update und wird per Bluetooth aufgespielt; der Dongle bleibt dabei am PC.</p>
+          App-Update und wird per Bluetooth aufgespielt – der Dongle bleibt dabei am PC.</p>
         <p class="feature-more"><a href="/hilfe#start">Koppeln Schritt für Schritt <span aria-hidden="true">→</span></a></p>
       </div>
     </section>
 
     <section class="extras" aria-labelledby="extras">
-      <h2 id="extras">Im Detail</h2>
+      <h2 id="extras">Außerdem an Bord</h2>
       <ul>
-        <li><strong>Tippgeschwindigkeit.</strong> 5 bis 250 Zeichen pro Sekunde, voreingestellt 30; bei Remote Desktop
-          und Citrix höchstens 30.</li>
+        <li><strong>Tippgeschwindigkeit einstellbar.</strong> So kommen auch langsamere Programme mit.</li>
         <li><strong>Pause nach Zeilenumbruch.</strong> Für Programme, die nach Enter einen Moment brauchen.</li>
-        <li><strong>App-Icon.</strong> Leuchtrot, Warnweste, Nachtschicht oder Blaulicht.</li>
+        <li><strong>Vier App-Icons.</strong> Zur Auswahl in den Einstellungen.</li>
         <li><strong>Hell und dunkel.</strong> Im Hoch- und Querformat, mit VoiceOver bedienbar.</li>
+        <li><strong><a href="/hilfe#frage-lassen-sich-mehrere-dongles-nutzen">Mehrere Dongles.</a></strong> Für mehrere PCs – der Wechsel dauert in der App nur wenige Tipps, nicht mehr benötigte lassen sich vergessen.</li>
         <li><strong><a href="/hilfe#demo">Demo-Modus.</a></strong> Zum Ausprobieren ohne Dongle.</li>
       </ul>
     </section>
@@ -425,17 +426,16 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
 
   <section class="section ink" aria-labelledby="daten">
     <div class="wrap">
-      <p class="label">Datenschutz</p>
-      <h2 class="display" id="daten">Der Weg des Textes</h2>
-      <ol class="ink-list">
-        <li><strong>Auf dem Gerät.</strong> Bausteine und Entwurf liegen in einer Datenbank der App auf dem Gerät, ohne
-          Abgleich mit iCloud. MedType hat keinen Server und braucht kein Internet.</li>
-        <li><strong>Zum Dongle.</strong> Per Bluetooth, verschlüsselt. Nach dem Koppeln nimmt der Dongle nur noch dieses
-          Gerät an; er hält den Text nur kurz im Arbeitsspeicher und speichert keine Texte dauerhaft.</li>
-        <li><strong>Am PC.</strong> Der Text landet in dem Programm, in dem der Cursor steht.</li>
-      </ol>
-      <p class="ink-note">Werbung, Tracking oder Analysedienste enthält die App nicht, und der Anbieter erhält keine
-        geschriebenen Inhalte.</p>
+      <p class="kicker">Datenschutz</p>
+      <h2 class="display" id="daten">Keine Cloud, kein Konto, kein Server.</h2>
+      <ul class="ink-list">
+        <li><strong>Auf dem Smartphone.</strong> Bausteine und Entwürfe bleiben auf dem Gerät. MedType hat keinen
+          Server und braucht kein Internet.</li>
+        <li><strong>Nur an den eigenen Dongle.</strong> Texte gehen per Bluetooth verschlüsselt an den eigenen Dongle.
+          Nach dem Koppeln nimmt er nur noch dieses Smartphone an und speichert keine Texte dauerhaft.</li>
+        <li><strong>Keine Weitergabe.</strong> Keine Werbung, kein Tracking, keine Analyse. Geschriebene Inhalte
+          werden nicht an den Anbieter übermittelt.</li>
+      </ul>
       <p><a href="/datenschutz">Zur Datenschutzerklärung <span aria-hidden="true">→</span></a></p>
     </div>
   </section>
@@ -443,32 +443,47 @@ Dieser Text erscheint dort, wo der Cursor steht.</span><span class="fl-caret"></
   <section class="section needs" aria-labelledby="brauchst">
     <div class="wrap">
       <div class="section-head">
-        <h2 class="display" id="brauchst">Was gebraucht wird</h2>
+        <p class="kicker">Voraussetzungen</p>
+        <h2 class="display" id="brauchst">Voraussetzungen im Überblick</h2>
       </div>
-      <dl class="spec">
-        <div><dt>Smartphone oder Tablet</dt><dd>iOS bzw. iPadOS 17 oder neuer, Bluetooth eingeschaltet.</dd></div>
-        <div><dt>MedType-Dongle</dt><dd>Steckt direkt am PC. Anfrage an
-          <a href="mailto:store@medtype.de?subject=Dongle%20f%C3%BCr%20MedType">store@medtype.de</a>.</dd></div>
-        <div><dt>Windows-PC</dt><dd>Tastaturbelegung Deutsch (Deutschland), QWERTZ.
-          <a href="/hilfe#frage-muss-am-pc-etwas-installiert-werden">Keine Installation</a>, Bluetooth braucht der PC nicht.</dd></div>
-        <div><dt>Ohne Dongle</dt><dd><a href="/hilfe#demo">Demo-Modus</a> unter <span class="path">Einstellungen › Demo-Modus</span>.</dd></div>
-      </dl>
-      <p class="muted">Ein Konto, WLAN oder Internet braucht MedType nicht. <a href="/hilfe#brauchst">Voraussetzungen in der Hilfe</a></p>
+      <ul class="needs-list">
+        <li>
+          <span class="needs-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>
+          </span>
+          <h3>iPhone oder iPad</h3>
+          <p>mit iOS 17 oder neuer und eingeschaltetem Bluetooth.</p>
+        </li>
+        <li>
+          <span class="needs-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7.5" y="9" width="9" height="12.5" rx="2.2"/><path d="M9.5 9V3h5v6"/><path d="M11.2 5.5h.01M12.8 5.5h.01"/><circle cx="12" cy="15.5" r="1.2"/></svg>
+          </span>
+          <h3>MedType-USB-Dongle</h3>
+          <p>Steckt direkt am PC. Anfragen per E-Mail an store@medtype.de. <a href="/hilfe#brauchst">Alle Voraussetzungen</a>.</p>
+        </li>
+        <li>
+          <span class="needs-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="12.5" rx="1.8"/><path d="M8.5 20.5h7M12 16.5v4"/></svg>
+          </span>
+          <h3>Windows-PC mit deutscher Tastatur&shy;belegung</h3>
+          <p>QWERTZ, Sprache „Deutsch (Deutschland)“. Am PC ist <a href="/hilfe#frage-muss-am-pc-etwas-installiert-werden">keine Installation nötig</a>, Bluetooth wird dort nicht benötigt.</p>
+        </li>
+      </ul>
+      <p class="note needs-note">Kein Konto, kein WLAN, kein Internet nötig. Ohne Dongle lässt sich MedType <a href="/hilfe#demo">im Demo-Modus ausprobieren</a>:
+        <span class="path">Einstellungen › Demo-Modus</span>.</p>
     </div>
   </section>
 
   <section class="section ask" aria-labelledby="fragen">
     <div class="wrap">
       <div class="ask-inner">
-        <h2 class="display ask-title" id="fragen">Kontakt</h2>
+        <h2 class="display ask-title" id="fragen">Fragen?</h2>
         <div>
-          <p class="ask-lead">Fragen zu MedType werden per E-Mail beantwortet.</p>
-          <dl class="spec spec--compact">
-            <div><dt>Fragen und Hilfe</dt><dd><a href="mailto:support@medtype.de">support@medtype.de</a></dd></div>
-            <div><dt>Dongle anfragen</dt><dd><a href="mailto:store@medtype.de?subject=Dongle%20f%C3%BCr%20MedType">store@medtype.de</a></dd></div>
-          </dl>
-          <p class="muted">Viele Antworten stehen schon in der <a href="/hilfe">Hilfe</a>. Keine vertraulichen oder
-            personenbezogenen Daten senden, auch nicht in Bildschirmfotos.</p>
+          <p class="ask-lead">Fragen zu MedType beantwortet der Support per E-Mail.</p>
+          <a class="mail" href="mailto:support@medtype.de">support@medtype.de</a>
+          <p class="muted">Dongle anfragen: <a href="mailto:store@medtype.de?subject=Dongle%20f%C3%BCr%20MedType">store@medtype.de</a></p>
+          <p class="muted">Viele Antworten stehen schon in der <a href="/hilfe">Hilfe</a>. Keine
+            vertraulichen oder personenbezogenen Daten senden – auch nicht in Bildschirmfotos.</p>
         </div>
       </div>
     </div>
