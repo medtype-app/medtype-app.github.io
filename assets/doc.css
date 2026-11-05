@@ -224,7 +224,7 @@ ol.guide > li {
 ol.guide > li:first-child { border-top: 0; padding-top: .75rem; }
 .guide-no { color: var(--accent); font-size: 1.6rem; font-weight: 800; line-height: 1; min-width: .8em; }
 .guide-visual { display: flex; align-items: center; min-height: 3rem; }
-.guide-visual > .dv-stick { width: 10.5rem; }
+.guide-visual > .dv-stick { --dv-w: 10.5rem; }
 .guide-text { grid-column: 1 / -1; }
 @media (min-width: 46rem) {
   ol.guide > li { --dv-size: .58rem; grid-template-columns: 1.4rem 18rem minmax(0, 1fr); gap: 1.75rem; align-items: center; }

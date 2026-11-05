@@ -13,10 +13,20 @@
 /* ---------- Dongle ---------- */
 .dv-stick {
   display: block;
-  width: 7.5rem; height: auto;
+  width: var(--dv-w, 7.5rem); height: auto;
   overflow: visible;
   color: var(--dv-led-blue);
   filter: drop-shadow(0 .3rem .45rem rgba(60, 20, 20, .16));
+}
+/* Dongle am PC (.dv-edge): Der rote PC-Rand, der Schatten und das Einstecken reichen über den Rahmen des Dongles
+   (viewBox -16 -14 162 76) hinaus. Safari schneidet ein SVG dabei manchmal an seiner viewBox ab, deshalb ist die viewBox
+   so groß, dass alles hineinpasst (-27 -30 218 122). Negative Ränder gleichen das aus: Platzbedarf, Lage und Größe
+   bleiben wie beim Rahmen. --dv-w ist die Breite des Rahmens, --dv-u eine Einheit der viewBox. */
+.dv-edge {
+  --dv-u: calc(var(--dv-w, 7.5rem) / 162);
+  width: calc(var(--dv-u) * 218);
+  margin: calc(var(--dv-u) * -16) calc(var(--dv-u) * -45) calc(var(--dv-u) * -30) calc(var(--dv-u) * -11);
+  pointer-events: none;
 }
 .dv-stick--on, .dv-stick--typing, .dv-stick--saved, .dv-stick--send { color: var(--dv-led-green); }
 .dv-stick--reject, .dv-stick--reset, .dv-stick--error { color: var(--dv-led-red); }
@@ -428,7 +438,7 @@
   font-size: var(--dv-size, .5rem);
 }
 .dv-pair > .dv-phone { position: absolute; right: 0; bottom: 0; font-size: 1em; }
-.dv-pair > .dv-stick { position: absolute; left: 0; bottom: 4em; width: 15em; }
+.dv-pair > .dv-stick { position: absolute; left: 0; bottom: 4em; --dv-w: 15em; }
 .dv-air { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .dv-air path { fill: none; stroke-linecap: round; }
 .dv-air-dash { stroke: var(--line, #e6deda); stroke-width: 2.4; stroke-dasharray: 1 7; }
