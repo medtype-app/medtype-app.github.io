@@ -70,6 +70,9 @@
 }
 .fx-steps li.is-now { background: var(--accent-soft); }
 .fx-steps li.is-now::before { background: var(--accent); color: #ffffff; }
+@media (prefers-color-scheme: dark) {
+  .fx-steps li.is-now::before { color: #1c1918; }
+}
 .path { font-weight: 600; }
 
 /* Gut zu wissen */
@@ -144,60 +147,127 @@
 .fx-scene {
   position: relative;
   display: flex; flex-direction: column; align-items: center; gap: 1.6em;
-  width: 25em;
+  width: 26em;
   margin-inline: auto;
   font-size: 10px; /* ohne Containerabfragen */
-  font-size: min(15px, 100cqi / 25);
+  font-size: min(15px, 100cqi / 26);
   line-height: 1.25;
 }
 .fx-scene .dv-phone { --dv-size: 1em; }
 .fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16); }
 .fx-scene--solo .dv-phone { --dv-size: 1em; }
 @container fx (min-width: 31rem) {
-  .fx-scene { flex-direction: row; justify-content: space-between; gap: 1em; width: 41em; font-size: min(15px, 100cqi / 41); }
+  .fx-scene { flex-direction: row; justify-content: space-between; gap: 1em; width: 42em; font-size: min(15px, 100cqi / 42); }
   .fx-scene .dv-phone { --dv-size: 1em; }
   .fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16); }
-  .fx-scene--stick { width: 37em; font-size: min(15px, 100cqi / 37); }
 }
 :where(.fx-scene) svg { display: block; }
 
-/* ---------- PC (Laptop) mit Dongle an der Seite ---------- */
-.fx-pc { position: relative; flex: none; width: 25em; padding-right: .4em; }
-.fx-lid {
-  width: 20.5em; margin-left: .8em;
-  padding: .55em .55em .75em;
-  border-radius: .9em .9em .25em .25em;
-  background: #1c1c1f;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 1.2em 2em -1em rgba(60, 10, 20, .45);
-}
-.fx-base {
-  position: relative;
-  width: 22.1em; height: 1.05em;
-  border-radius: .2em .2em 1em 1em / .2em .2em .7em .7em;
-  background: linear-gradient(#e2e2e6, #a7a8ae);
-  box-shadow: 0 .9em 1.4em -.6em rgba(40, 10, 10, .45);
-}
-.fx-base::before {
-  content: ""; position: absolute; left: 50%; top: 0;
-  width: 3.4em; height: .32em; translate: -50% 0;
-  border-radius: 0 0 .4em .4em;
-  background: rgba(0, 0, 0, .16);
+/* ---------- PC: robuster Tablet-PC wie auf der Startseite (roter Rahmen mit Griff, dunkle Fachanwendung),
+   der Dongle steckt rechts unten seitlich. Maße wie in flow.css, hier in em der Szene. ---------- */
+.fx-pc {
+  --shell-hi: #e8443b;
+  --shell-lo: #b81f22;
+  --bumper: #8b8d92;
+  --bezel: #141416;
+  position: relative; flex: none;
+  width: 26em;
 }
 @media (prefers-color-scheme: dark) {
-  .fx-lid { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), 0 1.2em 2em -1em rgba(0, 0, 0, .8); }
-  .fx-base { background: linear-gradient(#b4b5bb, #75767c); }
+  .fx-pc { --shell-hi: #c83a33; --shell-lo: #8e181c; --bumper: #5d5f64; --bezel: #0b0b0c; }
 }
-/* Dongle steckt rechts in der Seite des Laptops; LED-Zustände wie am echten Gerät */
+.fx-pad {
+  position: relative;
+  width: 21.6em; aspect-ratio: 1380 / 1000;
+  filter: drop-shadow(0 1.2em 1.4em rgba(70, 8, 18, .22)) drop-shadow(0 .3em .4em rgba(0, 0, 0, .15));
+}
+@media (prefers-color-scheme: dark) {
+  .fx-pad { filter: drop-shadow(0 1.2em 1.4em rgba(0, 0, 0, .55)); }
+}
+.fx-pad-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.fx-shell-hi { stop-color: var(--shell-hi); }
+.fx-shell-lo { stop-color: var(--shell-lo); }
+.fx-bumper { fill: var(--bumper); }
+.fx-bezel { fill: var(--bezel); }
+.fx-cam { fill: #2a2d33; }
+.fx-port { fill: #2a2a2c; }
+
+/* Bildschirm (x 120–1260, y 206–890 der Grafik): Werkzeugleiste, nummerierte Abschnitte, Textfeld mit Cursor */
+.fx-screen {
+  position: absolute;
+  left: 8.696%; top: 20.6%; width: 82.609%; height: 68.4%;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  border-radius: .2em;
+  background: #1b1c1f;
+  color: #ececee;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  font-size: .66em;
+}
+.fx-screen :where(span, b, i, em, small) { display: block; font-style: normal; }
+.fx-t-toolbar { display: flex !important; align-items: stretch; height: 2.5em; flex: none; background: #111214; border-bottom: 1px solid #2c2d31; }
+.fx-t-apps {
+  display: grid !important; grid-template-columns: repeat(3, .32em); gap: .2em; place-content: center;
+  width: 2.6em; border-right: 1px solid #2c2d31;
+}
+.fx-t-apps i { width: .32em; height: .32em; border-radius: 1px; background: #f2f2f4; }
+.fx-t-tool { display: grid !important; justify-items: center; align-content: center; gap: .1em; width: 3.4em; border-right: 1px solid #2c2d31; }
+.fx-t-tool svg { width: 1.1em; height: 1.1em; fill: none; stroke: #f2f2f4; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.fx-t-tool em { font-size: .5em; color: #c9c9cd; }
+.fx-t-clock { margin-left: auto; display: grid !important; justify-items: end; align-content: center; padding: 0 .7em; line-height: 1.05; }
+.fx-t-clock b { font-size: 1.05em; font-weight: 400; }
+.fx-t-clock small { font-size: .48em; color: #c9c9cd; }
+.fx-t-body { flex: 1; display: flex !important; min-height: 0; }
+.fx-t-nav { width: 5em; flex: none; background: #232428; }
+.fx-t-nav > span {
+  position: relative;
+  display: flex !important; align-items: center; gap: .35em;
+  padding: .5em .45em;
+  border-bottom: 1px solid #303136;
+  color: #d9d9dc;
+  font-size: .56em; font-weight: 600;
+}
+.fx-t-nav b { font-size: 1.7em; font-weight: 300; line-height: 1; color: #bcbcc1; }
+.fx-t-nav > span:first-child::before { content: ""; position: absolute; left: 0; top: .5em; bottom: .5em; width: .22em; background: #2fbf5b; }
+.fx-t-nav .is-on { background: #3a3c42; color: #ffffff; }
+.fx-t-nav .is-on b { color: #ffffff; }
+.fx-t-main { flex: 1; min-width: 0; display: flex !important; flex-direction: column; padding: .55em .6em .4em; }
+.fx-t-card { padding: .45em .6em .6em; border-left: .22em solid #e0261f; background: #2b2c30; }
+.fx-t-card > b { font-size: .95em; font-weight: 600; }
+.fx-t-card > em { margin-top: .3em; color: #a9a9ae; font-size: .55em; }
+.fx-t-doc {
+  min-height: 5.6em;
+  margin-top: .2em; padding: .35em .45em;
+  border-left: .2em solid #2fbf5b;
+  background: #1f2023;
+  font-size: 1.15em; line-height: 1.35;
+  white-space: pre-wrap; overflow-wrap: break-word;
+}
+.fx-screen .fx-t-doc > span { display: inline; }
+.fx-caret {
+  display: inline-block !important;
+  width: 1.5px; height: 1.1em;
+  margin: 0 -1.5px -.2em 0;
+  background: #ffffff;
+}
+.fx-t-pages { display: flex !important; justify-content: center; gap: .3em; margin-top: auto; padding-top: .4em; }
+.fx-t-pages i { width: 1em; height: .2em; background: #4a4b50; }
+.fx-t-pages .is-on { background: #3b82d6; }
+
+/* Dongle in der weißen Hülle, rechts unten seitlich eingesteckt; LED-Zustände wie am echten Gerät */
 .fx-usb {
-  position: absolute; left: 21.75em; bottom: -.12em;
-  width: 3.4em; height: auto;
+  position: absolute; left: calc(100% - .35em); top: 78%;
+  width: 4.6em; height: auto;
+  translate: 0 -50%;
   overflow: visible;
   color: var(--dv-led-blue);
-  filter: drop-shadow(0 .12em .2em rgba(0, 0, 0, .3));
+  filter: drop-shadow(0 .15em .2em rgba(0, 0, 0, .25));
 }
+.fx-case-edge { fill: none; stroke: #cfcfcb; stroke-width: 1; }
+/* Funkwellen über der LED, solange Text über Bluetooth ankommt */
 .fx-waves {
-  position: absolute; left: 22.35em; bottom: 1.25em;
-  width: 2.2em; height: auto;
+  position: absolute; left: calc(100% - .5em); top: calc(78% - 3em);
+  width: 2.4em; height: auto;
   overflow: visible;
   fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round;
   opacity: 0;
@@ -205,79 +275,10 @@
 }
 .is-air .fx-waves { opacity: 1; }
 
-/* Bildschirm: dunkle Fachanwendung wie auf der Startseite, in beiden Erscheinungsbildern dunkel */
-.fx-display {
-  display: flex; flex-direction: column;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: .2em;
-  background: #1b1c1f;
-  color: #ececee;
-  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-}
-.fx-display > *, .fx-display :where(span, b, i, em) { display: block; font-style: normal; }
-.fx-winbar {
-  display: flex; align-items: center; gap: .3em;
-  flex: none; height: 1.65em;
-  padding: 0 .6em;
-  background: #111214;
-  border-bottom: 1px solid #2c2d31;
-}
-.fx-winbar > i { width: .42em; height: .42em; border-radius: 50%; background: #4a4b50; }
-.fx-winbar > b { margin-left: .4em; color: #c9c9cd; font-size: .62em; font-weight: 600; }
-.fx-winbody { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: .6em .7em .7em; }
-.fx-wincard { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: .45em .6em .55em; border-left: .2em solid #e0261f; background: #2b2c30; }
-.fx-wincard > b { font-size: .78em; font-weight: 600; }
-.fx-wincard > em { margin-top: .25em; color: #a9a9ae; font-size: .52em; }
-.fx-doc {
-  flex: 1; min-height: 0;
-  margin-top: .25em; padding: .35em .45em;
-  border-left: .18em solid #2fbf5b;
-  background: #1f2023;
-  font-size: .82em; line-height: 1.4;
-  white-space: pre-wrap; overflow-wrap: break-word;
-  overflow: hidden;
-}
-.fx-doc > span { display: inline; }
-.fx-caret {
-  display: inline-block !important;
-  width: 1.5px; height: 1.12em;
-  margin: 0 -1.5px -.22em 0;
-  background: #ffffff;
-}
-.fx-mark { background: rgba(59, 130, 214, .45); border-radius: .15em; }
-
-/* ---------- Dongle groß an der Seite des PCs (Verbinden) ---------- */
-.fx-stickbox { flex: none; display: flex; flex-direction: column; align-items: center; width: 19em; }
-.fx-stickbox .dv-stick { --dv-w: 15em; filter: drop-shadow(0 .3rem .45rem rgba(60, 20, 20, .16)); }
-.fx-stickbox .hs-ring { stroke-dashoffset: 100; }
-.fx-stickbox .hs-press { transition: opacity .2s ease; }
-.fx-stickbox .hs-button { transition: transform .15s ease; }
-.fx-hold .hs-press { opacity: 1; }
-.fx-hold .hs-button { transform: scale(.86); }
-.fx-hold .hs-ring { stroke-dashoffset: 0; transition: stroke-dashoffset 3s linear; }
-.fx-stickcap {
-  position: relative;
-  margin-top: 1.4em;
-  white-space: nowrap;
-  padding: .3em .8em;
-  border: 1px solid var(--line); border-radius: 99px;
-  background: var(--surface);
-  color: var(--muted);
-  font-size: .8em; font-weight: 600; text-align: center;
-  transition: color .3s ease;
-}
-@media (prefers-color-scheme: dark) {
-  .fx-stickbox .dv-stick { filter: drop-shadow(0 .3rem .45rem rgba(0, 0, 0, .5)); }
-}
-
-/* LED-Zustände (gelten für den großen und den kleinen Dongle) */
-.fx-led-on, .fx-led-typing, .fx-led-paired { color: var(--dv-led-green); }
+/* LED-Zustände des Dongles */
+.fx-led-on, .fx-led-typing { color: var(--dv-led-green); }
 @media (prefers-reduced-motion: no-preference) {
-  .fx-led-slow .hs-on { animation: dv-led-slow 1.5s linear infinite; }
-  .fx-led-fast .hs-on { animation: dv-led-fast .33s linear infinite; }
   .fx-led-typing .hs-on { animation: fx-flicker .16s steps(2, jump-none) infinite; }
-  .fx-led-paired .hs-on { animation: dv-led-saved 3s linear 1 both; }
   .is-air .fx-waves path { animation: fx-wave 1s ease-out infinite; }
   .is-air .fx-waves path:nth-child(2) { animation-delay: .2s; }
   .is-air .fx-waves path:nth-child(3) { animation-delay: .4s; }
@@ -346,11 +347,11 @@
 .fx-nav-plain { grid-template-columns: auto 1fr auto; }
 .fx-back svg { width: .8em; height: .8em; }
 
-/* Verbindungsstatus mit Wechsel (Nicht verbunden → Verbindet … → Verbunden) */
+/* Verbindungsstatus: sichtbar ist der Eintrag mit .is-on */
 .fx-chip > * { transition: opacity .25s ease; }
 .fx-chip > :not(.is-on) { opacity: 0; }
 
-/* Großer Titel, Suchfeld und Listen (Bausteine, Einfügen, Einstellungen) */
+/* Großer Titel, Suchfeld und Listen (Bausteine, Einfügen) */
 .fx-big { margin: .1em .7em .35em; font-size: 1.05em; font-weight: 800; letter-spacing: -.01em; }
 .fx-search {
   display: flex; align-items: center; gap: .35em;
@@ -440,6 +441,10 @@
   animation: fx-bubble .35s var(--ease-out) both;
 }
 .fx-history > i em { font-size: .5em; white-space: pre; }
+/* Taste im Verlauf (Pfeile), wiederholte Tasten mit Zähler */
+.fx-history > .fx-keychip { display: flex; align-items: center; gap: .2em; background: var(--app-fill); color: var(--app-muted); }
+.fx-keychip svg { width: .78em; height: .78em; }
+.fx-keychip em { font-weight: 600; font-variant-numeric: tabular-nums; }
 @keyframes fx-bubble { from { opacity: 0; transform: translateY(.8em) scale(.9); } to { opacity: 1; transform: none; } }
 .fx-liveline {
   display: flex; align-items: center; gap: .4em;
@@ -499,7 +504,7 @@
 .fx-mic { display: grid; place-items: center; width: 1.6em; height: 1.6em; border-radius: 50%; transition: background-color .2s ease, color .2s ease; }
 .is-dictating .fx-mic { background: var(--app-link); color: #ffffff; }
 
-/* ---------- Blätter (von unten) und Systemabfrage ---------- */
+/* ---------- Blätter (von unten) ---------- */
 .fx-dim { position: absolute; z-index: 10; inset: 0; background: rgba(0, 0, 0, .25); opacity: 0; transition: opacity .35s ease; pointer-events: none; }
 .fx-sheet {
   position: absolute; z-index: 11; left: 0; right: 0; top: 4.2em; bottom: 0;
@@ -510,7 +515,6 @@
   transform: translateY(105%);
   transition: transform .5s var(--ease-out);
 }
-.fx-sheet--half { top: 11.2em; }
 .is-sheet .fx-dim { opacity: 1; }
 .is-sheet .fx-sheet { transform: none; }
 .fx-sheet .fx-list, .fx-sheet .fx-row { background: var(--app-sheet-card); }
@@ -535,78 +539,6 @@
 .fx-sheet .dv-sec { margin: .55em .6em .3em; }
 .fx-sheet .dv-sec:first-of-type { margin-top: 0; }
 
-.fx-phone .dv-alert { z-index: 25; opacity: 0; transition: opacity .25s ease; pointer-events: none; }
-.fx-phone .dv-alert-box { transform: scale(1.12); transition: transform .3s var(--ease-out); }
-.fx-phone.is-alert .dv-alert { opacity: 1; }
-.fx-phone.is-alert .dv-alert-box { transform: none; }
-
-/* „Dongle verbinden“: Zeile mit Kopplungsstatus */
-.fx-dev { display: flex; align-items: center; gap: .45em; padding: .5em .65em; }
-.fx-dev .dv-dev-text { flex: 1; min-width: 0; }
-.fx-pairhint { display: grid; margin-top: .12em; }
-.fx-pairhint > * { grid-area: 1 / 1; transition: opacity .25s ease; }
-.fx-pairhint > em { color: var(--app-muted); font-size: .46em; }
-.fx-pairhint .dv-pairing { opacity: 0; margin: 0; }
-.is-ready .fx-pairhint > em { opacity: 0; }
-.is-ready .fx-pairhint .dv-pairing { opacity: 1; }
-.fx-dev .dv-spinner { width: 1em; height: 1em; opacity: 0; }
-.is-linking .fx-dev .dv-spinner { opacity: 1; }
-.is-linking .fx-dev .dv-bars { display: none; }
-.fx-hintbox { display: grid; grid-template-rows: 1fr; transition: grid-template-rows .45s var(--ease-out), opacity .3s ease; }
-.fx-hintbox > * { overflow: hidden; min-height: 0; }
-.is-linked .fx-hintbox { grid-template-rows: 0fr; opacity: 0; }
-
-/* ---------- Einstellungen und Dongle-Seite ---------- */
-.fx-settings .dv-form { padding-top: .2em; }
-.fx-settings .dv-sec { margin: .55em .6em .3em; }
-.fx-settings .dv-sec:first-child { margin-top: .1em; }
-.fx-settings .dv-li { min-height: 2.05em; }
-.fx-blue { color: var(--app-link); }
-.fx-red { color: #ff3b30; }
-.fx-li-v { display: flex !important; align-items: center; gap: .3em; color: var(--app-muted); }
-.fx-li-v em { font-size: .52em; }
-.fx-li-v svg { width: .75em; height: .75em; }
-.fx-li-v .dv-ok { width: .85em; height: .85em; }
-.fx-pen { color: var(--app-link); }
-.fx-result { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ease-out); }
-.fx-result > * { overflow: hidden; min-height: 0; }
-.is-result .fx-result { grid-template-rows: 1fr; }
-.fx-result .dv-sep { margin-left: 2.1em; }
-.fx-res { display: flex !important; align-items: flex-start; gap: .45em; padding: .45em .65em; }
-.fx-res .dv-ok { width: 1.05em; height: 1.05em; margin-top: .05em; }
-.fx-res b { font-size: .54em; font-weight: 500; }
-.fx-res b span { display: inline; color: var(--app-green); font-weight: 650; }
-.fx-res em { margin-top: .2em; color: var(--app-muted); font-size: .42em; line-height: 1.35; }
-.fx-check { display: flex !important; align-items: center; justify-content: space-between; }
-.fx-check .dv-spinner { width: .9em; height: .9em; opacity: 0; }
-.is-checking .fx-check .dv-spinner { opacity: 1; }
-.fx-name { transition: opacity .2s ease; }
-
-/* Regler für die Tippgeschwindigkeit */
-.fx-speed { padding: .5em .65em .55em; }
-.fx-speed-head { display: flex !important; justify-content: space-between; }
-.fx-speed-head em { font-size: .54em; }
-.fx-speed-head em + em { color: var(--app-muted); font-variant-numeric: tabular-nums; }
-.fx-slider { display: flex !important; align-items: center; gap: .45em; margin-top: .45em; color: var(--app-muted); }
-.fx-slider > svg { width: 1em; height: 1em; }
-.fx-track { position: relative; flex: 1; height: .26em; border-radius: 99px; background: rgba(120, 120, 128, .2); }
-.fx-track > i {
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: calc(var(--v, .1) * 100%);
-  border-radius: inherit;
-  background: var(--app-blue);
-}
-.fx-track > b {
-  position: absolute; top: 50%; left: calc(var(--v, .1) * 100%);
-  width: 1.15em; height: 1.15em; margin: -.575em 0 0 -.575em;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 .1em .4em rgba(0, 0, 0, .25), 0 0 0 .5px rgba(0, 0, 0, .06);
-}
-.fx-track.is-moving > i, .fx-track.is-moving > b { transition: width .8s var(--ease-out), left .8s var(--ease-out); }
-.fx-icons { display: flex !important; gap: .3em; }
-.fx-icons img { width: 1.25em; height: 1.25em; border-radius: .3em; }
-
 @media print {
   .fx-demo, .fx-ctrl { display: none; }
   .fx { display: block; }
@@ -624,64 +556,87 @@
 }
 @keyframes fx-blink { from { opacity: 1; } to { opacity: 0; } }
 
-/* Einstellungen › Dongle: zwei Seiten, die zweite schiebt sich von rechts herein */
-.fx-pages { position: relative; flex: 1; min-height: 0; overflow: hidden; }
-.fx-page {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  background: var(--app-bg);
-  transition: transform .5s var(--ease-out);
+/* ---------- Felder in Bausteinen (MedType 1.3): leere Stellen im Text, Leiste mit Vorschlägen über der Tastatur ---------- */
+.fx-phone {
+  --slot-bg: #e5e5ea;
+  --slot-line: #8e8e93;
+  --slot-text: #3a3a3c;
+  --tok-text: #0058b0;
+  --pick: #0071e3;
 }
-.fx-page--b { transform: translateX(100%); box-shadow: -.4em 0 1em rgba(0, 0, 0, .08); }
-.is-pushed > .fx-page--a { transform: translateX(-30%); }
-.is-pushed > .fx-page--b { transform: none; }
-.fx-navleft { display: flex !important; align-items: center; gap: .3em; }
-.fx-navleft .dv-round { width: 1.75em; }
-.fx-two em:first-child { font-size: .54em; }
-.fx-two .fx-sub { margin-top: .15em; color: var(--app-muted); font-size: .44em; }
-.dv-li.fx-tall { min-height: 2.6em; }
-.dv-li.fx-tall > em { line-height: 1.3; }
-.fx-gap { margin-top: .7em; }
-.fx-page--b .dv-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+@media (prefers-color-scheme: dark) {
+  .fx-phone { --slot-bg: #3a3a3c; --slot-line: #8e8e93; --slot-text: #e5e5ea; --tok-text: #a8d1ff; --pick: #0a6dd9; }
+}
+.fx-field .fx-slot {
+  display: inline-block;
+  padding: 0 .3em;
+  border: 1px dashed var(--slot-line);
+  border-radius: .35em;
+  background: var(--slot-bg);
+  color: var(--slot-text);
+  line-height: 1.3;
+  transition: background-color .25s ease, border-color .25s ease, color .25s ease;
+}
+.fx-field .fx-slot.is-active { border-color: var(--app-link); background: transparent; color: var(--app-muted); }
+.fx-field .fx-slot.is-filled { border-style: solid; border-color: transparent; background: var(--app-bubble); color: var(--tok-text); }
+.fx-field .fx-slot.is-filled.is-active { border-color: var(--app-link); }
+/* Liste: Abzeichen „2 Felder“ und Feldnamen in der Vorschau */
+.fx-row-text b .fx-tag {
+  display: inline-block;
+  margin-left: .45em; padding: .05em .4em;
+  border-radius: .4em;
+  background: var(--app-bubble); color: var(--tok-text);
+  font-size: .82em; font-weight: 650;
+  vertical-align: .05em;
+}
+.fx-row-text em .fx-fname { display: inline; color: var(--tok-text); font-weight: 650; }
+/* Leiste und Tastatur als ein Block mit oben abgerundeten Ecken, kommt beim Ausfüllen von unten */
+.fx-fill {
+  position: absolute; z-index: 6; left: 0; right: 0; bottom: 0;
+  border-radius: 1em 1em 0 0;
+  background: var(--kb-bg);
+  box-shadow: 0 -.2em .8em rgba(0, 0, 0, .08);
+  transform: translateY(105%);
+  transition: transform .45s var(--ease-out);
+}
+.is-filling .fx-fill { transform: none; }
+.fx-fill .fx-kb { border-radius: 0; padding-top: .35em; }
+.fx-fillhead { display: flex !important; align-items: center; gap: .4em; padding: .45em .6em .1em .75em; }
+.fx-fillhead b { font-size: .54em; font-weight: 650; white-space: nowrap; }
+.fx-fillhead em { flex: 1; color: var(--app-muted); font-size: .46em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fx-minisend {
+  display: grid !important; place-items: center;
+  width: 1.75em; height: 1.75em; border-radius: 50%;
+  background: var(--app-off-bg); color: var(--app-off-text);
+  transition: background-color .25s ease, color .25s ease;
+}
+.fx-minisend svg { width: .8em; height: .8em; }
+.fx-minisend.is-on { background: var(--app-blue); color: #ffffff; }
+.fx-chips { display: flex !important; gap: .3em; padding: .35em .6em .1em; overflow: hidden; }
+.fx-chips > span {
+  flex: none;
+  display: flex !important; align-items: center; gap: .25em;
+  padding: .38em .62em;
+  border-radius: 99px;
+  background: var(--kb-key);
+  box-shadow: 0 .07em 0 rgba(0, 0, 0, .18);
+  color: var(--app-text);
+  transition: background-color .2s ease, color .2s ease;
+}
+.fx-chips em { font-size: .5em; white-space: nowrap; }
+.fx-chips > .is-sel { background: var(--pick); color: #ffffff; box-shadow: none; }
+.fx-chips > .is-sel em { font-weight: 650; }
+.fx-chips > .is-sel em::before { content: "✓ "; content: "✓ " / ""; }
+/* Hinweis „Kommt mit Version 1.3“ */
+.fx-soon {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin: 0 0 .9rem; padding: .25rem .7rem;
+  border-radius: 99px;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: .85rem; font-weight: 700;
+}
 
-/* „Dongle verbinden“: Verbunden-Anzeige und Häkchen */
-.fx-pairhint .fx-linked { opacity: 0; color: var(--app-green); font-weight: 600; }
-.is-linked .fx-pairhint > em:first-child { opacity: 0; }
-.is-linked .fx-pairhint .fx-linked { opacity: 1; }
-.fx-devok { display: none !important; width: 1em; height: 1em; }
-.is-linked .fx-devok { display: grid !important; }
-.is-linked .fx-dev .dv-bars { display: none; }
-.fx-near { display: flex !important; align-items: center; gap: .35em; }
-.fx-near .dv-spinner { width: .8em; height: .8em; }
-
-/* ---------- Außerdem an Bord ---------- */
-.fx-more { padding: 3.5rem 0 1rem; border-top: 1px solid var(--line); scroll-margin-top: 1rem; }
-.fx-more h2 {
-  font-size: clamp(1.75rem, 1.35rem + 1.7vw, 2.6rem);
-  font-weight: 800; line-height: 1.06; letter-spacing: -.032em;
-  margin: 0 0 1.5rem;
-}
-.fx-grid {
-  list-style: none; margin: 0 0 2.5rem; padding: 0;
-  display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
-}
-.fx-grid li {
-  margin: 0; padding: 1.15rem 1.25rem 1.25rem;
-  border: 1px solid var(--line); border-radius: var(--radius);
-  background: var(--surface);
-}
-.fx-grid h3 { margin: 0 0 .35rem; font-size: 1.05rem; line-height: 1.3; }
-.fx-grid h3::before {
-  content: ""; display: block;
-  width: 1.5rem; height: 3px; margin-bottom: .75rem;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
-}
-.fx-grid p { margin: 0; color: var(--muted); font-size: .96rem; line-height: 1.5; }
-.fx-end { max-width: 40rem; margin: 0; font-size: 1.05rem; }
-
-/* Angehalten: auch Blinken, Flackern und Übergänge in der Szene stehen still */
+/* Angehalten: Blinken und Flackern stehen still (Übergänge hält funktionen.js über getAnimations an) */
 .fx-demo.is-paused .fx-scene *,
 .fx-demo.is-paused .fx-scene *::before,
 .fx-demo.is-paused .fx-scene *::after { animation-play-state: paused !important; }

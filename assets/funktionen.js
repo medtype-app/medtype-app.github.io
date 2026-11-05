@@ -78,6 +78,21 @@
     em.textContent = word;
     i.appendChild(em);
     c.q("history").appendChild(i);
+    c.chip = null;
+  }
+
+  var KEY_ICON = { left: "left", right: "right", up: "up", down: "down" };
+  function keyChip(c, key) {
+    if (c.chip && c.chip.key === key) {
+      c.chip.count += 1;
+      c.chip.em.textContent = "×" + c.chip.count;
+      return;
+    }
+    var i = document.createElement("i");
+    i.className = "fx-keychip";
+    i.innerHTML = '<svg viewBox="0 0 20 20"><use href="#i-' + KEY_ICON[key] + '"/></svg><em></em>';
+    c.q("history").appendChild(i);
+    c.chip = { key: key, count: 1, em: i.querySelector("em") };
   }
 
   /* ---------- Ablauf ---------- */
@@ -205,7 +220,7 @@
         on(c.q("field"), "is-empty");
         phoneState(c, "is-empty");
       });
-      s.wait(2600).step(0);
+      s.wait(2600).at(function () { phoneState(c, "is-busy", false); }).wait(400).step(0);
     }
   };
 
@@ -213,6 +228,7 @@
     reset: function (c) {
       c.q("history").textContent = "";
       ["Blutdruck", "128/82", "mmHg,"].forEach(function (w) { bubble(c, w); });
+      c.chip = null;
       text(c.q("line"), "");
       pcText(c, "Blutdruck 128/82 mmHg, ");
       led(c.q("usb"), "on");
@@ -226,6 +242,12 @@
       var arrows = c.fig.querySelectorAll(".fx-arrows > span");
       function move(dir) {
         return function () {
+          var line = c.q("line");
+          if (line.textContent) {
+            bubble(c, line.textContent);
+            line.textContent = "";
+          }
+          keyChip(c, dir < 0 ? "left" : "right");
           var b = c.before.textContent;
           var a = c.after.textContent;
           if (dir < 0 && b) pcText(c, b.slice(0, -1), b.slice(-1) + a);
@@ -266,8 +288,9 @@
       s.wait(1600).step(3).at(function () { phoneState(c, "is-dictating", false); }).wait(500);
       s.at(function () {
         var line = c.q("line");
-        line.textContent.split(" ").forEach(function (w) { bubble(c, w); });
-        line.textContent = "";
+        var words = line.textContent.split(" ");
+        line.textContent = words.pop();
+        words.forEach(function (w) { bubble(c, w); });
       });
       s.wait(2600).step(0);
     }
@@ -297,7 +320,6 @@
       s.chars("Kontrolle", 90, function (sofar) {
         text(c.q("title"), sofar);
         c.q("tph").hidden = true;
-        on(c.q("save"), "is-off", false);
       });
       s.wait(400).at(function () {
         on(c.q("tbox"), "is-focus", false);
@@ -306,6 +328,7 @@
       s.chars(KONTROLLE, 32, function (sofar) {
         text(c.q("body"), sofar);
         c.q("bph").hidden = true;
+        on(c.q("save"), "is-off", false);
       });
       s.wait(600).tap(c.q("save")).at(function () { phoneState(c, "is-sheet", false); });
       s.wait(550).at(function () {
@@ -396,138 +419,128 @@
     }
   };
 
-  DEMOS.verbinden = {
-    reset: function (c) {
-      var stick = c.q("stick");
-      led(stick, "slow");
-      stick.classList.remove("fx-hold");
-      text(c.q("cap"), "LED blinkt langsam blau: bereit");
-      chipState(c, "x");
-      ["is-linked", "is-ready", "is-linking", "is-sheet", "is-alert"].forEach(function (k) { phoneState(c, k, false); });
-    },
-    run: function (s, c) {
-      var stick = c.q("stick");
-      s.step(1).wait(1600).step(2).at(function () {
-        stick.classList.add("fx-hold");
-        text(c.q("cap"), "Taste 3 Sekunden halten …");
-      });
-      s.wait(3000).at(function () {
-        stick.classList.remove("fx-hold");
-        led(stick, "fast");
-        text(c.q("cap"), "LED blinkt schnell blau: Koppelmodus");
-      });
-      s.wait(1300).step(3).tap(c.q("chip")).at(function () {
-        phoneState(c, "is-sheet");
-        phoneState(c, "is-ready");
-      });
-      s.wait(1300).tap(c.q("dev")).at(function () { phoneState(c, "is-linking"); });
-      s.wait(900).step(4).at(function () { phoneState(c, "is-alert"); });
-      s.wait(1200).tap(c.q("koppeln")).at(function () {
-        phoneState(c, "is-alert", false);
-        chipState(c, "link");
-        led(stick, "paired");
-        text(c.q("cap"), "LED leuchtet grün: verbunden");
-      });
-      s.wait(1100).at(function () {
-        chipState(c, "ok");
-        phoneState(c, "is-linking", false);
-        phoneState(c, "is-ready", false);
-        phoneState(c, "is-linked");
-      });
-      s.wait(1300).tap(c.q("fertig")).at(function () { phoneState(c, "is-sheet", false); });
-      s.wait(2200).step(0);
-    }
-  };
+  /* Felder in Bausteinen (MedType 1.3): Baustein mit leeren Feldern einfügen, ausfüllen, senden */
+  var FELDER = [
+    { name: "Symptome", options: ["Fieber", "Husten", "Schnupfen"] },
+    { name: "Zeitraum", options: ["zwei Wochen", "vier Wochen", "drei Monaten"] }
+  ];
+  var FELDER_TEXT = ["Beschwerden: ", 1, ". Kontrolle in ", 2, "."];
 
-  function chipState(c, key) {
-    Array.prototype.forEach.call(c.q("chip").children, function (el) {
-      el.classList.toggle("is-on", el.getAttribute("data-chip") === key);
+  function slot(c, n) { return c.fig.querySelector('[data-slot="' + n + '"]'); }
+
+  function slotState(c, n, value, active) {
+    var el = slot(c, n);
+    el.textContent = value || FELDER[n - 1].name;
+    el.classList.toggle("is-filled", !!value);
+    el.classList.toggle("is-active", !!active);
+  }
+
+  function insertTemplate(c) {
+    var t = c.q("text");
+    t.textContent = "";
+    FELDER_TEXT.forEach(function (part) {
+      if (typeof part === "string") {
+        t.appendChild(document.createTextNode(part));
+        return;
+      }
+      var el = document.createElement("span");
+      el.className = "fx-slot";
+      el.setAttribute("data-slot", part);
+      el.textContent = FELDER[part - 1].name;
+      t.appendChild(el);
     });
   }
 
-  DEMOS.dongle = {
-    reset: function (c) {
-      var pages = c.q("pages");
-      ["is-pushed", "is-result", "is-checking"].forEach(function (k) { pages.classList.remove(k); });
-      ["name", "title", "aname", "newname"].forEach(function (k) { text(c.q(k), "MedType Dongle"); });
-      phoneState(c, "is-sheet", false);
-    },
-    run: function (s, c) {
-      var pages = c.q("pages");
-      s.step(1).wait(1100).tap(c.q("dongle-row")).at(function () { pages.classList.add("is-pushed"); });
-      s.wait(1200).step(2).tap(c.q("check")).at(function () { pages.classList.add("is-checking"); });
-      s.wait(1400).at(function () {
-        pages.classList.remove("is-checking");
-        pages.classList.add("is-result");
-      });
-      s.wait(1800).step(3).tap(c.q("namerow")).at(function () { phoneState(c, "is-sheet"); });
-      s.wait(900);
-      var old = "MedType Dongle";
-      for (var i = old.length - 1; i >= 0; i--) {
-        s.wait(45).at(text.bind(null, c.q("newname"), old.slice(0, i)));
-      }
-      s.wait(250).chars("PC 1", 150, function (sofar) { text(c.q("newname"), sofar); });
-      s.wait(500).tap(c.q("save")).at(function () { phoneState(c, "is-sheet", false); });
-      s.wait(400).at(function () {
-        ["name", "title", "aname"].forEach(function (k) { text(c.q(k), "PC 1"); });
-      });
-      s.wait(1500).step(4).wait(2400).step(0);
-    }
-  };
+  /* Leiste über der Tastatur: Name, „Feld n von 2“ und die Vorschläge des aktuellen Felds */
+  function fieldBar(c, n, picked) {
+    var f = FELDER[n - 1];
+    text(c.q("fname"), f.name);
+    text(c.q("fpos"), "Feld " + n + " von " + FELDER.length);
+    var chips = c.q("chips");
+    chips.textContent = "";
+    f.options.forEach(function (option) {
+      var chip = document.createElement("span");
+      var em = document.createElement("em");
+      em.textContent = option;
+      chip.appendChild(em);
+      chip.setAttribute("data-pick", option);
+      if (picked.indexOf(option) >= 0) chip.className = "is-sel";
+      chips.appendChild(chip);
+    });
+  }
 
-  function speedValue(v) { return (v - 5) / 245; }
+  function pick(c, option) {
+    return function () { return c.q("chips").querySelector('[data-pick="' + option + '"]'); };
+  }
 
-  DEMOS.tippgeschwindigkeit = {
+  DEMOS.felder = {
     reset: function (c) {
+      text(c.q("text"), "");
+      text(c.q("sum"), summary(0));
+      on(c.q("field"), "is-empty");
+      on(c.q("fsend"), "is-on", false);
+      phoneState(c, "is-empty");
+      ["is-sheet", "is-filling", "is-busy", "is-done"].forEach(function (k) { phoneState(c, k, false); });
       pcText(c, "");
-      text(c.q("speed"), "30 Zeichen/s");
-      c.q("track").style.setProperty("--v", speedValue(30));
       led(c.q("usb"), "on");
       on(c.pc, "is-air", false);
-      c.touch.classList.remove("is-hold");
     },
     run: function (s, c) {
-      var done = "";
-      function typeLine(line, speed) {
-        s.at(function () { on(c.pc, "is-air"); led(c.q("usb"), "typing"); });
-        s.chars(line, 1000 / speed, function (sofar) { pcText(c, done + sofar); });
-        s.at(function () {
-          done += line;
-          on(c.pc, "is-air", false);
-          led(c.q("usb"), "on");
-        });
-      }
-      function drag(from, to) {
-        var track = c.q("track");
-        s.at(function () {
-          aim(c, c.q("knob"));
-          c.touch.classList.add("is-hold");
-        }).wait(350).at(function () {
-          var r = track.getBoundingClientRect();
-          track.classList.add("is-moving");
-          track.style.setProperty("--v", speedValue(to));
-          aim(c, c.q("knob"), r.left + speedValue(to) * r.width);
-        });
-        var stepsN = 6;
-        for (var i = 1; i <= stepsN; i++) {
-          s.wait(110).at(text.bind(null, c.q("speed"), Math.round((from + (to - from) * i / stepsN) / 5) * 5 + " Zeichen/s"));
-        }
-        s.wait(250).at(function () {
-          c.touch.classList.remove("is-hold");
-          track.classList.remove("is-moving");
-        });
-      }
-      s.step(2).wait(900);
-      typeLine("Blutdruck 128/82 mmHg,\n", 30);
-      s.wait(700).step(1);
-      drag(30, 10);
-      s.wait(500).step(3);
-      typeLine("Puls 72/min,\n", 10);
-      s.wait(700).step(1);
-      drag(10, 120);
-      s.wait(500).step(2);
-      typeLine("Atmung unauffällig.", 120);
-      s.wait(2400).step(0);
+      var done = "Beschwerden: Husten, Fieber. Kontrolle in vier Wochen.";
+      s.step(2).wait(1200).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
+      s.wait(1100).tap(function () { return c.row("beschwerden"); }).at(function () { phoneState(c, "is-sheet", false); });
+      s.wait(380).at(function () {
+        insertTemplate(c);
+        slotState(c, 1, "", true);
+        on(c.q("field"), "is-empty", false);
+        phoneState(c, "is-empty", false);
+        text(c.q("sum"), summary(c.q("text").textContent.length));
+        fieldBar(c, 1, []);
+        phoneState(c, "is-filling");
+      });
+      s.wait(1300).step(3).tap(pick(c, "Husten")).at(function () {
+        fieldBar(c, 1, ["Husten"]);
+        slotState(c, 1, "Husten", true);
+      });
+      s.wait(700).tap(pick(c, "Fieber")).at(function () {
+        fieldBar(c, 1, ["Husten", "Fieber"]);
+        slotState(c, 1, "Husten, Fieber", true);
+      });
+      s.wait(1000).tap(function () { return slot(c, 2); }).at(function () {
+        slotState(c, 1, "Husten, Fieber", false);
+        slotState(c, 2, "", true);
+        fieldBar(c, 2, []);
+      });
+      s.wait(1000).tap(pick(c, "vier Wochen")).at(function () {
+        fieldBar(c, 2, ["vier Wochen"]);
+        slotState(c, 2, "vier Wochen", true);
+        on(c.q("fsend"), "is-on");
+        text(c.q("sum"), summary(done.length));
+      });
+      s.wait(1000).step(4).tap(c.q("fsend")).at(function () {
+        phoneState(c, "is-filling", false);
+        slotState(c, 2, "vier Wochen", false);
+        progress(c, 0, done.length, "Text wird getippt");
+        phoneState(c, "is-busy");
+        on(c.pc, "is-air");
+        led(c.q("usb"), "typing");
+      }).wait(350);
+      s.chars(done, 1000 / SPEED, function (sofar) {
+        pcText(c, sofar);
+        progress(c, sofar.length, done.length);
+      });
+      s.wait(250).at(function () {
+        phoneState(c, "is-done");
+        on(c.pc, "is-air", false);
+        led(c.q("usb"), "on");
+      });
+      s.wait(500).at(function () {
+        text(c.q("text"), "");
+        text(c.q("sum"), summary(0));
+        on(c.q("field"), "is-empty");
+        phoneState(c, "is-empty");
+      });
+      s.wait(2600).at(function () { phoneState(c, "is-busy", false); }).wait(400).step(0);
     }
   };
 
@@ -548,6 +561,8 @@
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "fx-ctrl";
+    var heading = fig.closest(".fx").getAttribute("aria-labelledby");
+    if (heading) btn.setAttribute("aria-describedby", heading);
     fig.querySelector(".fx-stage").appendChild(btn);
     this.btn = btn;
     var self = this;
@@ -585,6 +600,7 @@
     this.autoPaused = false;
     this.last = null;
     this.fig.classList.remove("is-paused");
+    this.freeze(false);
     this.label("pause", "Anhalten");
     window.cancelAnimationFrame(this.raf);
     this.raf = window.requestAnimationFrame(this.frame);
@@ -596,7 +612,17 @@
     this.autoPaused = !!auto;
     window.cancelAnimationFrame(this.raf);
     this.fig.classList.add("is-paused");
+    this.freeze(true);
     this.label("play", "Weiter");
+  };
+
+  /* Übergänge und Animationen der Szene anhalten bzw. fortsetzen (CSS allein hält Übergänge nicht an) */
+  Player.prototype.freeze = function (stop) {
+    if (!this.fig.getAnimations) return;
+    this.fig.getAnimations({ subtree: true }).forEach(function (a) {
+      if (stop && a.playState === "running") a.pause();
+      else if (!stop && a.playState === "paused") a.play();
+    });
   };
 
   Player.prototype.tick = function (now) {

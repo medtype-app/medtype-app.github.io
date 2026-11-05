@@ -148,19 +148,16 @@ a:hover { text-decoration-thickness: 2px; }
 .site-nav a[aria-current="page"] { background: #ffffff; color: var(--on-pill); font-weight: 650; }
 .site-nav a:focus-visible { border-radius: 999px; }
 
-@media (max-width: 26rem) {
-  /* Schmal: „Start“ entfällt, das Symbol links führt zur Startseite */
-  .site-nav .nav-start { display: none; }
-  .brand-name {
-    position: absolute; width: 1px; height: 1px; overflow: hidden;
-    clip: rect(0 0 0 0); white-space: nowrap;
-  }
+/* Schmal: Die Navigation bekommt eine eigene Zeile unter dem Logo, damit alle Punkte Platz haben */
+@media (max-width: 32rem) {
+  .topnav { flex-wrap: wrap; row-gap: .7rem; }
+  .site-nav { flex: 1 0 100%; }
+  .site-nav ul { gap: .15rem; margin-left: -.6rem; }
   .site-nav a { padding: .4rem .6rem; font-size: .92rem; }
 }
 @media (max-width: 23rem) {
-  .topnav { gap: .5rem; }
-  .site-nav ul { gap: .1rem; }
-  .site-nav a { padding: .4rem .45rem; font-size: .86rem; }
+  .site-nav ul { gap: .05rem; margin-left: -.45rem; }
+  .site-nav a { padding: .38rem .45rem; font-size: .87rem; }
 }
 
 /* Fußzeile */
