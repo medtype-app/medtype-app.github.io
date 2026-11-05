@@ -421,8 +421,8 @@
 
   /* Felder in Bausteinen (MedType 1.3): Baustein mit leeren Feldern einfügen, ausfüllen, senden */
   var FELDER = [
-    { name: "Symptome", options: ["Fieber", "Husten", "Schnupfen"] },
-    { name: "Zeitraum", options: ["zwei Wochen", "vier Wochen", "drei Monaten"] }
+    { name: "Symptome", options: ["Fieber", "Husten", "Schnupfen"], hint: "Mehrere Vorschläge wählbar. Eigener Text direkt über die Tastatur." },
+    { name: "Zeitraum", options: ["2 Wochen", "4 Wochen", "3 Monaten"], hint: "Ein Vorschlag führt direkt zum nächsten leeren Feld. Eigener Text direkt über die Tastatur." }
   ];
   var FELDER_TEXT = ["Beschwerden: ", 1, ". Kontrolle in ", 2, "."];
 
@@ -454,6 +454,7 @@
   /* Leiste über der Tastatur: Name, „Feld n von 2“ und die Vorschläge des aktuellen Felds */
   function fieldBar(c, n, picked) {
     var f = FELDER[n - 1];
+    text(c.q("sum"), f.hint); // Hinweis zur Auswahl unter dem Text, solange ein Feld aktuell ist
     text(c.q("fname"), f.name);
     text(c.q("fpos"), "Feld " + n + " von " + FELDER.length);
     var chips = c.q("chips");
@@ -486,7 +487,7 @@
       on(c.pc, "is-air", false);
     },
     run: function (s, c) {
-      var done = "Beschwerden: Husten, Fieber. Kontrolle in vier Wochen.";
+      var done = "Beschwerden: Husten, Fieber. Kontrolle in 4 Wochen.";
       s.step(2).wait(1200).tap(c.q("pick")).at(function () { phoneState(c, "is-sheet"); });
       s.wait(1100).tap(function () { return c.row("beschwerden"); }).at(function () { phoneState(c, "is-sheet", false); });
       s.wait(380).at(function () {
@@ -494,7 +495,6 @@
         slotState(c, 1, "", true);
         on(c.q("field"), "is-empty", false);
         phoneState(c, "is-empty", false);
-        text(c.q("sum"), summary(c.q("text").textContent.length));
         fieldBar(c, 1, []);
         phoneState(c, "is-filling");
       });
@@ -511,15 +511,15 @@
         slotState(c, 2, "", true);
         fieldBar(c, 2, []);
       });
-      s.wait(1000).tap(pick(c, "vier Wochen")).at(function () {
-        fieldBar(c, 2, ["vier Wochen"]);
-        slotState(c, 2, "vier Wochen", true);
+      s.wait(1000).tap(pick(c, "4 Wochen")).at(function () {
+        fieldBar(c, 2, ["4 Wochen"]);
+        slotState(c, 2, "4 Wochen", true);
         on(c.q("fsend"), "is-on");
-        text(c.q("sum"), summary(done.length));
       });
       s.wait(1000).step(4).tap(c.q("fsend")).at(function () {
         phoneState(c, "is-filling", false);
-        slotState(c, 2, "vier Wochen", false);
+        slotState(c, 2, "4 Wochen", false);
+        text(c.q("sum"), summary(done.length));
         progress(c, 0, done.length, "Text wird getippt");
         phoneState(c, "is-busy");
         on(c.pc, "is-air");

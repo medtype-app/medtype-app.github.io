@@ -562,10 +562,15 @@
   --slot-line: #8e8e93;
   --slot-text: #3a3a3c;
   --tok-text: #0058b0;
+  --slot-fill: rgba(0, 122, 255, .18);
+  --slot-fill-on: rgba(0, 122, 255, .28);
   --pick: #0071e3;
 }
 @media (prefers-color-scheme: dark) {
-  .fx-phone { --slot-bg: #3a3a3c; --slot-line: #8e8e93; --slot-text: #e5e5ea; --tok-text: #a8d1ff; --pick: #0a6dd9; }
+  .fx-phone {
+    --slot-bg: #3a3a3c; --slot-line: #8e8e93; --slot-text: #e5e5ea; --tok-text: #a8d1ff; --pick: #0a6dd9;
+    --slot-fill: rgba(10, 132, 255, .32); --slot-fill-on: rgba(10, 132, 255, .45);
+  }
 }
 .fx-field .fx-slot {
   display: inline-block;
@@ -578,8 +583,9 @@
   transition: background-color .25s ease, border-color .25s ease, color .25s ease;
 }
 .fx-field .fx-slot.is-active { border-color: var(--app-link); background: transparent; color: var(--app-muted); }
-.fx-field .fx-slot.is-filled { border-style: solid; border-color: transparent; background: var(--app-bubble); color: var(--tok-text); }
-.fx-field .fx-slot.is-filled.is-active { border-color: var(--app-link); }
+/* Gefüllt: getönt und halbfett wie in der App; das aktuelle Feld kräftiger getönt und dick unterstrichen */
+.fx-field .fx-slot.is-filled { padding: 0 .1em; border: 0; border-radius: .15em; background: var(--slot-fill); color: var(--tok-text); font-weight: 600; }
+.fx-field .fx-slot.is-filled.is-active { background: var(--slot-fill-on); text-decoration: underline .14em var(--app-link); text-underline-offset: .18em; }
 /* Liste: Abzeichen „2 Felder“ und Feldnamen in der Vorschau */
 .fx-row-text b .fx-tag {
   display: inline-block;
