@@ -11,18 +11,20 @@
   margin: 0 auto;
   padding: 1rem var(--gutter) 3rem;
 }
+/* Abschnitt: Kopf, Vorführung, Schritte und „Gut zu wissen“ stehen in einem Raster (.fx-split). Die Vorführung kann
+   nur innerhalb dieses Rasters mitlaufen und überdeckt deshalb nie den nächsten Abschnitt. */
 .fx {
   display: grid; gap: 1.5rem;
-  grid-template-areas: "head" "demo" "body" "extra";
   padding: 3rem 0;
   border-top: 1px solid var(--line);
   scroll-margin-top: 1rem;
 }
 .fx-main > .fx:first-child { border-top: 0; }
+.fx-split { display: grid; gap: 1.5rem; grid-template-areas: "head" "demo" "body" "extra"; min-width: 0; }
+.fx-extra { grid-area: extra; max-width: 40rem; }
 .fx-head, .fx-body { max-width: 40rem; }
 .fx-head { grid-area: head; }
 .fx-body { grid-area: body; }
-.fx-extra { grid-area: extra; }
 .fx-demo { grid-area: demo; margin: 0; min-width: 0; }
 .fx h2 {
   font-size: clamp(1.75rem, 1.35rem + 1.7vw, 2.6rem);
@@ -85,30 +87,33 @@
   background: var(--accent);
 }
 
-/* Breit: Vorführung und Text nebeneinander, gleich hoch. Kopf und Schritte stehen mittig neben der Vorführung
-   (leere Zeilen oben und unten fangen den Höhenunterschied auf), „Gut zu wissen“ läuft darunter über die volle Breite.
-   Ist der Text höher, läuft die Vorführung beim Scrollen mit. */
+/* Breit: links bzw. rechts die Vorführung, daneben Kopf, Schritte und „Gut zu wissen“ (kompakt). Ist der Text höher,
+   läuft die Vorführung beim Lesen mit und bleibt am Ende des Abschnitts stehen; ist sie höher, steht der Text mittig
+   daneben (leere Zeilen oben und unten fangen den Unterschied auf). */
 @media (min-width: 70rem) {
-  .fx {
+  .fx { padding: 4.5rem 0; }
+  .fx-split {
     grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    grid-template-areas: "demo ." "demo head" "demo body" "demo ." "extra extra";
-    grid-template-rows: 1fr auto auto 1fr auto;
+    grid-template-areas: "demo ." "demo head" "demo body" "demo extra" "demo .";
+    grid-template-rows: 1fr auto auto auto 1fr;
     column-gap: 3.5rem; row-gap: 0;
     align-items: start;
-    padding: 4.5rem 0;
   }
-  .fx--flip {
+  .fx--flip .fx-split {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-    grid-template-areas: ". demo" "head demo" "body demo" ". demo" "extra extra";
+    grid-template-areas: ". demo" "head demo" "body demo" "extra demo" ". demo";
   }
   /* Nur das Smartphone: schmalere Bühne, mehr Platz für den Text */
-  .fx--solo { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
-  .fx--solo.fx--flip { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+  .fx--solo .fx-split { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  .fx--solo.fx--flip .fx-split { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
   .fx-head { margin-bottom: 1.75rem; }
   .fx-steps { margin-bottom: 0; }
   .fx-demo { position: sticky; top: 1.5rem; }
-  .fx-extra { max-width: none; margin-top: 2.75rem; }
-  .fx-extra .fx-notes { grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); column-gap: 3rem; padding: 1.25rem 1.5rem; }
+  /* „Gut zu wissen“ kompakt unter den Schritten */
+  .fx-extra { margin-top: 1.75rem; }
+  .fx-extra .fx-notes { gap: .45rem; padding: .85rem 1rem; font-size: .9rem; line-height: 1.45; }
+  .fx-extra .fx-notes li { padding-left: 1.2rem; }
+  .fx-extra .fx-notes li::before { width: .42rem; height: .42rem; }
 }
 
 /* ---------- Bühne ---------- */
