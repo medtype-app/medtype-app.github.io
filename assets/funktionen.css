@@ -117,23 +117,31 @@
 }
 .fx-demo > figcaption { margin-top: .8rem; color: var(--muted); font-size: .92rem; line-height: 1.5; }
 
-/* Szene: schmal untereinander (PC oben, Smartphone darunter), breit nebeneinander */
+/* Szene: schmal untereinander (PC oben, Smartphone darunter), breit nebeneinander. Die Größe folgt der Breite der Bühne
+   und der Höhe des Fensters: Szene, aktueller Schritt und Knopf passen zusammen auf einen Bildschirm (--fx-reserve ist
+   der Platz für Schrittzeile und Ränder). */
+.fx-stage { --fx-reserve: 12.5rem; }
 .fx-scene {
   position: relative;
-  display: flex; flex-direction: column; align-items: center; gap: 1.6em;
+  display: flex; flex-direction: column; align-items: center; gap: 1.2em;
   width: 26em;
   margin-inline: auto;
   font-size: 10px; /* ohne Containerabfragen */
   font-size: min(15px, 100cqi / 26);
+  font-size: min(15px, 100cqi / 26, (100vh - var(--fx-reserve)) / 41);
+  font-size: min(15px, 100cqi / 26, (100svh - var(--fx-reserve)) / 41);
   line-height: 1.25;
 }
-.fx-scene .dv-phone { --dv-size: 1em; }
-.fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16); }
+.fx-scene .dv-phone { --dv-size: .8em; }
+.fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16, (100svh - var(--fx-reserve)) / 30); }
 .fx-scene--solo .dv-phone { --dv-size: 1em; }
 @container fx (min-width: 31rem) {
-  .fx-scene { flex-direction: row; justify-content: space-between; gap: 1em; width: 42em; font-size: min(15px, 100cqi / 42); }
+  .fx-scene {
+    flex-direction: row; justify-content: space-between; gap: 1em; width: 42em;
+    font-size: min(15px, 100cqi / 42, (100svh - var(--fx-reserve)) / 30);
+  }
   .fx-scene .dv-phone { --dv-size: 1em; }
-  .fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16); }
+  .fx-scene--solo { width: 16em; font-size: min(15px, 100cqi / 16, (100svh - var(--fx-reserve)) / 30); }
 }
 :where(.fx-scene) svg { display: block; }
 
@@ -615,6 +623,32 @@
   background: var(--accent-soft); color: var(--accent);
   font-size: .85rem; font-weight: 700;
 }
+
+/* Schrittzeile in der Bühne: Nummer und Text des Schritts, den die Vorführung gerade zeigt, daneben Anhalten/Weiter */
+.fx-bar {
+  display: grid; grid-template-columns: 1.6rem minmax(0, 1fr) auto; gap: .9rem; align-items: center;
+  margin: 1.4rem -.75rem -1.75rem; padding: .85rem 1rem .85rem 1.25rem;
+  border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+.fx-now-no { color: var(--accent); font-size: 1.6rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+.fx-now-text { margin: 0; display: flex; align-items: center; font-size: .95rem; line-height: 1.45; }
+.fx-now.is-new .fx-now-no, .fx-now.is-new .fx-now-text { animation: fx-step-in .35s var(--ease-out); }
+@keyframes fx-step-in { from { opacity: 0; transform: translateY(.3rem); } to { opacity: 1; transform: none; } }
+.fx-now { display: contents; }
+.fx-pause {
+  display: grid; place-items: center;
+  width: 2.75rem; height: 2.75rem;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: var(--surface); color: var(--text);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.fx-pause svg { width: 1.1rem; height: 1.1rem; }
+.fx-pause:hover { border-color: var(--accent); background: var(--accent-soft); }
+.fx-pause:active { transform: scale(.96); }
+.fx-pause:focus-visible { border-radius: 50%; }
 
 /* Angehalten: Blinken und Flackern stehen still (Übergänge hält funktionen.js über getAnimations an) */
 .fx-demo.is-paused .fx-scene *,

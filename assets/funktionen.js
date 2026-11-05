@@ -101,8 +101,10 @@
   Script.prototype.wait = function (ms) { this.t += ms; return this; };
   Script.prototype.step = function (n) {
     var steps = this.c.steps;
+    var c = this.c;
     return this.at(function () {
       Array.prototype.forEach.call(steps, function (li, i) { li.classList.toggle("is-now", i === n - 1); });
+      if (c.onStep && n) c.onStep(n);
     });
   };
   /* Fingertipp mit kurzem Druck auf das Ziel; el darf eine Funktion sein (Ziel erst beim Abspielen bekannt) */
@@ -544,18 +546,74 @@
   };
 
   /* ---------- Abspielen ----------
-     Jede Vorführung läuft dauerhaft in Schleife, solange sie zu sehen ist; außerhalb des Bildes hält sie an. */
+     Jede Vorführung läuft dauerhaft in Schleife, solange sie zu sehen ist; außerhalb des Bildes hält sie an. Unter der
+     Szene steht der Schritt, den sie gerade zeigt, daneben der Knopf zum Anhalten und Weiterspielen. */
 
   var LOOP_PAUSE_MS = 1800; // Endzustand stehen lassen, dann von vorn
+
+  var ICON_PAUSE = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.5 4v12M13.5 4v12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>';
+  var ICON_PLAY = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6.5 3.8v12.4L16.5 10z" fill="currentColor"/></svg>';
 
   function Player(fig, def) {
     this.fig = fig;
     this.def = def;
     this.c = context(fig);
     this.state = "idle";
+    this.userPaused = false;
     var self = this;
     this.frame = function (now) { self.tick(now); };
   }
+
+  /* Schrittzeile unter der Szene: zeigt Nummer und Text des aktuellen Schritts, daneben Anhalten/Weiter */
+  Player.prototype.addBar = function () {
+    var self = this;
+    var bar = document.createElement("div");
+    bar.className = "fx-bar";
+    bar.innerHTML = '<p class="fx-now" aria-hidden="true"><b class="fx-now-no"></b><span class="fx-now-text"></span></p>' +
+      '<button type="button" class="fx-pause"></button>';
+    this.fig.querySelector(".fx-stage").appendChild(bar);
+    this.now = bar.querySelector(".fx-now");
+    this.btn = bar.querySelector(".fx-pause");
+    var heading = this.fig.closest(".fx").getAttribute("aria-labelledby");
+    if (heading) this.btn.setAttribute("aria-describedby", heading);
+    this.btn.addEventListener("click", function () {
+      if (self.state === "playing") { self.userPaused = true; self.pause(); }
+      else { self.userPaused = false; self.resume(); }
+    });
+    this.c.onStep = function (n) { self.showStep(n); };
+    this.fitBar();
+    this.showStep(1);
+    this.button();
+  };
+
+  /* Die Schrittzeile ist so hoch wie ihr längster Schritt: Die Bühne springt beim Wechsel nicht */
+  Player.prototype.fitBar = function () {
+    var box = this.now.querySelector(".fx-now-text");
+    var keep = box.textContent;
+    var tallest = 0;
+    box.style.minHeight = "";
+    Array.prototype.forEach.call(this.c.steps, function (li) {
+      box.textContent = li.textContent;
+      tallest = Math.max(tallest, box.getBoundingClientRect().height);
+    });
+    box.textContent = keep;
+    box.style.minHeight = tallest ? tallest + "px" : "";
+  };
+
+  Player.prototype.showStep = function (n) {
+    var li = this.c.steps[n - 1];
+    if (!li || !this.now) return;
+    this.now.querySelector(".fx-now-no").textContent = n;
+    this.now.querySelector(".fx-now-text").textContent = li.textContent;
+    restart(this.now, "is-new");
+  };
+
+  Player.prototype.button = function () {
+    if (!this.btn) return;
+    var running = this.state === "playing";
+    this.btn.innerHTML = running ? ICON_PAUSE : ICON_PLAY;
+    this.btn.setAttribute("aria-label", running ? "Vorführung anhalten" : "Vorführung abspielen");
+  };
 
   Player.prototype.build = function () {
     /* Reste eines früheren Durchlaufs (gedrückte Tasten, Fingertipp) entfernen */
@@ -580,6 +638,7 @@
     this.freeze(false);
     window.cancelAnimationFrame(this.raf);
     this.raf = window.requestAnimationFrame(this.frame);
+    this.button();
   };
 
   Player.prototype.pause = function () {
@@ -588,6 +647,7 @@
     window.cancelAnimationFrame(this.raf);
     this.fig.classList.add("is-paused");
     this.freeze(true);
+    this.button();
   };
 
   /* Übergänge und Animationen der Szene anhalten bzw. fortsetzen (CSS allein hält Übergänge nicht an) */
@@ -620,7 +680,17 @@
   /* Mit „Bewegung reduzieren“ (oder ohne IntersectionObserver) bleibt der Endzustand aus dem HTML stehen */
   if (reduce || !("IntersectionObserver" in window)) return;
 
-  players.forEach(function (p) { p.def.reset(p.c); });
+  players.forEach(function (p) {
+    p.def.reset(p.c);
+    p.addBar();
+  });
+
+  /* Nach Größenänderungen die Höhe der Schrittzeilen neu bestimmen */
+  var refit = 0;
+  window.addEventListener("resize", function () {
+    window.clearTimeout(refit);
+    refit = window.setTimeout(function () { players.forEach(function (p) { if (p.now) p.fitBar(); }); }, 200);
+  });
 
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
@@ -629,8 +699,11 @@
       /* Genug zu sehen: knapp die Hälfte der Vorführung oder, bei niedrigem Fenster, mehr als die Hälfte des Fensters */
       var rb = entry.rootBounds;
       var fills = rb && entry.intersectionRect.height >= rb.height * 0.6;
-      if (entry.intersectionRatio >= 0.45 || fills) p.resume();
-      else if (!entry.isIntersecting) p.pause();
+      if (entry.intersectionRatio >= 0.45 || fills) {
+        if (!p.userPaused && p.state !== "playing") p.resume();
+      } else if (!entry.isIntersecting) {
+        p.pause();
+      }
     });
   }, { threshold: [0, 0.2, 0.3, 0.45] });
   players.forEach(function (p) { io.observe(p.fig); });
