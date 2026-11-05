@@ -422,7 +422,7 @@
 
   /* Felder in Bausteinen (MedType 1.3): Baustein mit leeren Feldern einfügen, ausfüllen, senden */
   var FELDER = [
-    { name: "Symptome", options: ["Fieber", "Husten", "Schnupfen"], hint: "Mehrere Vorschläge wählbar. Eigener Text direkt über die Tastatur." },
+    { name: "Symptome", options: ["Fieber", "Husten", "Schnupfen"], multi: true, hint: "Mehrere Vorschläge wählbar. Eigener Text direkt über die Tastatur." },
     { name: "Zeitraum", options: ["2 Wochen", "4 Wochen", "3 Monaten"], hint: "Ein Vorschlag führt direkt zum nächsten leeren Feld. Eigener Text direkt über die Tastatur." }
   ];
   var FELDER_TEXT = ["Beschwerden: ", 1, ". Kontrolle in ", 2, "."];
@@ -458,6 +458,8 @@
     text(c.q("sum"), f.hint); // Hinweis zur Auswahl unter dem Text, solange ein Feld aktuell ist
     text(c.q("fname"), f.name);
     text(c.q("fpos"), "Feld " + n + " von " + FELDER.length);
+    /* Mehrfachauswahl vor dem letzten Feld: „Weiter“ statt „Senden“ */
+    phoneState(c, "is-next", !!f.multi && n < FELDER.length);
     var chips = c.q("chips");
     chips.textContent = "";
     f.options.forEach(function (option) {
@@ -482,7 +484,7 @@
       on(c.q("field"), "is-empty");
       on(c.q("fsend"), "is-on", false);
       phoneState(c, "is-empty");
-      ["is-sheet", "is-filling", "is-busy", "is-done"].forEach(function (k) { phoneState(c, k, false); });
+      ["is-sheet", "is-filling", "is-busy", "is-done", "is-next"].forEach(function (k) { phoneState(c, k, false); });
       pcText(c, "");
       led(c.q("usb"), "on");
       on(c.pc, "is-air", false);
@@ -507,7 +509,7 @@
         fieldBar(c, 1, ["Husten", "Fieber"]);
         slotState(c, 1, "Husten, Fieber", true);
       });
-      s.wait(1000).tap(function () { return slot(c, 2); }).at(function () {
+      s.wait(1000).tap(c.q("fnext")).at(function () {
         slotState(c, 1, "Husten, Fieber", false);
         slotState(c, 2, "", true);
         fieldBar(c, 2, []);

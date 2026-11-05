@@ -600,6 +600,17 @@
 }
 .fx-minisend svg { width: .8em; height: .8em; }
 .fx-minisend.is-on { background: var(--app-blue); color: #ffffff; }
+/* „Weiter“ bei Mehrfachauswahl, solange es nicht das letzte Feld ist */
+.fx-next {
+  display: none !important; align-items: center; gap: .15em;
+  height: 1.75em; padding: 0 .45em 0 .7em;
+  border-radius: 99px;
+  background: var(--app-blue); color: #ffffff;
+}
+.fx-next em { font-size: .5em; font-weight: 650; }
+.fx-next svg { width: .7em; height: .7em; }
+.is-next .fx-next { display: flex !important; }
+.is-next .fx-minisend { display: none !important; }
 .fx-chips { display: flex !important; gap: .3em; padding: .35em .6em .1em; overflow: hidden; }
 .fx-chips > span {
   flex: none;
